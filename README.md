@@ -157,7 +157,7 @@ Run the Hardware Service:
 After a successful build, you can run the Hardware Service using the following command:
 
 ```bash
-java -jar target/hardware-service-0.0.1.jar
+java -jar target/controller-0.0.1-SNAPSHOT.jar
 ```
 The Hardware Service will start up and be accessible at the specified endpoint. By default, it runs on http://localhost:8081.
 
