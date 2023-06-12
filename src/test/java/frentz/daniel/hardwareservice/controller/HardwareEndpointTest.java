@@ -55,11 +55,11 @@ class HardwareEndpointTest {
         Hardware hardware = new Hardware();
         Hardware updatedHardware = new Hardware();
 
-        when(this.hardwareAdditionService.update(hardware)).thenReturn(updatedHardware);
+        when(this.hardwareAdditionService.update(1, hardware)).thenReturn(updatedHardware);
 
-        ResponseEntity<Hardware> result = this.hardwareEndpoint.updateHardware(hardware);
+        ResponseEntity<Hardware> result = this.hardwareEndpoint.updateHardware(1, hardware);
 
-        verify(this.hardwareAdditionService).update(hardware);
+        verify(this.hardwareAdditionService).update(1, hardware);
         assertEquals(200, result.getStatusCodeValue());
         assertSame(updatedHardware, result.getBody());
     }

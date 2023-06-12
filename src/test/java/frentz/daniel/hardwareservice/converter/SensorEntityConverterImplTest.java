@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice.converter;
 
+import frentz.daniel.hardwareservice.client.model.Sensor;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.client.model.SensorType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,12 +29,12 @@ class SensorEntityConverterImplTest {
     void toModel() {
         SensorEntity sensorEntity = new SensorEntity();
         sensorEntity.setId(1L);
-        sensorEntity.setSensorType(SensorType.HUMIDITY);
+        sensorEntity.setSensorType("humidity");
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         hardwareControllerEntity.setId(2L);
         sensorEntity.setHardwareController(hardwareControllerEntity);
         sensorEntity.setPort(3);
-        frentz.daniel.controllerclient.model.Sensor result = this.sensorConverter.toModel(sensorEntity);
+        Sensor result = this.sensorConverter.toModel(sensorEntity);
         assertEquals(sensorEntity.getId(), result.getId());
         assertEquals(sensorEntity.getPort(), result.getPort());
         assertEquals(sensorEntity.getSensorType(), result.getSensorType());

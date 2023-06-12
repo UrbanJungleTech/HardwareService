@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.converter;
 
+import frentz.daniel.hardwareservice.client.model.Timer;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
@@ -64,8 +65,8 @@ class HardwareConverterImplTest {
         TimerEntity timerEntity2 = new TimerEntity();
         hardwareEntity.getTimers().add(timerEntity2);
         //setup timer converter mock to return the correct timer objects
-        frentz.daniel.controllerclient.model.Timer timer1 = new frentz.daniel.controllerclient.model.Timer();
-        frentz.daniel.controllerclient.model.Timer timer2 = new frentz.daniel.controllerclient.model.Timer();
+        Timer timer1 = new Timer();
+        Timer timer2 = new Timer();
         when(timerConverter.toModels(List.of(timerEntity1, timerEntity2))).thenReturn(List.of(timer1, timer2));
         //ensure that 2 timers were added to the hardware, and that both are different. order doesn't matter.
         Hardware result = this.hardwareConverter.toModel(hardwareEntity);

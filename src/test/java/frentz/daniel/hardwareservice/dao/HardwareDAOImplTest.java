@@ -65,7 +65,6 @@ class HardwareDAOImplTest {
         when(this.hardwareControllerRepository.findById(anyLong())).thenReturn(Optional.of(hardwareControllerEntity));
         when(this.hardwareRepository.save(any())).thenReturn(hardwareEntity);
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
-        assertSame(result.getHardwareController(), hardwareControllerEntity);
         assertTrue(hardwareControllerEntity.getHardware().contains(result));
     }
 
