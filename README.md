@@ -102,41 +102,69 @@ In a nutshell, MQTT is our go-to communication protocol that brings scalability,
 # Installation Instructions
 
 The Hardware Service is built as a Spring Boot microservice, making it easy to compile and run on various platforms. Follow the steps below to get started:
+markdown
 
-Prerequisites:
+# Installation Instructions
 
-    Java Development Kit (JDK) version 17 or higher
-    Apache Maven
+## Hardware Service Client
 
-    Clone the repository to your local machine:
+1. **Clone the Hardware Service Client repository:**
 
-    shell
+Open your terminal and type in the following command:
 
-git clone <repository_url>
-
-Navigate to the project directory:
-
-```shell
-cd controller
+```bash
+git clone https://github.com/UrbanJungleTech/HardwareService-Client.git
 ```
 
-Build the project using Maven:
+After successfully cloning the client repository, you need to build the client. Navigate into the HardwareService-Client directory:
 
-```shell
-mvn package
+```bash
+cd HardwareService-Client
 ```
+
+Then use Maven to build and install the client library in your local repository:
+
+```bash
+mvn clean install
+```
+
+This command cleans the target directory, builds your project, and installs the library into your local Maven repository.
+
+1. **Clone and run the Hardware Service**
+
+Clone the Hardware Service repository:
+
+```bash
+git clone https://github.com/UrbanJungleTech/HardwareService.git
+```
+
+Build the Hardware Service:
+
+Next, navigate into the HardwareService directory:
+
+```bash
+cd HardwareService
+```
+
+And build the Hardware Service using Maven:
+
+```bash
+mvn clean install
+```
+
+Run the Hardware Service:
 
 After a successful build, you can run the Hardware Service using the following command:
 
-```shell
-java -jar target/controller-0.0.1.jar
+```bash
+java -jar target/hardware-service-0.0.1.jar
 ```
-
-The Hardware Service will start up and be accessible at the specified endpoint. By default, it runs on http://localhost:8080.
+The Hardware Service will start up and be accessible at the specified endpoint. By default, it runs on http://localhost:8081.
 
 Note: Make sure to configure any required environment variables, database connections, or external service integrations as specified in the project documentation.
 
 You can now interact with the Hardware Service and leverage its functionality to control and monitor physical devices in the Plant Project ecosystem.
+
 
 # Configuration
 
