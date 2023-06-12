@@ -281,18 +281,17 @@ Any message with an id expect a response, otherwise the id is optional.
 
 Each JSON-RPC message is structured as follows:
 
-json
-
+```json
 {
   "jsonrpc": "2.0",
   "method": "<methodName>",
   "params": {
     "<param1>": "<value1>",
-    "<param2>": "<value2>",
-    ...
+    "<param2>": "<value2>"
   },
-  "id": <id>
+  "id": "<id>"
 }
+```
 
 where jsonrpc is a fixed value indicating the version of JSON-RPC protocol being used, method is the name of the method to be invoked, params is a map containing method parameters, and id is a unique identifier for the request. If id is 0, it indicates that the message does not expect a response.
 
