@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: hardware-service
+  jackson:
+    default-property-inclusion: non_null
+  datasource:
+    url: jdbc:h2:file:~/db/mydb
+    driverClassName: org.h2.Driver
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  profiles:
+    active: MockMqttServer
+  sleuth:
+    quartz:
+      enabled: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  http2:
+    enabled: true
+  port: 8081
+logging:
+  level:
+    root: INFO
+    frentz.daniel: DEBUG
+    org.hibernate.SQL: INFO
+  mqtt:
+    level: INFO
+local:
+  mqtt:
+    enabled: true
+    port: 1883
+    host: localhost
+    logAll: true
+scheduling:
+  distribution-strategy: local
+development:
+  mqtt:
+    client:
+      enabled: true
+      serialNumber: "1234"
+
+
+entity:
+  names:
+    frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
+    frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
+    frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
+    frentz.daniel.hardwareservice.entity.TimerEntity: Timer
+mqtt:
+  server: tcp://localhost:1883
+  queue: HardwareServer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics

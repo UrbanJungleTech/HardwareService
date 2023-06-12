@@ -36,3 +36,4 @@ mvnw
 mvnw.cmd
 .mvn/
 /target
+/HardwareServer-tcplocalhost1883/
