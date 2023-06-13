@@ -35,6 +35,10 @@ public class MockMqttClientListener implements IMqttMessageListener {
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         JsonRpcMessage jsonRpcMessage = this.objectMapper.readValue(new String(mqttMessage.getPayload()), JsonRpcMessage.class);
         System.out.println("this is mock, Got a message: " + new String(mqttMessage.getPayload()));
-        this.callbacks.get(jsonRpcMessage.getMethod()).callback(jsonRpcMessage);
+        System.out.println("calling " + jsonRpcMessage.getMethod() + " callback");
+        MockMqttClientCallback callback = this.callbacks.get(jsonRpcMessage.getMethod());
+        if(callback != null){
+            callback.callback(jsonRpcMessage);
+        }
     }
 }
