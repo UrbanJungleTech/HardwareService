@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.converter;
 
 import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.converter.implementation.HardwareConverterImpl;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;

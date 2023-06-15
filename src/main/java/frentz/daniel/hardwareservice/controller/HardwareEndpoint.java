@@ -46,6 +46,6 @@ public class HardwareEndpoint {
     public ResponseEntity<Timer> addTimer(@RequestBody Timer timer,
                                           @PathVariable("hardwareId") long hardwareId){
         timer = this.hardwareAdditionService.addTimer(hardwareId, timer);
-        return ResponseEntity.ok(timer);
+        return ResponseEntity.created(null).body(timer);
     }
 }

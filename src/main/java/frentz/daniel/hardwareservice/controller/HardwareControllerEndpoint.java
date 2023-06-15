@@ -39,7 +39,7 @@ public class HardwareControllerEndpoint {
     @PostMapping("/")
     public ResponseEntity<HardwareController> create(@RequestBody HardwareController hardwareController) throws JsonProcessingException {
         HardwareController result = this.hardwareControllerAdditionService.create(hardwareController);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.created(null).body(result);
     }
 
     @PutMapping("/{hardwareControllerId}")
@@ -69,6 +69,13 @@ public class HardwareControllerEndpoint {
     public ResponseEntity deleteHardwareController(@PathVariable("hardwareControllerId") long hardwareControllerId){
         this.hardwareControllerAdditionService.delete(hardwareControllerId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/sensor")
+    public ResponseEntity<Sensor> addSensor(@RequestBody Sensor sensor,
+                                            @PathVariable("hardwareControllerId") long hardwareControllerId){
+        Sensor result = this.hardwareControllerAdditionService.addSensor(hardwareControllerId, sensor);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/{hardwareControllerId}/sensor")

@@ -11,7 +11,7 @@ public class SensorEntity {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hardware_id")
     private HardwareControllerEntity hardwareController;
     private String sensorType;

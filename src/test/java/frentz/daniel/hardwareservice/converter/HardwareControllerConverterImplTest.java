@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.converter;
 
+import frentz.daniel.hardwareservice.converter.implementation.HardwareControllerConverterImpl;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.client.model.Hardware;

@@ -70,17 +70,12 @@ public class SensorEndpoint {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Sensor> addSensor(@RequestBody Sensor sensor,
-                                            @PathVariable("hardwareControllerId") long hardwareControllerId){
-        Sensor result = this.hardwareControllerAdditionService.addSensor(hardwareControllerId, sensor);
-        return ResponseEntity.ok(result);
-    }
+
 
     @DeleteMapping("/{sensorId}")
     public ResponseEntity deleteSensor(@PathVariable("sensorId") long sensorId){
         this.sensorAdditionService.delete(sensorId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{sensorId}")

@@ -2,6 +2,7 @@ package frentz.daniel.hardwareservice.addition;
 
 import frentz.daniel.hardwareservice.builder.HardwareStateBuilder;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
+import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
@@ -25,19 +26,22 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     private final HardwareConverter hardwareConverter;
     private final Logger logger = LoggerFactory.getLogger(HardwareAdditionServiceImpl.class);
     private final ObjectLoggerService objectLoggerService;
+    private HardwareStateConverter hardwareStateConverter;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
                                        HardwareQueueService hardwareQueueService,
                                        HardwareStateBuilder hardwareStateBuilder,
                                        HardwareConverter hardwareConverter,
-                                       ObjectLoggerService objectLoggerService){
+                                       ObjectLoggerService objectLoggerService,
+                                       HardwareStateConverter hardwareStateConverter){
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
         this.hardwareQueueService = hardwareQueueService;
         this.hardwareStateBuilder = hardwareStateBuilder;
         this.hardwareConverter = hardwareConverter;
         this.objectLoggerService = objectLoggerService;
+        this.hardwareStateConverter = hardwareStateConverter;
     }
 
     public List<Hardware> updateList(List<Hardware> hardwares){
@@ -88,6 +92,12 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     public Hardware update(long hardwareId, Hardware hardware) {
         hardware.setId(hardwareId);
         HardwareEntity current = this.hardwareDAO.getHardware(hardware.getId());
+        if(hardware.getDesiredState() == null){
+            hardware.setDesiredState(hardwareStateConverter.toModel(current.getDesiredState()));
+        }
+        if(hardware.getCurrentState() == null){
+            hardware.setCurrentState(hardwareStateConverter.toModel(current.getCurrentState()));
+        }
         boolean updateHardwareState = hardware.getDesiredState().getState() != current.getDesiredState().getState();
         HardwareEntity result = this.hardwareDAO.updateHardware(hardware);
         hardware.getTimers().forEach((Timer timer) -> {

@@ -23,9 +23,4 @@ public class RegisterSensor implements RpcMethod{
         Sensor sensor = this.objectMapper.convertValue(params.get("sensor"), Sensor.class);
         this.sensorAdditionService.create(sensor);
     }
-
-    @Override
-    public String getName() {
-        return "RegisterSensor";
-    }
 }

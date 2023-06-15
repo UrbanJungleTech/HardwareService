@@ -2,6 +2,7 @@ package frentz.daniel.hardwareservice.service;
 
 import frentz.daniel.hardwareservice.exception.NameNotFoundException;
 import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
+import frentz.daniel.hardwareservice.service.implementation.ExceptionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

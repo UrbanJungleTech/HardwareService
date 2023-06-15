@@ -17,10 +17,10 @@ public class HardwareControllerEntity {
     @Column(unique = true)
     private String serialNumber;
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)
     private List<HardwareEntity> hardware;
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "hardwareController")
+    @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)
     private List<SensorEntity> Sensors;
 
 

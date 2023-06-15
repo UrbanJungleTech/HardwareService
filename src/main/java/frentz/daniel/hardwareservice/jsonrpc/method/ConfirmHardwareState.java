@@ -45,9 +45,4 @@ public class ConfirmHardwareState implements RpcMethod {
         Hardware updatedHardware = this.hardwareConverter.toModel(hardware);
         this.hardwareAdditionService.update(hardware.getId(), updatedHardware);
     }
-
-    @Override
-    public String getName() {
-        return "ConfirmHardwareState";
-    }
 }

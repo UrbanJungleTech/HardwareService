@@ -26,9 +26,4 @@ public class DeregisterHardware implements RpcMethod {
         Hardware hardware = this.hardwareService.getHardware(serialNumber, hardwarePort);
         this.hardwareAdditionService.delete(hardware.getId());
     }
-
-    @Override
-    public String getName() {
-        return "DeregisterHardware";
-    }
 }

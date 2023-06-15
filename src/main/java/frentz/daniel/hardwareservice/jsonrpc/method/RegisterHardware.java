@@ -23,9 +23,4 @@ public class RegisterHardware implements RpcMethod {
         Hardware hardware = objectMapper.convertValue(params.get("hardware"), Hardware.class);
         hardwareAdditionService.create(hardware);
     }
-
-    @Override
-    public String getName() {
-        return "RegisterHardware";
-    }
 }

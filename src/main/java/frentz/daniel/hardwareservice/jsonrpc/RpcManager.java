@@ -6,5 +6,4 @@ import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 public interface RpcManager {
 
     void process(JsonRpcMessage jsonRpcMessage);
-    void addRpcMethod(RpcMethod rpcMethod);
 }

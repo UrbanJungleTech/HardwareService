@@ -27,9 +27,4 @@ public class GetInitialState implements RpcMethod{
             this.hardwareQueueService.sendInitialState(serialNumber, hardwareController.getHardware());
         }
     }
-
-    @Override
-    public String getName() {
-        return "GetInitialState";
-    }
 }

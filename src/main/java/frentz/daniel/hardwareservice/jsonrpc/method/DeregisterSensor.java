@@ -24,9 +24,4 @@ public class DeregisterSensor implements RpcMethod{
         Sensor sensor = this.sensorService.getSensor(serialNumber, hardwarePort);
         this.sensorAdditionService.delete(sensor.getId());
     }
-
-    @Override
-    public String getName() {
-        return "DeregisterSensor";
-    }
 }

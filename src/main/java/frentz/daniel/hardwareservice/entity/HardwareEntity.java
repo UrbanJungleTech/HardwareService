@@ -20,7 +20,7 @@ public class HardwareEntity {
     private HardwareStateEntity desiredState;
     @Embedded()
     private HardwareStateEntity currentState;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hardware_id")
     private HardwareControllerEntity hardwareController;
     @OneToMany(mappedBy = "hardware", fetch = FetchType.EAGER)

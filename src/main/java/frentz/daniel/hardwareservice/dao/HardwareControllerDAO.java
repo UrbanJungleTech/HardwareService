@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface HardwareControllerDAO {
     HardwareControllerEntity createHardwareController(HardwareController hardwareController);
-    List<HardwareControllerEntity> getAllHardware();
+    List<HardwareControllerEntity> getAllHardwareControllers();
     HardwareControllerEntity getHardwareController(long hardwareControllerId);
     HardwareControllerEntity getBySerialNumber(String serialNumber);
     boolean exists(String serialNumber);

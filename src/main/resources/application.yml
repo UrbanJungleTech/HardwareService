@@ -6,8 +6,8 @@ spring:
   datasource:
     url: jdbc:h2:file:~/db/mydb
     driverClassName: org.h2.Driver
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
+    username: sa
+    password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -59,6 +59,18 @@ entity:
     frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
     frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
     frentz.daniel.hardwareservice.entity.TimerEntity: Timer
+
+rpc:
+  methods:
+    "frentz.daniel.hardwareservice.jsonrpc.method.ConfirmHardwareState": "ConfirmHardwareState"
+    "frentz.daniel.hardwareservice.jsonrpc.method.DeregisterHardware": DeregisterHardware
+    "frentz.daniel.hardwareservice.jsonrpc.method.DeregisterSensor": DeregisterSensor
+    "frentz.daniel.hardwareservice.jsonrpc.method.GetInitialState": GetInitialState
+    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterHardware": RegisterHardware
+    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterHardwareController": RegisterHardwareController
+    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterSensor": RegisterSensor
+
+
 mqtt:
   server: tcp://localhost:1883
   queue: HardwareServer

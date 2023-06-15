@@ -3,6 +3,7 @@ package frentz.daniel.hardwareservice.service;
 
 import frentz.daniel.hardwareservice.config.EntityNameConfiguration;
 import frentz.daniel.hardwareservice.exception.NameNotFoundException;
+import frentz.daniel.hardwareservice.service.implementation.EntityNameServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

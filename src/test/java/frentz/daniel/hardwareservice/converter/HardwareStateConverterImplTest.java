@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.converter;
 
+import frentz.daniel.hardwareservice.converter.implementation.HardwareStateConverterImpl;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.client.model.HardwareState;
 import frentz.daniel.hardwareservice.client.model.ONOFF;

@@ -99,10 +99,75 @@ MQTT (Message Queuing Telemetry Transport) plays a central role in our system as
 
 In a nutshell, MQTT is our go-to communication protocol that brings scalability, efficiency, and reliability to our system, ensuring a smooth interaction between our hardware and software components for optimal plant growth.
 
+
+# Hardware Service API Documentation
+
+## Overview
+
+The Hardware Service provides a RESTful API interface for managing resources related to hardware, sensors, and hardware controllers in a garden automation system. Each type of entity has its own dedicated endpoint, which allows for straightforward interaction with each type of resource.
+
+## Endpoints
+
+Endpoints are organized based on the type of resource that they manage. The following are examples of how endpoints for different resources may look:
+
+### Hardware Controller
+
+`/hardwarecontroller/` - Manages hardware controller entities.
+
+### Hardware
+
+`/hardware/` - Manages hardware entities.
+
+### Sensor
+
+`/sensor/` - Manages sensor entities.
+
+### Child entities
+
+The API supports managing child entities through nested routes. For example, to interact with the hardware entities associated with a particular hardware controller, you could use a route similar to:
+
+`/hardwarecontroller/hardware/`
+
+To interact with sensor entities associated with a particular hardware controller, a route could look like:
+
+`/hardwarecontroller/sensor/`
+
+And to manage state of a particular hardware entity, a route could be:
+
+`/hardware/state/`
+
+## Requests
+
+### Creating Resources
+
+To create a resource, a `POST` request should be sent to the appropriate endpoint. The body of the request should include a JSON representation of the resource to be created. When a resource is successfully created, the API will respond with a `201 Created` status.
+
+### Deleting Resources
+
+To delete a resource, a `DELETE` request should be sent to the specific endpoint for the resource that should be deleted. Upon successful deletion, the API will respond with a `204 No Content` status.
+
+### Updating Resources
+
+Updating resources is accomplished with a `PUT` request to the specific endpoint for the resource that should be updated. The body of the request should include a JSON representation of the resource with updated values. This will replace the entire entity.
+
+For child entities, only those included in the request body will be updated or created. To delete a child entity, a separate `DELETE` request must be sent.
+
+## Status Codes
+
+The API uses standard HTTP status codes to indicate the success or failure of a request:
+
+- `201 Created`: The resource was successfully created.
+- `204 No Content`: The resource was successfully deleted.
+- `200 OK`: The resource was successfully retrieved or updated.
+
+Additional status codes may be returned depending on the specific nature of the request and the state of the system at the time of the request.
+
+
 # Installation Instructions
 
 The Hardware Service is built as a Spring Boot microservice, making it easy to compile and run on various platforms. Follow the steps below to get started:
 markdown
+
 
 # Installation Instructions
 
@@ -546,3 +611,154 @@ json
 }
 ```
 
+
+# Writing Code in the Hardware Service
+
+Welcome to the central guide for contributing code to the Hardware Service. Whether you're new to the project or an experienced contributor, this document aims to provide a clear, comprehensive guide to help you contribute effectively.
+
+The Hardware Service is built with maintainability, readability, and scalability in mind. To uphold these principles, it's important to follow the guidelines and best practices outlined in this guide. Each section will detail key aspects of the development process, from designing APIs to handling exceptions, and will provide examples to illustrate best practices.
+
+In addition, the guide will discuss the key design philosophies that underpin the Hardware Service, which should inform your decisions when writing code. Whether you're improving existing functionality or adding entirely new features, understanding these philosophies will help ensure your contributions align with the overall goals of the project.
+
+Without further ado, let's get started!
+
+
+## Creating and handling exceptions
+
+## Overview
+
+The Exception Service within the Hardware Service is designed to streamline error handling by leveraging specific, application-centric exceptions. It also provides mechanisms to deliver human-friendly, readable error information to the API clients.
+
+## Error Handling
+
+All exceptions within the application should not be caught directly; rather, application-specific exceptions like `NotFoundException` should be thrown. These exceptions are then handled by the global exception handler
+
+## Human-Readable Entity Names
+
+When an exception message needs to include the name of an entity, the application leverages the `EntityNameService` to retrieve a human-friendly name. This service retrieves the names from an `EntityNameConfiguration` instance, which maps class names to their corresponding human-readable names.
+
+The entity names are set in the application configuration and are loaded at runtime.
+
+## Configuration
+
+The names of the entities are set in the configuration as shown below:
+
+```yaml
+entity:
+  names:
+    frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
+    frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
+    frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
+    frentz.daniel.hardwareservice.entity.TimerEntity: Timer
+```
+
+## Exception Generation
+
+Application-specific exceptions can be created using the ExceptionService. For instance, to create a NotFoundException, the createNotFoundException method from ExceptionServiceImpl class can be used, providing the class and ID of the non-existent entity as arguments:
+
+```java
+public StandardNotFoundException createNotFoundException(Class clazz, long id) {
+    String name = this.entityNameService.getName(clazz);
+    StandardNotFoundException result = new StandardNotFoundException(name, id);
+    return result;
+}
+```
+
+As a result, the NotFoundException will contain a human-readable error message including the name of the missing entity.
+
+# Models and Converters in the Hardware Service
+
+In the Hardware Service, data is represented through models that are either stored in the database or exchanged with users. There are two main types of models:
+
+1. **Entities**: These models map directly to database tables, with relationships defined through JPA annotations.
+
+2. **Data Transfer Objects (DTOs)**: These models represent the data that users submit and retrieve through the API. They might differ from the entities but are consistent for input and output.
+
+To translate between these two model types, we use converter classes.
+
+## Converter Classes
+
+Converter classes typically contain the following methods:
+
+- `toModel`: Converts an entity into a DTO.
+- `fillEntity`: Updates an existing entity with data from a DTO. This method is used when the entity contains information not supplied by the user, such as IDs.
+- `toModels`: (Optional) A convenience method that converts a list of entities into a list of DTOs.
+
+Here's an example of a `HardwareControllerConverter`:
+
+```java
+@Service
+public class HardwareControllerConverterImpl implements HardwareControllerConverter{
+
+    private final HardwareConverter hardwareConverter;
+    private final SensorConverter sensorConverter;
+
+    public HardwareControllerConverterImpl(HardwareConverter hardwareConverter,
+                                           SensorConverter sensorConverter){
+        this.hardwareConverter = hardwareConverter;
+        this.sensorConverter = sensorConverter;
+    }
+
+    @Override
+    public HardwareController toModel(HardwareControllerEntity hardwareControllerEntity) {
+        HardwareController result = new HardwareController();
+        result.setId(hardwareControllerEntity.getId());
+        result.setName(hardwareControllerEntity.getName());
+        result.setSerialNumber(hardwareControllerEntity.getSerialNumber());
+        result.setHardware(this.hardwareConverter.toModels(hardwareControllerEntity.getHardware()));
+        result.setSensors(this.sensorConverter.toModels(hardwareControllerEntity.getSensors()));
+        return result;
+    }
+
+    @Override
+    public List<HardwareController> toModels(List<HardwareControllerEntity> hardwareControllerEntities) {
+        List<HardwareController> result = new ArrayList<>();
+        for(HardwareControllerEntity entity : hardwareControllerEntities){
+            result.add(this.toModel(entity));
+        }
+        return result;
+    }
+
+    @Override
+    public void fillEntity(HardwareControllerEntity hardwareControllerEntity, HardwareController hardwareController) {
+        hardwareControllerEntity.setName(hardwareController.getName());
+        hardwareControllerEntity.setSerialNumber(hardwareController.getSerialNumber());
+    }
+}
+```
+
+In the fillEntity method, only two fields (name and serialNumber) are filled. The HardwareControllerEntity is expected to have already existing entities for the hardware and sensors fields, typically retrieved from the database.
+
+Please note, the specific model-to-entity or entity-to-model conversion logic will differ based on the requirements and structure of each entity or DTO.
+
+
+## Data Transfer Objects (DTOs) in the Hardware Service
+
+Data Transfer Objects, or DTOs, serve as the intermediate data format for interacting with the database. DTOs are used when data needs to be saved to or retrieved from the database. In the default implementation, DTOs map directly to `JpaRepository` objects.
+
+The rationale for having a DTO layer is twofold:
+
+1. **Exception Handling**: If a requested entity isn't found in the database, exceptions are thrown at this layer. This approach centralizes error handling related to data retrieval.
+
+2. **Abstraction**: The DTO layer encapsulates all data storage logic. This design choice will facilitate future plans to replace the current database with different services (like Azure IoT). By keeping all data saving and retrieval logic in the DTO layer, we can switch out the underlying storage mechanism with minimal impact on the rest of the application.
+
+With the DTO layer, we have successfully separated concerns: the rest of the application interacts with the DTOs, and is not concerned with how the DTOs interact with the data store. This means less code needs to be modified
+
+## Code Style Guidelines
+
+The Hardware Service enforces the following code style principles:
+
+1. **Interface-backed services**: Every service within the application must be backed by an interface. This helps ensure flexibility and interchangeability of implementations.
+2. **Optional Services**: Optional services, such as development mocks, must be annotated so that their loading conditions are derived from the configuration.
+3. **Avoid static or private methods**: Static and private methods can complicate testing and should be avoided whenever possible.
+4. **Stateless Services**: Services must not contain any state, unless it's a generic value like a counter. The purpose of a service should be to facilitate and orchestrate operations, not to maintain state.
+5. **Model Classes without Logic**: Model classes should strictly serve as data containers. They must not contain any logic.
+
+## Testing
+
+Thorough testing is a key aspect of code quality in the Hardware Service. Here are our expectations:
+
+1. **Unit Testing**: Every method must be unit tested. When testing methods that return an object, confirm that the correct object is returned. In the case of converters, every field must be tested. However, when a method gets its result from another service, it's sufficient to test that the returned object matches the one returned by the service.
+2. **Integration Testing**: Every endpoint must have an integration test to ensure end-to-end functionality of the application.
+
+Please ensure your code adheres to these guidelines and has suitable coverage by tests before submitting a contribution.

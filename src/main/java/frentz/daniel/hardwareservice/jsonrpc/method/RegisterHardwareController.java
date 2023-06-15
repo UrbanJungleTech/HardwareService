@@ -23,9 +23,4 @@ public class RegisterHardwareController implements RpcMethod{
         HardwareController hardwareController = this.objectMapper.convertValue(params.get("hardwareController"), HardwareController.class);
         this.hardwareControllerAdditionService.create(hardwareController);
     }
-
-    @Override
-    public String getName() {
-        return "RegisterHardwareController";
-    }
 }
