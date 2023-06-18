@@ -8,7 +8,6 @@ import java.util.List;
 public interface HardwareDAO {
     HardwareEntity createHardware(Hardware hardware);
     HardwareEntity getHardware(long hardwareId);
-    void removeHardware(String hardwareControllerSerialNumber, long port);
     HardwareEntity updateHardware(Hardware hardware);
     HardwareEntity updateHardware(HardwareEntity hardware);
     HardwareEntity getHardware(String serialNumber, long port);

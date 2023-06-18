@@ -8,6 +8,7 @@ import frentz.daniel.hardwareservice.client.model.Timer;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
+import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext
 public class HardwareEndpointIT {
 
     @Autowired
@@ -41,9 +41,12 @@ public class HardwareEndpointIT {
     private HardwareRepository hardwareRepository;
     @Autowired
     private TimerRepository timerRepository;
+    @Autowired
+    private HardwareControllerRepository hardwareControllerRepository;
 
     @BeforeEach
     void setUp() {
+        this.hardwareControllerRepository.deleteAll();
         this.hardwareRepository.deleteAll();
         this.timerRepository.deleteAll();
     }

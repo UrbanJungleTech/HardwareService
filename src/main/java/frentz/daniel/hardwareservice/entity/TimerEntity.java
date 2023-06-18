@@ -12,7 +12,7 @@ public class TimerEntity {
     private ScheduledHardwareEntity onCronJob;
     @OneToOne(cascade = CascadeType.REMOVE)
     private ScheduledHardwareEntity offCronJob;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "hardware_id")
     private HardwareEntity hardware;
 

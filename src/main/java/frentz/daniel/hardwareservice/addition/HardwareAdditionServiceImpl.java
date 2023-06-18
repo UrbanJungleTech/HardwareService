@@ -11,6 +11,7 @@ import frentz.daniel.hardwareservice.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         return results;
     }
 
+    @Transactional
     @Override
     public Hardware create(Hardware hardware) {
         this.objectLoggerService.logInfo("Creating hardware", hardware);
@@ -81,6 +83,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         return this.hardwareConverter.toModel(result);
     }
 
+    @Transactional
     @Override
     public void delete(long hardwareId) {
         HardwareEntity hardware = this.hardwareDAO.getHardware(hardwareId);

@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frentz.daniel.hardwareservice.exception.MqttPublishException;
 import frentz.daniel.hardwareservice.jsonrpc.RpcResponseProcessor;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.service.MqttService;
@@ -39,18 +40,18 @@ public class MqttServiceImpl implements MqttService {
     @Override
     public void publish(String serialNumber, JsonRpcMessage rpcMessage) {
         try {
-            if(!this.mqttClient.isConnected()){
-                this.mqttClient.connect(this.mqttConnectOptions);
-            }
             String payload = this.objectMapper.writeValueAsString(rpcMessage);
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(2);
+            message.setQos(1);
             message.setRetained(false);
+            if(this.mqttClient.isConnected() == false){
+                Thread.sleep(2000);
+            }
             this.mqttClient.publish(serialNumber + "ToMicrocontroller", message);
             logger.debug("Sent RPC message -> {} ", message);
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            throw new MqttPublishException(ex);
         }
     }
 

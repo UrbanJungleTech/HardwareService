@@ -27,7 +27,6 @@ public class SensorReadingCallback implements MockMqttClientCallback{
     @Override
     public void callback(JsonRpcMessage jsonRpcMessage) {
         try {
-            System.out.println("Got a sensor reading: " + jsonRpcMessage.getResult());
             JsonRpcMessage response = new JsonRpcMessage();
             response.setId(jsonRpcMessage.getId());
             Map<String, Object> responsePayload = new HashMap<>();
@@ -37,7 +36,6 @@ public class SensorReadingCallback implements MockMqttClientCallback{
             MqttMessage message = new MqttMessage(messageText.getBytes());
             message.setQos(2);
             message.setRetained(false);
-            System.out.println("sending message from mock");
             this.mqttClient.publish("FromMicrocontroller", message);
         } catch (Exception e) {
             throw new SensorReadingException(e);

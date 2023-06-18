@@ -59,6 +59,12 @@ public class SensorDAOImpl implements SensorDAO {
 
     @Override
     public void delete(long sensorId) {
+        SensorEntity sensorEntity = this.sensorRepository.findById(sensorId).orElseThrow(() -> {
+            return this.exceptionService.createNotFoundException(SensorEntity.class, sensorId);
+        });
+        HardwareControllerEntity hardwareControllerEntity = sensorEntity.getHardwareController();
+        hardwareControllerEntity.getSensors().remove(sensorEntity);
+        this.hardwareControllerRepository.save(hardwareControllerEntity);
         this.sensorRepository.deleteById(sensorId);
     }
 

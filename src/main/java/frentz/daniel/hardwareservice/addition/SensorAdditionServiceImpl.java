@@ -7,6 +7,7 @@ import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.client.model.Sensor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
         this.hardwareQueueService = hardwareQueueService;
     }
 
+    @Transactional
     @Override
     public Sensor create(Sensor sensor) {
         SensorEntity result = this.sensorDAO.addSensor(sensor);
@@ -41,10 +43,11 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
         return this.sensorConverter.toModel(result);
     }
 
+    @Transactional
     @Override
     public void delete(long sensorId) {
         SensorEntity sensorEntity = this.sensorDAO.getSensor(sensorId);
-        this.hardwareQueueService.deregisterSensor(sensorEntity);
+        //this.hardwareQueueService.deregisterSensor(sensorEntity);
         this.sensorDAO.delete(sensorId);
     }
 

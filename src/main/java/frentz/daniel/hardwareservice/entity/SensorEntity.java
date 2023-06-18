@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,15 @@ public class SensorEntity {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "hardware_id")
     private HardwareControllerEntity hardwareController;
     private String sensorType;
     private long port;
     private String name;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SensorReadingEntity> readings;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ScheduledSensorReadingEntity> scheduledSensorReadings;
 
     public SensorEntity(){

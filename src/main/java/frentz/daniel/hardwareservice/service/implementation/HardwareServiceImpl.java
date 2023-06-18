@@ -34,7 +34,7 @@ public class HardwareServiceImpl implements HardwareService {
     }
 
     @Override
-    public Hardware getHardware(String serialNumber, int hardwarePort) {
+    public Hardware getHardware(String serialNumber, long hardwarePort) {
         HardwareEntity hardwareEntity = this.hardwareDAO.getHardware(serialNumber, hardwarePort);
         return this.hardwareConverter.toModel(hardwareEntity);
     }

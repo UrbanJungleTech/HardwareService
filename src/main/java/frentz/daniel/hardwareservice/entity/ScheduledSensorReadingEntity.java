@@ -9,7 +9,7 @@ public class ScheduledSensorReadingEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String cronString;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sensor_id")
     private SensorEntity sensorEntity;
 

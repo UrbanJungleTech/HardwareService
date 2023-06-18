@@ -48,4 +48,5 @@ public class HardwareEndpoint {
         timer = this.hardwareAdditionService.addTimer(hardwareId, timer);
         return ResponseEntity.created(null).body(timer);
     }
+
 }

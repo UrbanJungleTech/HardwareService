@@ -38,3 +38,4 @@ mvnw.cmd
 /target
 /HardwareServer-tcplocalhost1883/
 .moquette_uuid
+*tcplocal*/

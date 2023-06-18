@@ -20,10 +20,10 @@ public class HardwareEntity {
     private HardwareStateEntity desiredState;
     @Embedded()
     private HardwareStateEntity currentState;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "hardware_id")
     private HardwareControllerEntity hardwareController;
-    @OneToMany(mappedBy = "hardware", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "hardware", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<TimerEntity> timers;
     @ElementCollection
     @CollectionTable(name = "metadata",

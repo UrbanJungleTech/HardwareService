@@ -17,7 +17,7 @@ public class HardwareControllerEntity {
     @Column(unique = true)
     private String serialNumber;
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.REMOVE)
     private List<HardwareEntity> hardware;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)

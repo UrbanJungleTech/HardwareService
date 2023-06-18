@@ -2,6 +2,8 @@ package frentz.daniel.hardwareservice.jsonrpc.model;
 
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 
+import java.util.Map;
+
 public class RegisterHardwareMessage extends JsonRpcMessage{
     public RegisterHardwareMessage(HardwareEntity hardware){
         super("RegisterHardware");

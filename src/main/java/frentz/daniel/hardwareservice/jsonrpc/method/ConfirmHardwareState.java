@@ -8,6 +8,7 @@ import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.client.model.Hardware;
 import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.service.HardwareService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,17 +22,20 @@ public class ConfirmHardwareState implements RpcMethod {
     private final HardwareDAO hardwareDAO;
     private final HardwareConverter hardwareConverter;
     private final HardwareStateConverter hardwareStateConverter;
+    private final HardwareService hardwareService;
 
     public ConfirmHardwareState(HardwareDAO hardwareDAO,
                                 HardwareAdditionService hardwareAdditionService,
                                 ObjectMapper objectMapper,
                                 HardwareConverter hardwareConverter,
-                                HardwareStateConverter hardwareStateConverter){
+                                HardwareStateConverter hardwareStateConverter,
+                                HardwareService hardwareService){
         this.hardwareAdditionService = hardwareAdditionService;
         this.objectMapper = objectMapper;
         this.hardwareDAO = hardwareDAO;
         this.hardwareConverter = hardwareConverter;
         this.hardwareStateConverter = hardwareStateConverter;
+        this.hardwareService = hardwareService;
     }
 
     @Override
@@ -40,9 +44,8 @@ public class ConfirmHardwareState implements RpcMethod {
         HardwareState hardwareState = objectMapper.convertValue(hardwareStateJson, HardwareState.class);
         String serialNumber = (String)params.get("serialNumber");
         Long port = Long.valueOf((Integer)params.get("port"));
-        HardwareEntity hardware = this.hardwareDAO.getHardware(serialNumber, port);
-        hardwareStateConverter.fillEntity(hardware.getCurrentState(), hardwareState);
-        Hardware updatedHardware = this.hardwareConverter.toModel(hardware);
-        this.hardwareAdditionService.update(hardware.getId(), updatedHardware);
+        Hardware hardware = this.hardwareService.getHardware(serialNumber, port);
+        hardware.setCurrentState(hardwareState);
+        this.hardwareAdditionService.update(hardware.getId(), hardware);
     }
 }

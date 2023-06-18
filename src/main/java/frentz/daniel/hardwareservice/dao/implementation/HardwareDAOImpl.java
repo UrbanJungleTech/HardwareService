@@ -69,28 +69,12 @@ public class HardwareDAOImpl implements HardwareDAO {
     }
 
     @Override
-    @Transactional
-    public void removeHardware(String hardwareControllerSerialNumber, long port) {
-        HardwareEntity hardwareEntity = this.hardwareRepository.findHardwareBySerialNumberAndPort(hardwareControllerSerialNumber, port);
-        hardwareEntity.getHardwareController().getHardware().remove(hardwareEntity);
-        this.hardwareRepository.delete(hardwareEntity);
-    }
-
-
-
-    @Override
     public HardwareEntity getHardware(String serialNumber, long port) {
         HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findBySerialNumber(serialNumber);
-        Optional<HardwareEntity> result = hardwareControllerEntity.getHardware().stream().filter((hardwareEntity -> {
-            if(hardwareEntity.getPort() == port){
-                return true;
-            }
-            return false;
-        })).findFirst();
-        if(result.isEmpty() == false){
-            return result.get();
-        }
-        throw this.exceptionService.createNotFoundException(HardwareEntity.class, port);
+        HardwareEntity hardwareEntity = this.hardwareRepository.findHardwareBySerialNumberAndPort(serialNumber, port).orElseThrow(() -> {
+            throw this.exceptionService.createNotFoundException(HardwareEntity.class, port);
+        });
+        return hardwareEntity;
     }
 
     @Override
@@ -100,10 +84,9 @@ public class HardwareDAOImpl implements HardwareDAO {
 
     @Override
     public void delete(long hardwareId) {
-        HardwareEntity entity = hardwareRepository.findById(hardwareId).get();
-        entity.getHardwareController().getHardware().removeIf((HardwareEntity hardwareEntity) -> {
-            return hardwareEntity.getId() == hardwareId;
-        });
+        HardwareEntity hardwareEntity = hardwareRepository.findById(hardwareId).get();
+        hardwareEntity.getHardwareController().getHardware().remove(hardwareEntity);
+        this.hardwareControllerRepository.save(hardwareEntity.getHardwareController());
         this.hardwareRepository.deleteById(hardwareId);
     }
 

@@ -22,7 +22,7 @@ public class DeregisterHardware implements RpcMethod {
     @Override
     public void process(Map<String, Object> params) {
         String serialNumber = (String)params.get("serialNumber");
-        int hardwarePort = (int)params.get("hardwarePort");
+        int hardwarePort = (int)params.get("port");
         Hardware hardware = this.hardwareService.getHardware(serialNumber, hardwarePort);
         this.hardwareAdditionService.delete(hardware.getId());
     }

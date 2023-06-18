@@ -50,14 +50,15 @@ public class HardwareControllerEndpoint {
     }
 
     @GetMapping(value = "/")
-    public List<HardwareController> getAll(){
+    public List<HardwareController> getAllHardwareControllers(){
         return this.hardwareControllerService.getAllHardwareControllers();
     }
 
-    @GetMapping(value = "/realtime")
-    public SseEmitter getRealtimeHardwareControllers(){
-        return this.hardwareControllerSubscriptionService.addSubscriber();
-    }
+    //TODO: this is for the realtime epic
+//    @GetMapping(value = "/realtime")
+//    public SseEmitter getRealtimeHardwareControllers(){
+//        return this.hardwareControllerSubscriptionService.addSubscriber();
+//    }
 
     @GetMapping("/{hardwareControllerId}")
     public ResponseEntity<HardwareController> getHardwareController(@PathVariable long hardwareControllerId){
@@ -71,25 +72,23 @@ public class HardwareControllerEndpoint {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/sensor")
-    public ResponseEntity<Sensor> addSensor(@RequestBody Sensor sensor,
-                                            @PathVariable("hardwareControllerId") long hardwareControllerId){
-        Sensor result = this.hardwareControllerAdditionService.addSensor(hardwareControllerId, sensor);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/{hardwareControllerId}/sensor")
-    public ResponseEntity<List<Sensor>> getSensor(@PathVariable("hardwareControllerId") long hardwareControllerId){
-        List<Sensor> result = this.hardwareControllerService.getSensors(hardwareControllerId);
-        return ResponseEntity.ok(result);
-    }
-
+    /**
+     * Get all hardware for a hardware controller
+     * @param hardwareControllerId - the id of the hardware controller
+     * @return - all hardware for the hardware controller
+     */
     @GetMapping(value = "/{hardwareControllerId}/hardware")
     public ResponseEntity<List<Hardware>> getHardware(@PathVariable("hardwareControllerId") long hardwareControllerId){
         List<Hardware> result = this.hardwareControllerService.getHardware(hardwareControllerId);
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Create a new hardware for a hardware controller
+     * @param hardwareControllerId - the id of the hardware controller
+     * @param hardware - the hardware to add to the hardware controller
+     * @return - the created hardware
+     */
     @PostMapping(value = "/{hardwareControllerId}/hardware")
     public ResponseEntity<Hardware> createHardware(@PathVariable("hardwareControllerId") long hardwareControllerId, @RequestBody Hardware hardware){
         Hardware result = this.hardwareControllerAdditionService.addHardware(hardwareControllerId, hardware);
@@ -100,5 +99,11 @@ public class HardwareControllerEndpoint {
     public ResponseEntity<Sensor> createSensor(@PathVariable("hardwareControllerId") long hardwareControllerId, @RequestBody Sensor sensor){
         Sensor result = this.hardwareControllerAdditionService.addSensor(hardwareControllerId, sensor);
         return ResponseEntity.created(null).body(result);
+    }
+
+    @GetMapping(value = "/{hardwareControllerId}/sensor")
+    public ResponseEntity<List<Sensor>> getSensor(@PathVariable("hardwareControllerId") long hardwareControllerId){
+        List<Sensor> result = this.hardwareControllerService.getSensors(hardwareControllerId);
+        return ResponseEntity.ok(result);
     }
 }

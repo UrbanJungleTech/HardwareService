@@ -1,14 +1,15 @@
 package frentz.daniel.hardwareservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.client.model.Sensor;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
-import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.entity.SensorReadingEntity;
+import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
+import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
+import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext
 public class SensorEndpointIT {
 
     @Autowired
@@ -35,10 +35,23 @@ public class SensorEndpointIT {
     private ObjectMapper objectMapper;
     @Autowired
     SensorReadingRepository sensorReadingRepository;
+    @Autowired
+    private HardwareControllerRepository hardwareControllerRepository;
+    @Autowired
+    private ScheduledSensorReadingRepository scheduledSensorReadingRepository;
+    @Autowired
+    IMqttClient mqttClient;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InterruptedException, MqttException {
+        if(mqttClient.isConnected() == false){
+            Thread.sleep(5000);
+        }
+        this.mqttClient.disconnect();
+        this.scheduledSensorReadingRepository.deleteAll();
+        this.sensorReadingRepository.deleteAll();
         this.sensorRepository.deleteAll();
+        this.hardwareControllerRepository.deleteAll();
     }
 
     /**
@@ -235,4 +248,63 @@ public class SensorEndpointIT {
                 .andExpect(jsonPath("$.httpStatus").value(404))
                 .andExpect(jsonPath("$.message").value("Sensor not found with id of " + createdSensor.getId()));
     }
+
+    /**
+     * Given a HardwareController with a sensor has been created via /hardwarecontroller/
+     * When a POST request is made to /sensor/{sensorId}/scheduledReading with a valid ScheduledReading
+     * Then a 201 status code is returned
+     * And the ScheduledReading is created
+     * And the ScheduledReading has an id
+     */
+    @Test
+    void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
+        HardwareController hardwareController = new HardwareController();
+        hardwareController.setSerialNumber("1234");
+        Sensor sensor = new Sensor();
+        sensor.setSensorType("temperature");
+        sensor.setName("Test Sensor");
+        sensor.setPort(1);
+        hardwareController.getSensors().add(sensor);
+        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
+        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
+                        .content(hardwareControllerJson)
+                        .contentType("application/json")
+                        .content(hardwareControllerJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        scheduledReading.setCronString("0 0 0 1 1 ? 2099");
+        scheduledReading.setSensorId(createdSensor.getId());
+        String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
+        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledReading/")
+                        .content(scheduledReadingJson)
+                        .contentType("application/json")
+                        .content(scheduledReadingJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists());
+    }
+
+    /**
+     * Given an id which is not associated with a sensor
+     * When a POST request is made to /sensor/{sensorId}/scheduledReading with a valid ScheduledReading
+     * Then a 404 status code is returned
+     * And the response body has 2 fields:
+     * - httpStatus: 404
+     * - message: "Sensor not found with id of {sensorId}"
+     */
+    @Test
+    void createScheduledReading_whenGivenAnInvalidSensorId_shouldReturn404() throws Exception {
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
+        mockMvc.perform(post("/sensor/1/scheduledReading/")
+                        .content(scheduledReadingJson)
+                        .contentType("application/json")
+                        .content(scheduledReadingJson))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.httpStatus").value(404))
+                .andExpect(jsonPath("$.message").value("Sensor not found with id of 1"));
+    }
+
 }

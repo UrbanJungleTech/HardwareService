@@ -11,12 +11,17 @@ public class JsonRpcMessage {
     private long id;
 
     public JsonRpcMessage(){
-
+        this.params = new HashMap<>();
     }
 
     public JsonRpcMessage(String method){
         this.method = method;
         this.params = new HashMap<>();
+    }
+
+    public JsonRpcMessage(String method, Map<String, Object> params){
+        this.method = method;
+        this.params = params;
     }
 
     public String getMethod() {
@@ -39,7 +44,7 @@ public class JsonRpcMessage {
         return params;
     }
 
-    public void setParams(HashMap<String, Object> params) {
+    public void setParams(Map<String, Object> params) {
         this.params = params;
     }
 

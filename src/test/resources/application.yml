@@ -19,6 +19,8 @@ spring:
     console:
       enabled: true
       path: /h2
+  profiles:
+    active: test
   sleuth:
     quartz:
       enabled: false

@@ -5,6 +5,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @ConfigurationProperties(prefix = "mqtt")
@@ -34,14 +35,16 @@ public class MqttConfig {
         MqttConnectOptions result = new MqttConnectOptions();
         result.setAutomaticReconnect(true);
         result.setCleanSession(false);
-        result.setConnectionTimeout(10);
+        result.setConnectionTimeout(60);
+        result.setServerURIs(new String[]{this.getServer()});
+        result.setKeepAliveInterval(1800);
         return result;
     }
 
     @Bean
     public IMqttClient getMqttClient(){
         try {
-            IMqttClient result = new MqttClient(this.getServer(), this.getQueue());
+            IMqttClient result = new MqttClient(this.getServer(), MqttClient.generateClientId());
             return result;
         }
         catch(Exception ex){

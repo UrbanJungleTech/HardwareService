@@ -34,7 +34,7 @@ public class DeregisterHardwareTest {
         String expectedSerialNumber = "serialNumber";
         int expectedPort = 1;
         params.put("serialNumber", expectedSerialNumber);
-        params.put("hardwarePort", expectedPort);
+        params.put("port", expectedPort);
 
         when(hardwareService.getHardware(anyString(), anyInt())).thenReturn(hardware);
 

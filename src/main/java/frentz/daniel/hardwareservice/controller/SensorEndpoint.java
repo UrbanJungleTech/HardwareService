@@ -61,16 +61,8 @@ public class SensorEndpoint {
     public ResponseEntity<ScheduledSensorReading> createScheduledSensorReading(@PathVariable("sensorId") long sensorId,
                                                                                @RequestBody ScheduledSensorReading scheduledSensorReading){
         ScheduledSensorReading result = this.sensorAdditionService.addScheduledReading(sensorId, scheduledSensorReading);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.created(null).body(result);
     }
-
-    @DeleteMapping("/{sensorId}/scheduledReading/{scheduledReadingId}")
-    public ResponseEntity deleteScheduledReading(@PathVariable("scheduledReadingId") long scheduledReadingId){
-        this.scheduledSensorReadingAdditionService.delete(scheduledReadingId);
-        return ResponseEntity.noContent().build();
-    }
-
-
 
     @DeleteMapping("/{sensorId}")
     public ResponseEntity deleteSensor(@PathVariable("sensorId") long sensorId){
