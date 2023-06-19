@@ -5,6 +5,7 @@ import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.jsonrpc.model.*;
 import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.MqttService;
 import org.springframework.stereotype.Service;
@@ -18,42 +19,50 @@ public class HardwareQueueServiceImpl implements HardwareQueueService {
     private MqttService mqttService;
 
     private HardwareStateConverter hardwareStateConverter;
+    private HardwareControllerService hardwareControllerService;
 
     public HardwareQueueServiceImpl(MqttService mqttService,
-                                    HardwareStateConverter hardwareStateConverter) {
+                                    HardwareStateConverter hardwareStateConverter,
+                                    HardwareControllerService hardwareControllerService) {
         this.mqttService = mqttService;
         this.hardwareStateConverter = hardwareStateConverter;
+        this.hardwareControllerService = hardwareControllerService;
     }
 
 
     @Override
-    public void registerHardware(HardwareEntity hardware) {
+    public void registerHardware(Hardware hardware) {
         JsonRpcMessage jsonRpcMessage = new RegisterHardwareMessage(hardware);
-        this.mqttService.publish(hardware.getHardwareController().getSerialNumber(), jsonRpcMessage);
+        String serialNumber = this.hardwareControllerService.getSerialNumber(hardware.getHardwareControllerId());
+        this.mqttService.publish(serialNumber, jsonRpcMessage);
     }
 
     @Override
-    public void registerSensor(SensorEntity sensor) {
+    public void registerSensor(Sensor sensor) {
         RegisterSensorMessage registerSensorMessage = new RegisterSensorMessage(sensor);
-        this.mqttService.publish(sensor.getHardwareController().getSerialNumber(), registerSensorMessage);
+        String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
+        this.mqttService.publish(serialNumber, registerSensorMessage);
     }
 
     @Override
-    public void deregisterHardware(HardwareEntity hardware) {
+    public void deregisterHardware(Hardware hardware) {
         DeregisterHardwareMessage deregisterHardwareMessage = new DeregisterHardwareMessage(hardware);
-        this.mqttService.publish(hardware.getHardwareController().getSerialNumber(), deregisterHardwareMessage);
+        String serialNumber = this.hardwareControllerService.getSerialNumber(hardware.getHardwareControllerId());
+        this.mqttService.publish(serialNumber, deregisterHardwareMessage);
     }
 
     @Override
-    public void deregisterSensor(SensorEntity sensor) {
+    public void deregisterSensor(Sensor sensor) {
         DeregisterSensorMessage deregisterSensorMessage = new DeregisterSensorMessage(sensor);
-        this.mqttService.publish(sensor.getHardwareController().getSerialNumber(), deregisterSensorMessage);
+        String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
+        this.mqttService.publish(serialNumber, deregisterSensorMessage);
     }
 
     @Override
-    public void sendStateToController(HardwareEntity hardware) {
+    public void sendStateToController(Hardware hardware) {
         JsonRpcMessage jsonRpcMessage = new StateChangeRpcMessage(hardware.getPort(), hardware.getDesiredState());
-        this.mqttService.publish(hardware.getHardwareController().getSerialNumber(), jsonRpcMessage);
+        String serialNumber = this.hardwareControllerService.getSerialNumber(hardware.getHardwareControllerId());
+        this.mqttService.publish(serialNumber, jsonRpcMessage);
     }
 
     @Override
@@ -70,10 +79,11 @@ public class HardwareQueueServiceImpl implements HardwareQueueService {
 
 
     @Override
-    public double getSensorReading(SensorEntity sensorEntity) {
-        SensorPortReadingMessage message = new SensorPortReadingMessage(sensorEntity.getPort());
+    public double getSensorReading(Sensor sensor) {
+        SensorPortReadingMessage message = new SensorPortReadingMessage(sensor.getPort());
+        String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
         JsonRpcMessage result = this.mqttService
-                .publishWithResponse(sensorEntity.getHardwareController().getSerialNumber(), message, 10000).blockingFirst();
+                .publishWithResponse(serialNumber, message, 10000).blockingFirst();
         return (Double) result.getResult().get("reading");
     }
 

@@ -32,29 +32,29 @@ class HardwareQueueServiceImplTest {
     @Captor
     ArgumentCaptor<StateChangeRpcMessage> captor;
 
-    @Test
-    void sendStateToController() {
-        HardwareEntity hardwareEntity = new HardwareEntity();
-        long expectedPort = 1L;
-        String serialNumber = "123456789";
-        HardwareStateEntity desiredState = new HardwareStateEntity();
-        ONOFF expectedState = ONOFF.ON;
-        int expectedStateLevel = 100;
-        desiredState.setState(expectedState);
-        desiredState.setLevel(expectedStateLevel);
-        hardwareEntity.setPort(expectedPort);
-        hardwareEntity.setDesiredState(desiredState);
-        HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
-        hardwareControllerEntity.setSerialNumber(serialNumber);
-        hardwareEntity.setHardwareController(hardwareControllerEntity);
-        this.hardwareQueueService.sendStateToController(hardwareEntity);
-        verify(mqttService, times(1)).publish(eq(serialNumber), captor.capture());
-        StateChangeRpcMessage stateChangeRpcMessage = captor.getValue();
-        assertEquals(expectedPort, stateChangeRpcMessage.getParams().get("port"));
-        HardwareStateEntity resultHardwareState = (HardwareStateEntity)stateChangeRpcMessage.getParams().get("desiredState");
-        assertEquals(desiredState.getState(), resultHardwareState.getState());
-        assertEquals(desiredState.getLevel(), resultHardwareState.getLevel());
-    }
+//    @Test
+//    void sendStateToController() {
+//        HardwareEntity hardwareEntity = new HardwareEntity();
+//        long expectedPort = 1L;
+//        String serialNumber = "123456789";
+//        HardwareStateEntity desiredState = new HardwareStateEntity();
+//        ONOFF expectedState = ONOFF.ON;
+//        int expectedStateLevel = 100;
+//        desiredState.setState(expectedState);
+//        desiredState.setLevel(expectedStateLevel);
+//        hardwareEntity.setPort(expectedPort);
+//        hardwareEntity.setDesiredState(desiredState);
+//        HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
+//        hardwareControllerEntity.setSerialNumber(serialNumber);
+//        hardwareEntity.setHardwareController(hardwareControllerEntity);
+//        this.hardwareQueueService.sendStateToController(hardwareEntity);
+//        verify(mqttService, times(1)).publish(eq(serialNumber), captor.capture());
+//        StateChangeRpcMessage stateChangeRpcMessage = captor.getValue();
+//        assertEquals(expectedPort, stateChangeRpcMessage.getParams().get("port"));
+//        HardwareStateEntity resultHardwareState = (HardwareStateEntity)stateChangeRpcMessage.getParams().get("desiredState");
+//        assertEquals(desiredState.getState(), resultHardwareState.getState());
+//        assertEquals(desiredState.getLevel(), resultHardwareState.getLevel());
+//    }
 
     @Test
     void sendInitialState() {

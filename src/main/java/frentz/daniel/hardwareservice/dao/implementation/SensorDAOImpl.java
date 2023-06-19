@@ -17,19 +17,16 @@ import java.util.Optional;
 @Service
 public class SensorDAOImpl implements SensorDAO {
     private SensorRepository sensorRepository;
-    private HardwareQueueService hardwareQueueService;
     private HardwareControllerRepository hardwareControllerRepository;
     private ExceptionService exceptionService;
     private SensorConverter sensorConverter;
 
 
     public SensorDAOImpl(SensorRepository sensorRepository,
-                         HardwareQueueService hardwareQueueService,
                          HardwareControllerRepository hardwareControllerRepository,
                          ExceptionService exceptionService,
                          SensorConverter sensorConverter){
         this.sensorRepository = sensorRepository;
-        this.hardwareQueueService = hardwareQueueService;
         this.hardwareControllerRepository = hardwareControllerRepository;
         this.exceptionService = exceptionService;
         this.sensorConverter = sensorConverter;

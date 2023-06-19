@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
+import frentz.daniel.hardwareservice.client.model.HardwareState;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;

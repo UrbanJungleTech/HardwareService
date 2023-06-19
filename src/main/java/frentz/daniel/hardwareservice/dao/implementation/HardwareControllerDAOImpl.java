@@ -86,4 +86,9 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
         }
         this.hardwareControllerRepository.deleteById(hardwareControllerId);
     }
+
+    @Override
+    public String getSerialNumber(long hardwareControllerId) {
+        return this.hardwareControllerRepository.getSerialNumberById(hardwareControllerId);
+    }
 }

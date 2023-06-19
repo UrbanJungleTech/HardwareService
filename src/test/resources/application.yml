@@ -19,14 +19,14 @@ spring:
     console:
       enabled: true
       path: /h2
-  profiles:
-    active: test
   sleuth:
     quartz:
       enabled: false
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  profiles:
+    active: test
 server:
   http2:
     enabled: true
@@ -51,8 +51,9 @@ development:
     client:
       enabled: true
       serialNumber: "1234"
-
-
+      callbacks:
+        frentz.daniel.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
+        frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback : StateChange
 entity:
   names:
     frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
@@ -74,6 +75,10 @@ rpc:
 mqtt:
   server: tcp://localhost:1883
   queue: HardwareServer
+  listeners:
+    frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener: 1234ToMicrocontroller
+    frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener: FromMicrocontroller
+
 management:
   endpoints:
     web:

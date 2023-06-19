@@ -11,7 +11,7 @@ public class ScheduledHardwareEntity {
     private String cronString;
     @Embedded
     private HardwareStateEntity hardwareState;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private TimerEntity timerEntity;
 
     public String getCronString() {

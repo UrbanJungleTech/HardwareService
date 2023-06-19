@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.config.mqtt;
 
+import frentz.daniel.hardwareservice.config.mqtt.listener.MqttSubscriptionListener;
 import frentz.daniel.hardwareservice.exception.InvalidMqttClientException;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,11 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Configuration
 @ConfigurationProperties(prefix = "mqtt")
 public class MqttConfig {
     private String server;
     private String queue;
+    private Map<String, String> listeners;
 
     public String getServer() {
         return server;
@@ -52,4 +57,11 @@ public class MqttConfig {
         }
     }
 
+    public Map<String, String> getListeners() {
+        return listeners;
+    }
+
+    public void setListeners(Map<String, String> listeners) {
+        this.listeners = listeners;
+    }
 }

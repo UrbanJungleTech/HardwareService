@@ -8,11 +8,11 @@ public class TimerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private ScheduledHardwareEntity onCronJob;
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private ScheduledHardwareEntity offCronJob;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "hardware_id")
     private HardwareEntity hardware;
 

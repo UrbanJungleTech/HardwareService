@@ -23,7 +23,7 @@ public class SchedulerConfig {
         try {
             Properties config = new Properties();
             config.setProperty("org.quartz.scheduler.instanceName", "HardwareScheduler");
-            config.setProperty("org.quartz.threadPool.threadCount", "2");
+            config.setProperty("org.quartz.threadPool.threadCount", "20");
             SchedulerFactory schedulerFactory = new StdSchedulerFactory(config);
             Scheduler scheduler = schedulerFactory.getScheduler();
             scheduler.setJobFactory(jobFactory);

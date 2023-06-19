@@ -1,14 +1,17 @@
-package frentz.daniel.hardwareservice.config.mqtt;
+package frentz.daniel.hardwareservice.config.mqtt.mockclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frentz.daniel.hardwareservice.config.mqtt.SensorReadingException;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SensorReadingCallback implements MockMqttClientCallback{
+@Service
+public class SensorReadingCallback implements MockMqttClientCallback {
 
     private IMqttClient mqttClient;
     private ObjectMapper objectMapper;
@@ -17,11 +20,6 @@ public class SensorReadingCallback implements MockMqttClientCallback{
                                  ObjectMapper objectMapper){
         this.mqttClient = mqttClient;
         this.objectMapper = objectMapper;
-    }
-
-    @Override
-    public String getName() {
-        return "ReadSensor";
     }
 
     @Override

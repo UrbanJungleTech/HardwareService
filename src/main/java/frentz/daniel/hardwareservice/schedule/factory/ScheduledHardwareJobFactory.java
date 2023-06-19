@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.schedule.factory;
 
+import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.schedule.job.ScheduledHardwareJob;
@@ -9,27 +10,25 @@ import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Service("HardwareCronJobFactory")
 public class ScheduledHardwareJobFactory extends SimpleJobFactory {
 
-    private HardwareDAO hardwareDAO;
-    private HardwareQueueService hardwareQueueService;
+    private HardwareAdditionService hardwareAdditionService;
     private HardwareConverter hardwareConverter;
 
-    public ScheduledHardwareJobFactory(HardwareQueueService hardwareQueueService,
-                                       HardwareDAO hardwareDAO,
+    public ScheduledHardwareJobFactory(HardwareAdditionService hardwareAdditionService,
                                        HardwareConverter hardwareConverter){
-        this.hardwareQueueService = hardwareQueueService;
-        this.hardwareDAO = hardwareDAO;
+        this.hardwareAdditionService = hardwareAdditionService;
         this.hardwareConverter = hardwareConverter;
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
         ScheduledHardwareEntity scheduledHardware = (ScheduledHardwareEntity) bundle.getJobDetail().getJobDataMap().get("scheduledHardware");
-        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, this.hardwareDAO, this.hardwareQueueService, this.hardwareConverter);
+        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, hardwareAdditionService, hardwareConverter);
         return result;
     }
 }

@@ -5,7 +5,8 @@ import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.event.hardware.HardwareDeleteEvent;
+import frentz.daniel.hardwareservice.event.hardware.HardwareEventPublisher;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
 import frentz.daniel.hardwareservice.client.model.*;
 import org.slf4j.Logger;
@@ -22,27 +23,27 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
 
     private final HardwareDAO hardwareDAO;
     private final TimerAdditionService timerAdditionService;
-    private final HardwareQueueService hardwareQueueService;
     private final HardwareStateBuilder hardwareStateBuilder;
     private final HardwareConverter hardwareConverter;
     private final Logger logger = LoggerFactory.getLogger(HardwareAdditionServiceImpl.class);
     private final ObjectLoggerService objectLoggerService;
     private HardwareStateConverter hardwareStateConverter;
+    private HardwareEventPublisher hardwareEventPublisher;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
-                                       HardwareQueueService hardwareQueueService,
                                        HardwareStateBuilder hardwareStateBuilder,
                                        HardwareConverter hardwareConverter,
                                        ObjectLoggerService objectLoggerService,
-                                       HardwareStateConverter hardwareStateConverter){
+                                       HardwareStateConverter hardwareStateConverter,
+                                       HardwareEventPublisher hardwareEventPublisher){
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
-        this.hardwareQueueService = hardwareQueueService;
         this.hardwareStateBuilder = hardwareStateBuilder;
         this.hardwareConverter = hardwareConverter;
         this.objectLoggerService = objectLoggerService;
         this.hardwareStateConverter = hardwareStateConverter;
+        this.hardwareEventPublisher = hardwareEventPublisher;
     }
 
     public List<Hardware> updateList(List<Hardware> hardwares){
@@ -73,7 +74,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
             hardware.setCurrentState(hardwareState);
         }
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
-        this.hardwareQueueService.registerHardware(result);
+        this.hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
         if(hardware.getTimers() != null) {
             hardware.getTimers().forEach((timer) -> {
                 timer.setHardwareId(result.getId());
@@ -86,8 +87,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     @Transactional
     @Override
     public void delete(long hardwareId) {
-        HardwareEntity hardware = this.hardwareDAO.getHardware(hardwareId);
-        this.hardwareQueueService.deregisterHardware(hardware);
+        this.hardwareEventPublisher.publishDeleteHardwareEvent(hardwareId);
         this.hardwareDAO.delete(hardwareId);
     }
 
@@ -108,9 +108,10 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         });
         this.timerAdditionService.updateList(hardware.getTimers());
         if(updateHardwareState) {
-            this.hardwareQueueService.sendStateToController(result);
+            this.hardwareEventPublisher.publishUpdateHardwareStateEvent(result.getId());
         }
-        return this.hardwareConverter.toModel(result);
+        Hardware hardwareResult = this.hardwareConverter.toModel(result);
+        return hardwareResult;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.jsonrpc.model;
 
+import frentz.daniel.hardwareservice.client.model.Hardware;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ class DeregisterHardwareMessageTest {
 
     @Test
     void testParametersSetOnConstruction(){
-        HardwareEntity hardwareEntity = new HardwareEntity();
+        Hardware hardwareEntity = new Hardware();
         long port = 1;
         hardwareEntity.setPort(port);
         DeregisterHardwareMessage deregisterHardwareMessage = new DeregisterHardwareMessage(hardwareEntity);
@@ -19,10 +20,10 @@ class DeregisterHardwareMessageTest {
 
     @Test
     void testMethodNameSet(){
-        HardwareEntity hardwareEntity = new HardwareEntity();
+        Hardware hardware = new Hardware();
         long port = 1;
-        hardwareEntity.setPort(port);
-        DeregisterHardwareMessage deregisterHardwareMessage = new DeregisterHardwareMessage(hardwareEntity);
+        hardware.setPort(port);
+        DeregisterHardwareMessage deregisterHardwareMessage = new DeregisterHardwareMessage(hardware);
         assertEquals("DeregisterHardware", deregisterHardwareMessage.getMethod());
     }
 }

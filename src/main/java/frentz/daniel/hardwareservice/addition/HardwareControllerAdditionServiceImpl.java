@@ -21,20 +21,17 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     private HardwareControllerDAO hardwareControllerDAO;
     private HardwareAdditionService hardwareAdditionService;
     private SensorAdditionService sensorAdditionService;
-    private HardwareControllerSubscriptionService hardwareControllerSubscriptionService;
     private HardwareControllerConverter hardwareControllerConverter;
     private ObjectLoggerService objectLoggerService;
 
     public HardwareControllerAdditionServiceImpl(HardwareControllerDAO hardwareControllerDAO,
                                                  HardwareAdditionService hardwareAdditionService,
                                                  SensorAdditionService sensorAdditionService,
-                                                 HardwareControllerSubscriptionService hardwareControllerSubscriptionService,
                                                  HardwareControllerConverter hardwareControllerConverter,
                                                  ObjectLoggerService objectLoggerService){
         this.hardwareControllerDAO = hardwareControllerDAO;
         this.hardwareAdditionService = hardwareAdditionService;
         this.sensorAdditionService = sensorAdditionService;
-        this.hardwareControllerSubscriptionService = hardwareControllerSubscriptionService;
         this.hardwareControllerConverter = hardwareControllerConverter;
         this.objectLoggerService = objectLoggerService;
     }

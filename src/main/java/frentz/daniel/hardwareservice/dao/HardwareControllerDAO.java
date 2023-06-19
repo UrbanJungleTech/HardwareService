@@ -14,4 +14,5 @@ public interface HardwareControllerDAO {
     HardwareControllerEntity updateHardwareController(HardwareController hardwareController);
     String getHardwareControllerSerialNumber(long hardwareControllerId);
     void delete(Long id);
+    String getSerialNumber(long hardwareControllerId);
 }

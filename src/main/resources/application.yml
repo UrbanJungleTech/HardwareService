@@ -49,8 +49,9 @@ development:
     client:
       enabled: true
       serialNumber: "1234"
-
-
+      callbacks:
+        - "frentz.daniel.hardwareservice.config.mqtt.mockclient.SensorReadingCallback" : "ReadSensor"
+        - "frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback" : "StateChange"
 entity:
   names:
     frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
@@ -72,6 +73,11 @@ rpc:
 mqtt:
   server: tcp://localhost:1883
   queue: HardwareServer
+  listeners:
+    - listener: frentz.daniel.hardwareservice.config.mqtt.mockclient
+      topic: 1234ToMicrocontroller
+    - listener: frentz.daniel.hardwareservice.config.mqtt.listener
+      topic: FromMicrocontroller
 management:
   endpoints:
     web:

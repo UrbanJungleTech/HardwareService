@@ -3,6 +3,7 @@ package frentz.daniel.hardwareservice.schedule.service;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.exception.ScheduledHardwareDeleteException;
 import frentz.daniel.hardwareservice.exception.ScheduledHardwareStartException;
+import frentz.daniel.hardwareservice.schedule.job.ScheduledHardwareJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,7 +24,7 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
         try {
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put("scheduledHardware", scheduledHardware);
-            JobDetail details = JobBuilder.newJob(frentz.daniel.hardwareservice.schedule.job.ScheduledHardwareJob.class)
+            JobDetail details = JobBuilder.newJob(ScheduledHardwareJob.class)
                     .withIdentity(String.valueOf(scheduledHardware.getId()))
                     .usingJobData(jobDataMap)
                     .build();

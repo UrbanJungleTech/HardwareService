@@ -1,5 +1,7 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
+import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.client.model.Sensor;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class HardwareQueueServiceAzure implements HardwareQueueService {
     @Override
-    public void sendStateToController(HardwareEntity hardware) {
+    public void sendStateToController(Hardware hardware) {
     }
 
     @Override
@@ -17,7 +19,7 @@ public class HardwareQueueServiceAzure implements HardwareQueueService {
     }
 
     @Override
-    public double getSensorReading(SensorEntity sensor) {
+    public double getSensorReading(Sensor sensor) {
         return 0;
     }
 
@@ -27,22 +29,22 @@ public class HardwareQueueServiceAzure implements HardwareQueueService {
     }
 
     @Override
-    public void registerHardware(HardwareEntity hardware) {
+    public void registerHardware(Hardware hardware) {
 
     }
 
     @Override
-    public void registerSensor(SensorEntity sensor) {
+    public void registerSensor(Sensor sensor) {
 
     }
 
     @Override
-    public void deregisterHardware(HardwareEntity hardware) {
+    public void deregisterHardware(Hardware hardware) {
 
     }
 
     @Override
-    public void deregisterSensor(SensorEntity sensor) {
+    public void deregisterSensor(Sensor sensor) {
 
     }
 }

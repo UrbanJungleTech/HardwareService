@@ -2,9 +2,11 @@ package frentz.daniel.hardwareservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.HardwareControllerTestService;
+import frentz.daniel.hardwareservice.HardwareTestService;
+import frentz.daniel.hardwareservice.MqttTestService;
+import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,6 +47,15 @@ public class HardwareEndpointIT {
     @Autowired
     private HardwareControllerRepository hardwareControllerRepository;
 
+    @Autowired
+    private MqttTestService mqttTestService;
+    @Autowired
+    private HardwareControllerTestService hardwareControllerTestService;
+    @Autowired
+    StateChangeCallback stateChangeCallback;
+    @Autowired
+    HardwareTestService hardwareTestService;
+
     @BeforeEach
     void setUp() {
         this.hardwareControllerRepository.deleteAll();
@@ -60,28 +72,12 @@ public class HardwareEndpointIT {
      */
     @Test
     void readHardware_whenGivenAValidHardwareId_shouldReturnTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Hardware hardware = new Hardware();
-        hardware.setType("light");
-        hardwareController.getHardware().add(hardware);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-
-        //retrieve the hardware controller from the db
-        HardwareEntity hardwareEntity = hardwareRepository.findAll().get(0);
-
-        mockMvc.perform(get("/hardware/" + hardwareEntity.getId()))
+        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        mockMvc.perform(get("/hardware/" + createdHardware.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(hardwareEntity.getId()))
-                .andExpect(jsonPath("$.type").value(hardwareEntity.getHardwareCategory()));
+                .andExpect(jsonPath("$.id").value(createdHardware.getId()))
+                .andExpect(jsonPath("$.type").value(createdHardware.getType()));
     }
 
     /**
@@ -108,20 +104,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void deleteHardware_WhenGivenAValidHardwareId_shouldDeleteTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Hardware hardware = new Hardware();
-        hardware.setType("light");
-        hardwareController.getHardware().add(hardware);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         //retrieve the hardware controller from the db
@@ -145,22 +128,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Hardware hardware = new Hardware();
-        hardware.setType("light");
-        hardware.setName("Test Name");
-        hardware.setPort(1L);
-        hardwareController.getHardware().add(hardware);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         //retrieve the hardware controller from the db
@@ -237,5 +205,48 @@ public class HardwareEndpointIT {
         TimerEntity timerEntity = hardwareEntity.getTimers().get(0);
         assertEquals(createdTimer.getId(), timerEntity.getId());
 
+    }
+
+    /**
+     * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
+     * And a timer has been created for the hardware via /hardware/{hardwareId}/timer with:
+     * - port = 1
+     * And the timer has the on cron string "0/1 * * * * ?"
+     * And the timer has the off cron string "0/2 * * * * ?"
+     * Then after 2 seconds there should be at least 2 "on" states sent to the client over mqtt
+     * and at least 1 "off" state sent to the client over mqtt
+     */
+    @Test
+    public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
+        Hardware hardware = new Hardware();
+        hardware.setPort(1L);
+        Timer timer = new Timer();
+        timer.setOnLevel(100);
+        timer.setOnCronString("0/3 * * * * ?");
+        timer.setOffCronString("0/5 * * * * ?");
+        hardware.getTimers().add(timer);
+        HardwareController hardwareController = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
+        hardware = hardwareController.getHardware().get(0);
+
+        Thread.sleep(10000);
+
+        List<HardwareState> deliveredStates = stateChangeCallback.getStates(hardware.getPort());
+
+        //count the on and off states saved
+        int onCount = 0;
+        int offCount = 0;
+        for(HardwareState hardwareState : deliveredStates) {
+            if(hardwareState.getState().equals(ONOFF.ON)) {
+                onCount++;
+            } else if(hardwareState.getState().equals(ONOFF.OFF)) {
+                offCount++;
+            }
+        }
+        System.out.println("onCount: " + onCount);
+        System.out.println("offCount: " + offCount);
+        //check how often the on and off states were sent, given that we're dealing with seconds
+        // its necessary to give a little margin of error
+        assertTrue(onCount >= 2 && onCount <= 3);
+        assertTrue(offCount >= 1 && offCount <= 2);
     }
 }

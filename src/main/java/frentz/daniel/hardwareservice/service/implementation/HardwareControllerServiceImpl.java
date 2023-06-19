@@ -65,4 +65,9 @@ public class HardwareControllerServiceImpl implements HardwareControllerService 
         List<Sensor> result = this.sensorConverter.toModels(sensors);
         return result;
     }
+
+    @Override
+    public String getSerialNumber(long hardwareControllerId) {
+        return this.hardwareControllerDAO.getSerialNumber(hardwareControllerId);
+    }
 }

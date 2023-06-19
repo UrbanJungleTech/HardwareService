@@ -37,11 +37,13 @@ public class ScheduledHardwareJobAdditionServiceImpl implements ScheduledHardwar
     }
 
     @Override
+    //TODO: Implement this method
     public ScheduledHardware update(long scheduledHardwareId, ScheduledHardware scheduledHardware) {
         return null;
     }
 
     @Override
+    //TODO: Implement this method
     public List<ScheduledHardware> updateList(List<ScheduledHardware> models) {
         return null;
     }

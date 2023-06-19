@@ -3,6 +3,7 @@ package frentz.daniel.hardwareservice.addition;
 import frentz.daniel.hardwareservice.converter.SensorConverter;
 import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
+import frentz.daniel.hardwareservice.event.sensor.SensorEventPublisher;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.client.model.Sensor;
@@ -18,17 +19,16 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
     private SensorDAO sensorDAO;
     private SensorConverter sensorConverter;
     private ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
-
-    private HardwareQueueService hardwareQueueService;
+    private SensorEventPublisher sensorEventPublisher;
 
     public SensorAdditionServiceImpl(SensorDAO sensorDAO,
                                      SensorConverter sensorConverter,
                                      ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
-                                     HardwareQueueService hardwareQueueService){
+                                     SensorEventPublisher sensorEventPublisher){
         this.sensorDAO = sensorDAO;
         this.sensorConverter = sensorConverter;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
-        this.hardwareQueueService = hardwareQueueService;
+        this.sensorEventPublisher = sensorEventPublisher;
     }
 
     @Transactional
@@ -39,7 +39,7 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
             scheduledSensorReading.setSensorId(result.getId());
         });
         this.scheduledSensorReadingAdditionService.updateList(sensor.getScheduledSensorReadings());
-        this.hardwareQueueService.registerSensor(result);
+        this.sensorEventPublisher.publishSensorCreateEvent(result.getId());
         return this.sensorConverter.toModel(result);
     }
 
@@ -47,7 +47,7 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
     @Override
     public void delete(long sensorId) {
         SensorEntity sensorEntity = this.sensorDAO.getSensor(sensorId);
-        //this.hardwareQueueService.deregisterSensor(sensorEntity);
+        this.sensorEventPublisher.publishSensorDeleteEvent(sensorEntity.getId());
         this.sensorDAO.delete(sensorId);
     }
 

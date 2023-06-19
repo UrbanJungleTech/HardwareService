@@ -49,7 +49,7 @@ public class SensorServiceImpl implements SensorService {
 
     @Override
     public SensorReading readSensor(long sensorId) {
-        SensorEntity sensor = this.sensorDAO.getSensor(sensorId);
+        Sensor sensor = this.getSensor(sensorId);
         Double reading = this.hardwareQueueService.getSensorReading(sensor);
         SensorReading result = new SensorReading();
         result.setReading(reading);

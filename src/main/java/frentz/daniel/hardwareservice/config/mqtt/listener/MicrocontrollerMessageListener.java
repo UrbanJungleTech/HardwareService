@@ -1,4 +1,4 @@
-package frentz.daniel.hardwareservice.config.mqtt;
+package frentz.daniel.hardwareservice.config.mqtt.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.jsonrpc.RpcManager;
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service("MicrocontrollerMqttListener")
+@Service
 public class MicrocontrollerMessageListener implements IMqttMessageListener {
     private RpcManager rpcManager;
     private ObjectMapper objectMapper;
