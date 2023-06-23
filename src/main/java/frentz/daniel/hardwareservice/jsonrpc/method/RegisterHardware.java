@@ -29,7 +29,6 @@ public class RegisterHardware implements RpcMethod {
     }
     @Override
     public void process(Map<String, Object> params) {
-        System.out.println("Registering hardware");
         Hardware hardware = objectMapper.convertValue(params.get("hardware"), Hardware.class);
         hardwareAdditionService.addHardware(1L, hardware);
     }

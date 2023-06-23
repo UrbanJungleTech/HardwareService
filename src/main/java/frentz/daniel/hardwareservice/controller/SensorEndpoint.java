@@ -49,10 +49,10 @@ public class SensorEndpoint {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{sensorId}/readings/")
+    @GetMapping("/{sensorId}/readings")
     public ResponseEntity<List<SensorReading>> getReadings(@PathVariable("sensorId") long sensorId,
-                                                           @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH-mm-ss") LocalDateTime startDate,
-                                                           @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH-mm-ss") LocalDateTime endDate){
+                                                           @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+                                                           @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate){
         List<SensorReading> result = this.sensorReadingDAO.getReadings(sensorId, startDate, endDate);
         return ResponseEntity.ok(result);
     }

@@ -35,6 +35,7 @@ public class TimerConverterImpl implements TimerConverter {
 
     @Override
     public void fillEntity(TimerEntity timerEntity, Timer timer) {
-
+        this.scheduledHardwareJobConverter.fillOnEntity(timer, timerEntity.getOnCronJob());
+        this.scheduledHardwareJobConverter.fillOffEntity(timer, timerEntity.getOffCronJob());
     }
 }

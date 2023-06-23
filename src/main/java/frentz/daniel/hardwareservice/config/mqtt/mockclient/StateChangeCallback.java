@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+//@Service
 public class StateChangeCallback implements MockMqttClientCallback {
 
     private Map<Long, List<HardwareState>> states;
@@ -28,12 +28,10 @@ public class StateChangeCallback implements MockMqttClientCallback {
         logger.debug("StateChangeCallback called on port {} with hardware state {}", message.getParams().get("port"), message.getParams().get("desiredState"));
         long port = (Integer)message.getParams().get("port");
         HardwareState state = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
-        System.out.println("adding state with port " + port + " and state " + state);
         if(states.get(port) == null) {
             states.put(port, new ArrayList<>());
         }
         states.get(port).add(state);
-        System.out.println("added state");
     }
 
     public List<HardwareState> getStates(long port){

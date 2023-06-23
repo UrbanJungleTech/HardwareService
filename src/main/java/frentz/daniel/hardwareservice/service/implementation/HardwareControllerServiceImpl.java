@@ -70,4 +70,10 @@ public class HardwareControllerServiceImpl implements HardwareControllerService 
     public String getSerialNumber(long hardwareControllerId) {
         return this.hardwareControllerDAO.getSerialNumber(hardwareControllerId);
     }
+
+    @Override
+    public HardwareController getHardwareControllerBySerialNumber(String serialNumber) {
+        HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerDAO.getBySerialNumber(serialNumber);
+        return this.hardwareControllerConverter.toModel(hardwareControllerEntity);
+    }
 }

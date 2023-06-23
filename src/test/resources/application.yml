@@ -54,6 +54,7 @@ development:
       callbacks:
         frentz.daniel.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
         frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback : StateChange
+        frentz.daniel.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback: RegisterHardware
 entity:
   names:
     frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
@@ -77,6 +78,7 @@ mqtt:
   queue: HardwareServer
   listeners:
     frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener: 1234ToMicrocontroller
+    frentz.daniel.hardwareservice.config.mqtt.listener.MqttCacheListener: 1234ToMicrocontroller
     frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener: FromMicrocontroller
 
 management:

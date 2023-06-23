@@ -1,13 +1,19 @@
 package frentz.daniel.hardwareservice.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frentz.daniel.hardwareservice.SensorTestService;
 import frentz.daniel.hardwareservice.client.model.HardwareController;
 import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
+import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
+import io.moquette.broker.Server;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +24,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,17 +55,20 @@ public class SensorEndpointIT {
     private ScheduledSensorReadingRepository scheduledSensorReadingRepository;
     @Autowired
     IMqttClient mqttClient;
+    @Autowired
+    private SensorTestService sensorTestService;
+    @Autowired
+    MockMqttClientListener mockMqttClientListener;
+    @Autowired
+    Server mqttBroker;
 
     @BeforeEach
-    void setUp() throws InterruptedException, MqttException {
-        if(mqttClient.isConnected() == false){
-            Thread.sleep(5000);
-        }
-        this.mqttClient.disconnect();
+    void setUp() {
         this.scheduledSensorReadingRepository.deleteAll();
         this.sensorReadingRepository.deleteAll();
         this.sensorRepository.deleteAll();
         this.hardwareControllerRepository.deleteAll();
+        this.mockMqttClientListener.clear();
     }
 
     /**
@@ -64,28 +82,39 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldReturnTheSensor() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
-        hardwareController.getSensors().add(sensor);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
 
-        HardwareController retrievedHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-        Sensor retrievedSensor = retrievedHardwareController.getSensors().get(0);
+        Sensor retrievedSensor = hardwareController.getSensors().get(0);
 
-        mockMvc.perform(get("/sensor/" + createdHardwareController.getSensors().get(0).getId()))
+        mockMvc.perform(get("/sensor/" + retrievedSensor.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(retrievedSensor.getId()))
                 .andExpect(jsonPath("$.sensorType").value(retrievedSensor.getSensorType()));
+    }
+
+    /**
+     * Given a HardwareController with a sensor has been created via /hardwarecontroller/
+     * A RegisterSensor message should have been sent to the microcontroller via mqtt
+     */
+    @Test
+    void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+
+        Sensor createdSensor = hardwareController.getSensors().get(0);
+
+        boolean asserted = false;
+        long startTime = System.currentTimeMillis();
+
+        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
+            if (this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort())).size() >= 1) {
+                asserted = true;
+                Thread.sleep(10);
+            }
+        }
+        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor");
+        assertEquals(1, results.size());
+        JsonRpcMessage message = results.get(0);
+        assertEquals(createdSensor.getPort(), Long.valueOf((int)message.getParams().get("port")));
     }
 
     /**
@@ -115,22 +144,9 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensorReading_whenGivenAValidSensorId_shouldReturnTheSensorReading() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
-        hardwareController.setName("Test Hardware Controller");
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
-        hardwareController.getSensors().add(sensor);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-        Sensor createdSensor = createdHardwareController.getSensors().get(0);
-        mockMvc.perform(get("/sensor/" + createdHardwareController.getSensors().get(0).getId() + "/reading"))
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        Sensor createdSensor = hardwareController.getSensors().get(0);
+        mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/reading"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.reading").value(1))
                 .andExpect(jsonPath("$.sensorId").value(createdSensor.getId()))
@@ -164,22 +180,8 @@ public class SensorEndpointIT {
      */
     @Test
     void updateSensor_whenGivenAValidSensor_shouldUpdateTheSensor() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
-        sensor.setName("Test Sensor");
-        sensor.setPort(1);
-        hardwareController.getSensors().add(sensor);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        Sensor createdSensor = hardwareController.getSensors().get(0);
         Sensor updatedSensor = new Sensor();
         updatedSensor.setName("Updated Sensor");
         updatedSensor.setSensorType("humidity");
@@ -224,28 +226,39 @@ public class SensorEndpointIT {
      */
     @Test
     void deleteSensor_whenGivenAValidSensorId_shouldDeleteTheSensor() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
-        sensor.setName("Test Sensor");
-        sensor.setPort(1);
-        hardwareController.getSensors().add(sensor);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        Sensor createdSensor = hardwareController.getSensors().get(0);
         mockMvc.perform(delete("/sensor/" + createdSensor.getId()))
                 .andExpect(status().isNoContent());
         mockMvc.perform(get("/sensor/" + createdSensor.getId()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.httpStatus").value(404))
                 .andExpect(jsonPath("$.message").value("Sensor not found with id of " + createdSensor.getId()));
+    }
+
+    /**
+     * Given a HardwareController with a sensor has been created via /hardwarecontroller/
+     * When a DELETE request is made to /sensor/{sensorId}
+     * Then a message should be sent to the hardware controller of type DeregisterSensor
+     *
+     */
+    @Test
+    void deleteSensor_whenGivenAValidSensorId_shouldSendDeregisterSensorMessage() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        Sensor createdSensor = hardwareController.getSensors().get(0);
+        mockMvc.perform(delete("/sensor/" + createdSensor.getId()))
+                .andExpect(status().isNoContent());
+        boolean asserted = false;
+        long startTime = System.currentTimeMillis();
+
+        while (!asserted && System.currentTimeMillis() - startTime < 1000) {
+            if (this.mockMqttClientListener.getCache("DeregisterSensor").size() > 0) {
+                asserted = true;
+                Thread.sleep(100);
+            }
+        }
+        JsonRpcMessage rpcMessage = this.mockMqttClientListener.getCache("DeregisterSensor").get(0);
+        assertEquals(createdSensor.getPort(), Long.valueOf((int)rpcMessage.getParams().get("port")));
     }
 
     /**
@@ -304,6 +317,43 @@ public class SensorEndpointIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.httpStatus").value(404))
                 .andExpect(jsonPath("$.message").value("Sensor not found with id of 1"));
+    }
+
+    /**
+     * Given a HardwareController has been created via /hardwarecontroller/ with a sensor
+     * Given a ScheduledReading has been created via /sensor/{sensorId}/scheduledReading
+     * When a GET request is made to /sensor/{sensorId}/readings
+     * Then a 200 status code is returned
+     * And the response body is a list of ScheduledReadings
+     */
+    @Test
+    void getScheduledReadings_whenGivenAValidSensorId_shouldReturnAListOfScheduledReadings() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        Sensor createdSensor = hardwareController.getSensors().get(0);
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        scheduledReading.setCronString("0/1 * * * * ?");
+
+        String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss").toFormatter();
+        String startTime = LocalDateTime.now().format(formatter);
+        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledReading/")
+                        .content(scheduledReadingJson)
+                        .contentType("application/json")
+                        .content(scheduledReadingJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.cronString").value("0/1 * * * * ?"))
+                .andExpect(jsonPath("$.id").exists());
+        //give it enough time to get at least one reading
+        Thread.sleep(3000);
+        String endTime = LocalDateTime.now().format(formatter);
+        MvcResult result = mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/readings").queryParam("startDate", startTime).queryParam("endDate", endTime))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<SensorReading> sensorReadings = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<SensorReading>>() {
+        });
+        assertNotEquals(0, sensorReadings.size());
+        SensorReading firstReading = sensorReadings.get(0);
+        assertEquals(1, firstReading.getReading());
     }
 
 }

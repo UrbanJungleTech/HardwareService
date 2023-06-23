@@ -28,6 +28,7 @@ public class ScheduledSensorReadingJob implements Job {
             this.sensorReadingDAO.createAndSave(result);
         }
         catch(Exception ex){
+            ex.printStackTrace();
             throw new ScheduledSensorReadingJobException(ex);
         }
     }

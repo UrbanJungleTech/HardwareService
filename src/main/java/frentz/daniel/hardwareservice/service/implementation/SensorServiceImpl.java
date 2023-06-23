@@ -23,13 +23,13 @@ import java.util.stream.LongStream;
 @Service
 public class SensorServiceImpl implements SensorService {
 
-    private HardwareControllerDAO hardwareControllerDAO;
-    private HardwareQueueService hardwareQueueService;
-    private HardwareControllerRepository hardwareControllerRepository;
-    private ScheduledSensorReadingDAO scheduledSensorReadingDAO;
-    private SensorDAO sensorDAO;
-    private ScheduledSensorReadingConverter scheduledSensorReadingConverter;
-    private SensorConverter sensorConverter;
+    private final HardwareControllerDAO hardwareControllerDAO;
+    private final HardwareQueueService hardwareQueueService;
+    private final HardwareControllerRepository hardwareControllerRepository;
+    private final ScheduledSensorReadingDAO scheduledSensorReadingDAO;
+    private final SensorDAO sensorDAO;
+    private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
+    private final SensorConverter sensorConverter;
 
     public SensorServiceImpl(HardwareControllerRepository hardwareControllerRepository,
                              HardwareQueueService hardwareQueueService,
@@ -50,7 +50,7 @@ public class SensorServiceImpl implements SensorService {
     @Override
     public SensorReading readSensor(long sensorId) {
         Sensor sensor = this.getSensor(sensorId);
-        Double reading = this.hardwareQueueService.getSensorReading(sensor);
+        double reading = this.hardwareQueueService.getSensorReading(sensor);
         SensorReading result = new SensorReading();
         result.setReading(reading);
         result.setSensorId(sensorId);

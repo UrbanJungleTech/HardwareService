@@ -26,10 +26,11 @@ public class ScheduledHardwareJobDAOImpl implements ScheduledHardwareJobDAO {
 
     @Override
     public ScheduledHardwareEntity addScheduledHardwareJob(ScheduledHardware scheduledHardware) {
-        logger.debug("Creating scheduled hardware job.");
-        ScheduledHardwareEntity scheduledHardwareEntity = new ScheduledHardwareEntity();
-        this.scheduledHardwareJobConverter.fillEntity(scheduledHardwareEntity, scheduledHardware);
-        return scheduledHardwareEntity;
+//        logger.debug("Creating scheduled hardware job.");
+//        ScheduledHardwareEntity scheduledHardwareEntity = new ScheduledHardwareEntity();
+//        this.scheduledHardwareJobConverter.fillEntity(scheduledHardwareEntity, scheduledHardware);
+//        return scheduledHardwareEntity;
+        return null;
     }
 
     @Override
@@ -40,6 +41,6 @@ public class ScheduledHardwareJobDAOImpl implements ScheduledHardwareJobDAO {
 
     @Override
     public void delete(long scheduledHardwareId) {
-        this.hardwareCronJobRepository.deleteById(scheduledHardwareId);
+//        this.hardwareCronJobRepository.deleteById(scheduledHardwareId);
     }
 }

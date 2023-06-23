@@ -35,6 +35,7 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
             this.scheduler.scheduleJob(details, trigger);
         }
         catch(Exception ex){
+            ex.printStackTrace();
             throw new ScheduledHardwareStartException(scheduledHardware.getId(), ex);
         }
     }

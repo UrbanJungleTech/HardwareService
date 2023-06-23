@@ -1,10 +1,8 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
-import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
-import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.entity.SensorEntity;
+import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.client.model.Sensor;
 import frentz.daniel.hardwareservice.jsonrpc.model.*;
-import frentz.daniel.hardwareservice.client.model.*;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.MqttService;
@@ -12,20 +10,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HardwareQueueServiceImpl implements HardwareQueueService {
 
-    private MqttService mqttService;
+    private final MqttService mqttService;
 
-    private HardwareStateConverter hardwareStateConverter;
-    private HardwareControllerService hardwareControllerService;
+    private final HardwareControllerService hardwareControllerService;
 
     public HardwareQueueServiceImpl(MqttService mqttService,
-                                    HardwareStateConverter hardwareStateConverter,
                                     HardwareControllerService hardwareControllerService) {
         this.mqttService = mqttService;
-        this.hardwareStateConverter = hardwareStateConverter;
         this.hardwareControllerService = hardwareControllerService;
     }
 
@@ -66,11 +62,10 @@ public class HardwareQueueServiceImpl implements HardwareQueueService {
     }
 
     @Override
-    public void sendInitialState(String serialNumber, List<HardwareEntity> hardwares) {
+    public void sendInitialState(String serialNumber, List<Hardware> hardwares) {
         List<HardwareStateRpcMessage> hardwareStateRpcMessages = new ArrayList<>();
-        for (HardwareEntity hardware : hardwares) {
-            HardwareState desiredState = this.hardwareStateConverter.toModel(hardware.getDesiredState());
-            HardwareStateRpcMessage hardwareStateRpcMessage = new HardwareStateRpcMessage(hardware.getPort(), desiredState);
+        for (Hardware hardware : hardwares) {
+            HardwareStateRpcMessage hardwareStateRpcMessage = new HardwareStateRpcMessage(hardware.getPort(), hardware.getDesiredState());
             hardwareStateRpcMessages.add(hardwareStateRpcMessage);
         }
         InitialStateRpcMessage initialStateRpcMessage = new InitialStateRpcMessage(hardwareStateRpcMessages);
@@ -84,6 +79,9 @@ public class HardwareQueueServiceImpl implements HardwareQueueService {
         String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
         JsonRpcMessage result = this.mqttService
                 .publishWithResponse(serialNumber, message, 10000).blockingFirst();
+//        this.mqttService.publish(serialNumber, message);
+//        JsonRpcMessage result = new JsonRpcMessage();
+//        result.setResult(Map.of("reading", 0.0));
         return (Double) result.getResult().get("reading");
     }
 

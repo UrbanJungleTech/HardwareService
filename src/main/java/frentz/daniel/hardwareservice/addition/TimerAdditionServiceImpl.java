@@ -8,6 +8,7 @@ import frentz.daniel.hardwareservice.event.timer.TimerEventPublisher;
 import frentz.daniel.hardwareservice.client.model.Timer;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class TimerAdditionServiceImpl implements TimerAdditionService {
     @Override
     public Timer update(long timerId, Timer timer) {
         timer.setId(timerId);
-        TimerEntity timerEntity = this.timerDAO.getTimer(timer.getId());
+        TimerEntity timerEntity = this.timerDAO.updateTimer(timer);
         if(!timer.getOnCronString().equals(timerEntity.getOnCronJob().getCronString()) || !timer.getOffCronString().equals(timerEntity.getOffCronJob().getCronString())) {
             TimerEntity result = this.timerDAO.updateTimer(timer);
             //TODO: add events for this. Perhaps a "RestartTimerEvent"?
@@ -54,7 +55,18 @@ public class TimerAdditionServiceImpl implements TimerAdditionService {
     }
 
     @Override
-    public List<Timer> updateList(List<Timer> models) {
-        return null;
+    public List<Timer> updateList(List<Timer> timers) {
+        List<Timer> result = new ArrayList<>();
+        for(Timer timer : timers){
+            Timer timerResult = null;
+            if(timer.getId() == null){
+                timerResult = this.create(timer);
+            }
+            else{
+                timerResult = this.update(timer.getId(), timer);
+            }
+            result.add(timerResult);
+        }
+        return result;
     }
 }

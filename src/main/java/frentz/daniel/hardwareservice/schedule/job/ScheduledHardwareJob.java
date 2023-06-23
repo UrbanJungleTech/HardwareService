@@ -31,7 +31,6 @@ public class ScheduledHardwareJob implements Job {
         this.hardwareConverter = hardwareConverter;
     }
 
-    @Transactional
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.debug("Executing hardware scheduled job with state {}", scheduledHardware.getHardwareState().getState());

@@ -1,18 +1,23 @@
 package frentz.daniel.hardwareservice.event.hardware;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HardwareEventPublisher {
+    private static final Logger logger = LoggerFactory.getLogger(HardwareEventPublisher.class);
     private ApplicationEventPublisher applicationEventPublisher;
 
     public HardwareEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
     public void publishCreateHardwareEvent(long hardwareId){
-        HardwareCreateEvent hardwareCreateEvent = new HardwareCreateEvent(hardwareId);
-        this.applicationEventPublisher.publishEvent(hardwareCreateEvent);
+        logger.debug("Publishing hardware create event.");
+                HardwareCreateEvent hardwareCreateEvent = new HardwareCreateEvent(hardwareId);
+                applicationEventPublisher.publishEvent(hardwareCreateEvent);
     }
 
     public void publishDeleteHardwareEvent(long hardwareId){

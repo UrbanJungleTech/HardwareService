@@ -42,15 +42,16 @@ public class MqttServiceImpl implements MqttService {
         try {
             String payload = this.objectMapper.writeValueAsString(rpcMessage);
             MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(1);
-            message.setRetained(false);
-            if(this.mqttClient.isConnected() == false){
-                Thread.sleep(2000);
+            message.setQos(2);
+            message.setRetained(true);
+            while(!this.mqttClient.isConnected()){
+                Thread.sleep(100);
             }
             this.mqttClient.publish(serialNumber + "ToMicrocontroller", message);
             logger.debug("Sent RPC message -> {} ", message);
         }
         catch(Exception ex){
+            ex.printStackTrace();
             throw new MqttPublishException(ex);
         }
     }
@@ -59,8 +60,8 @@ public class MqttServiceImpl implements MqttService {
     public Observable<JsonRpcMessage> publishWithResponse(String serialNumber, JsonRpcMessage payload, long timeout) {
         long id = this.sequenceGenerator.getAndIncrement() + 1;
         payload.setId(id);
-        this.publish(serialNumber, payload);
         Observable<JsonRpcMessage> result = this.rpcResponseProcessor.awaitResponse(id, timeout);
+        this.publish(serialNumber, payload);
         return result;
     }
 }

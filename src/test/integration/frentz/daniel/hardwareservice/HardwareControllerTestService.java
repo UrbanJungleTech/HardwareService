@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Profile("test")
 public class HardwareControllerTestService {
 
-    private ObjectMapper objectMapper;
-    private MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
     public HardwareControllerTestService(ObjectMapper objectMapper,
                                          MockMvc mockMvc) {
         this.objectMapper = objectMapper;

@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     private final ObjectLoggerService objectLoggerService;
     private HardwareStateConverter hardwareStateConverter;
     private HardwareEventPublisher hardwareEventPublisher;
+
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
@@ -61,8 +65,8 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         return results;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Hardware create(Hardware hardware) {
         this.objectLoggerService.logInfo("Creating hardware", hardware);
         if(hardware.getDesiredState() == null){
@@ -74,13 +78,19 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
             hardware.setCurrentState(hardwareState);
         }
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
-        this.hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
         if(hardware.getTimers() != null) {
             hardware.getTimers().forEach((timer) -> {
                 timer.setHardwareId(result.getId());
                 this.timerAdditionService.create(timer);
             });
         }
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
+            }
+        });
+//        this.hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
         return this.hardwareConverter.toModel(result);
     }
 
@@ -91,6 +101,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         this.hardwareDAO.delete(hardwareId);
     }
 
+    @Transactional
     @Override
     public Hardware update(long hardwareId, Hardware hardware) {
         hardware.setId(hardwareId);

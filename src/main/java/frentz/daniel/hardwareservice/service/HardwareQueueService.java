@@ -2,14 +2,12 @@ package frentz.daniel.hardwareservice.service;
 
 import frentz.daniel.hardwareservice.client.model.Hardware;
 import frentz.daniel.hardwareservice.client.model.Sensor;
-import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.entity.SensorEntity;
 
 import java.util.List;
 
 public interface HardwareQueueService {
     void sendStateToController(Hardware hardware);
-    void sendInitialState(String serialNumber, List<HardwareEntity> allHardware);
+    void sendInitialState(String serialNumber, List<Hardware> allHardware);
 
     double getSensorReading(Sensor sensor);
 

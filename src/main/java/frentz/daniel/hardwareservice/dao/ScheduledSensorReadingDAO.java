@@ -9,5 +9,6 @@ public interface ScheduledSensorReadingDAO {
 
     ScheduledSensorReadingEntity create(ScheduledSensorReading scheduledSensorReading);
     List<ScheduledSensorReadingEntity> getScheduledSensorReadings();
+    ScheduledSensorReadingEntity getScheduledSensorReading(long scheduledSensorReadingId);
     void delete(long scheduledSensorReadingId);
 }

@@ -83,7 +83,10 @@ public class TimerDAOImpl implements TimerDAO {
 
     @Override
     public TimerEntity updateTimer(Timer timer) {
-        return null;
+        TimerEntity timerEntity = this.getTimer(timer.getId());
+        this.timerConverter.fillEntity(timerEntity, timer);
+        timerEntity = this.timerRepository.save(timerEntity);
+        return timerEntity;
     }
 
     @Override
@@ -102,7 +105,9 @@ public class TimerDAOImpl implements TimerDAO {
 
     @Override
     public TimerEntity getTimer(long timerId) {
-        TimerEntity timerEntity = this.timerRepository.findById(timerId).get();
+        TimerEntity timerEntity = this.timerRepository.findById(timerId).orElseThrow(() -> {
+            return this.exceptionService.createNotFoundException(TimerEntity.class, timerId);
+        });
         return timerEntity;
     }
 

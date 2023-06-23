@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -16,9 +18,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class SensorTestService {
 
     private HardwareControllerTestService hardwareControllerTestService;
-
+    private AtomicInteger portCounter;
     public SensorTestService(HardwareControllerTestService hardwareControllerTestService) {
         this.hardwareControllerTestService = hardwareControllerTestService;
+        this.portCounter = new AtomicInteger(1);
     }
 
     /**
@@ -31,8 +34,8 @@ public class SensorTestService {
      */
     public HardwareController createBasicSensor() throws Exception{
         Sensor sensor = new Sensor();
-        sensor.setPort(1);
-        sensor.setName("sensor1");
+        sensor.setPort(this.portCounter.getAndIncrement());
+        sensor.setName(UUID.randomUUID().toString());
         sensor.setSensorType("temperature");
         HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithSensors(List.of(sensor));
         return result;

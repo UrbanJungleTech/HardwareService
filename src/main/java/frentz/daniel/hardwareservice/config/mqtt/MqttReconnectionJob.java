@@ -45,11 +45,10 @@ public class MqttReconnectionJob {
     public void reconnect() {
         try {
             if (mqttClient.isConnected() == false) {
-                System.out.println("client " + mqttClient.getClientId());
                 IMqttToken token = mqttClient.connectWithResult(mqttConnectOptions);
                 for(MqttSubscriptionListener mqttSubscriptionListener : this.mqttSubscriptionListeners){
                     mqttClient.subscribe(mqttSubscriptionListener.getTopic(), mqttSubscriptionListener.getListener());
-                    logger.debug("Successfully registered the mqtt rpc callback {}", mqttSubscriptionListener.getTopic());
+                    logger.debug("Successfully registered the mqtt rpc callback on topic {} with nane {}", mqttSubscriptionListener.getTopic(), mqttSubscriptionListener.getListener().getClass().getCanonicalName() );
                 }
             }
         } catch (Exception ex) {

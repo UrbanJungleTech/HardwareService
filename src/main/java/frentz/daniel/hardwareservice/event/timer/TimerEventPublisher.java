@@ -1,7 +1,10 @@
 package frentz.daniel.hardwareservice.event.timer;
 
+import frentz.daniel.hardwareservice.event.hardware.HardwareCreateEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class TimerEventPublisher {
@@ -11,8 +14,8 @@ public class TimerEventPublisher {
     }
 
     public void publishCreateTimerEvent(long timerId){
-        TimerCreateEvent timerCreateEvent = new TimerCreateEvent(timerId);
-        this.applicationEventPublisher.publishEvent(timerCreateEvent);
+                TimerCreateEvent timerCreateEvent = new TimerCreateEvent(timerId);
+                applicationEventPublisher.publishEvent(timerCreateEvent);
     }
 
     public void publishDeleteTimerEvent(long timerId){

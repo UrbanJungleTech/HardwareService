@@ -1,7 +1,9 @@
 package frentz.daniel.hardwareservice.converter.implementation;
 
+import frentz.daniel.hardwareservice.client.model.Timer;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
+import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.client.model.HardwareState;
 import frentz.daniel.hardwareservice.client.model.ONOFF;
@@ -39,9 +41,19 @@ public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobCo
     }
 
     @Override
-    public void fillEntity(ScheduledHardwareEntity scheduledHardwareEntity, ScheduledHardware scheduledHardware) {
-        scheduledHardwareEntity.setCronString(scheduledHardware.getCronString());
-        HardwareState onState = new HardwareState();
-        onState.setState(ONOFF.ON);
+    public void fillOnEntity(Timer timer, ScheduledHardwareEntity scheduledHardwareEntity) {
+        scheduledHardwareEntity.setCronString(timer.getOnCronString());
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(ONOFF.ON);
+        hardwareState.setLevel(timer.getOnLevel());
+        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), hardwareState);
+    }
+
+    @Override
+    public void fillOffEntity(Timer timer, ScheduledHardwareEntity scheduledHardwareEntity) {
+        scheduledHardwareEntity.setCronString(timer.getOffCronString());
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(ONOFF.OFF);
+        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), hardwareState);
     }
 }

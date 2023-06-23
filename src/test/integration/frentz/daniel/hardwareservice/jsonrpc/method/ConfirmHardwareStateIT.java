@@ -5,6 +5,8 @@ import frentz.daniel.hardwareservice.HardwareTestService;
 import frentz.daniel.hardwareservice.MqttTestService;
 import frentz.daniel.hardwareservice.client.model.*;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,6 +37,13 @@ public class ConfirmHardwareStateIT {
 
     @Autowired
     private HardwareTestService hardwareTestService;
+
+    @Autowired
+    private HardwareControllerRepository hardwareControllerRepository;
+    @BeforeEach
+    public void setup() throws Exception {
+        this.hardwareControllerRepository.deleteAll();
+    }
 
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" and a Hardware with the port 1

@@ -36,8 +36,8 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
         this.objectLoggerService = objectLoggerService;
     }
 
-    @Override
     @Transactional
+    @Override
     public HardwareController create(HardwareController hardwareController) {
         this.objectLoggerService.logInfo("Adding new hardware controller", hardwareController);
         if(this.hardwareControllerDAO.exists(hardwareController.getSerialNumber())){

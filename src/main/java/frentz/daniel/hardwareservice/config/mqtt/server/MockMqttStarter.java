@@ -36,7 +36,6 @@ public class MockMqttStarter implements ApplicationListener<ContextRefreshedEven
             this.mqttServer.startServer(mqttProperties);
             interceptHandlers.forEach(handler -> this.mqttServer.addInterceptHandler(handler));
         } catch (Exception e) {
-            System.out.println("error starting server");
             e.printStackTrace();
         }
     }

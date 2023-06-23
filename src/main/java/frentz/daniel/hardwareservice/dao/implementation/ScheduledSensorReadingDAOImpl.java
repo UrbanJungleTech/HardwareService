@@ -53,6 +53,13 @@ public class ScheduledSensorReadingDAOImpl implements ScheduledSensorReadingDAO 
     }
 
     @Override
+    public ScheduledSensorReadingEntity getScheduledSensorReading(long scheduledSensorReadingId) {
+        return this.scheduledSensorReadingRepository.findById(scheduledSensorReadingId).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(ScheduledSensorReadingEntity.class, scheduledSensorReadingId)
+        );
+    }
+
+    @Override
     public void delete(long scheduledSensorReadingId) {
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingRepository.findById(scheduledSensorReadingId).get();
         SensorEntity sensorEntity = scheduledSensorReadingEntity.getSensor();

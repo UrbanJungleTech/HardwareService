@@ -22,6 +22,7 @@ public class RpcResponseProcessorImpl implements RpcResponseProcessor{
         BehaviorSubject<JsonRpcMessage> subject = responses.get(message.getId());
         if (subject != null) {
             subject.onNext(message);
+            this.responses.remove(message.getId());
         }
     }
 }

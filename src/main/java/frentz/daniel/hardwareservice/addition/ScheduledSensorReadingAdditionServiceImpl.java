@@ -3,9 +3,11 @@ package frentz.daniel.hardwareservice.addition;
 import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.dao.ScheduledSensorReadingDAO;
 import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
+import frentz.daniel.hardwareservice.event.scheduledreading.ScheduledReadingEventPublisher;
 import frentz.daniel.hardwareservice.schedule.service.SensorScheduleService;
 import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,26 +18,30 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     private ScheduledSensorReadingDAO scheduledSensorReadingDAO;
     private SensorScheduleService sensorScheduleService;
     private ScheduledSensorReadingConverter scheduledSensorReadingConverter;
+    private ScheduledReadingEventPublisher scheduledReadingEventPublisher;
 
     public ScheduledSensorReadingAdditionServiceImpl(ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                                                      SensorScheduleService sensorScheduleService,
-                                                     ScheduledSensorReadingConverter scheduledSensorReadingConverter){
+                                                     ScheduledSensorReadingConverter scheduledSensorReadingConverter,
+                                                     ScheduledReadingEventPublisher scheduledReadingEventPublisher){
         this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorScheduleService = sensorScheduleService;
         this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
+        this.scheduledReadingEventPublisher = scheduledReadingEventPublisher;
 
     }
 
     @Override
+    @Transactional
     public ScheduledSensorReading create(ScheduledSensorReading scheduledSensorReading) {
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.create(scheduledSensorReading);
-        this.sensorScheduleService.start(scheduledSensorReadingEntity);
+        this.scheduledReadingEventPublisher.publishScheduledReadingCreateEvent(scheduledSensorReadingEntity.getId());
         return this.scheduledSensorReadingConverter.toModel(scheduledSensorReadingEntity);
     }
 
     @Override
+    @Transactional
     public void delete(long scheduledSensorReadingId) {
-
         this.sensorScheduleService.delete(scheduledSensorReadingId);
         this.scheduledSensorReadingDAO.delete(scheduledSensorReadingId);
     }

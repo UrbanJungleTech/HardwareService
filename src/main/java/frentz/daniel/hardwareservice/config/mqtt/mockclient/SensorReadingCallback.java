@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.config.mqtt.SensorReadingException;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class SensorReadingCallback implements MockMqttClientCallback {
     @Override
     public void callback(JsonRpcMessage jsonRpcMessage) {
         try {
+
             JsonRpcMessage response = new JsonRpcMessage();
             response.setId(jsonRpcMessage.getId());
             Map<String, Object> responsePayload = new HashMap<>();
@@ -34,7 +36,14 @@ public class SensorReadingCallback implements MockMqttClientCallback {
             MqttMessage message = new MqttMessage(messageText.getBytes());
             message.setQos(2);
             message.setRetained(false);
-            this.mqttClient.publish("FromMicrocontroller", message);
+            long time = System.currentTimeMillis();
+            new Thread(() -> {
+                try {
+                    mqttClient.publish("FromMicrocontroller", message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
         } catch (Exception e) {
             throw new SensorReadingException(e);
         }

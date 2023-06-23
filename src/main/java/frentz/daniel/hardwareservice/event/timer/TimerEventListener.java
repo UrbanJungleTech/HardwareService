@@ -6,6 +6,7 @@ import frentz.daniel.hardwareservice.schedule.service.ScheduledHardwareScheduleS
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 public class TimerEventListener {
@@ -18,8 +19,8 @@ public class TimerEventListener {
         this.timerDAO = timerDAO;
     }
     @Async
-    @EventListener
-    public void onTimerDeleteEvent(TimerCreateEvent timerCreateEvent) {
+    @TransactionalEventListener
+    public void onTimerCreateEvent(TimerCreateEvent timerCreateEvent) {
         TimerEntity timerEntity = this.timerDAO.getTimer(timerCreateEvent.getTimerId());
         this.scheduledHardwareScheduleService.start(timerEntity.getOnCronJob());
         this.scheduledHardwareScheduleService.start(timerEntity.getOffCronJob());

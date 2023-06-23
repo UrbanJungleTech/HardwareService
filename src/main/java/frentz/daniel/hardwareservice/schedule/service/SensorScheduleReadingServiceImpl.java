@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.schedule.service;
 
+import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
 import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
@@ -24,11 +25,11 @@ public class SensorScheduleReadingServiceImpl implements SensorScheduleService{
     }
 
     @Override
-    public void start(ScheduledSensorReadingEntity scheduledSensorReading) {
+    public void start(ScheduledSensorReading scheduledSensorReading) {
         try {
             JobDetail details = JobBuilder.newJob(ScheduledSensorReadingJob.class)
                     .withIdentity(String.valueOf(scheduledSensorReading.getId()))
-                    .usingJobData("sensorId", scheduledSensorReading.getSensor().getId())
+                    .usingJobData("sensorId", scheduledSensorReading.getSensorId())
                     .build();
             CronTrigger trigger = TriggerBuilder.newTrigger()
                     .withSchedule(CronScheduleBuilder.cronSchedule(scheduledSensorReading.getCronString()))

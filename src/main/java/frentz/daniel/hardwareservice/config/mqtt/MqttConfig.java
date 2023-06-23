@@ -49,7 +49,7 @@ public class MqttConfig {
     @Bean
     public IMqttClient getMqttClient(){
         try {
-            IMqttClient result = new MqttClient(this.getServer(), MqttClient.generateClientId());
+            IMqttClient result = new MqttClient(this.getServer(), "happy");
             return result;
         }
         catch(Exception ex){

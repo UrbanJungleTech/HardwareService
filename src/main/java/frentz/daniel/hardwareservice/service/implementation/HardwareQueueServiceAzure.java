@@ -14,7 +14,7 @@ public class HardwareQueueServiceAzure implements HardwareQueueService {
     }
 
     @Override
-    public void sendInitialState(String serialNumber, List<HardwareEntity> allHardware) {
+    public void sendInitialState(String serialNumber, List<Hardware> allHardware) {
 
     }
 
