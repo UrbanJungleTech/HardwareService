@@ -70,7 +70,23 @@ The Hardware Microservice is a critical component that acts as the communication
 
 ## Hardware Controller
 
-At the heart of the system lies the Hardware Controller. This microcontroller plays the indispensable role of controlling the hardware, executing the instructions it receives from the Hardware Microservice. However, the role of the Hardware Controller goes beyond mere execution of commands. It acts as the system's "hands and feet," interacting with the physical world and performing the actual tasks that maintain the plant's environment. It is the gateway between the software and the real world, carrying out tasks such as turning lights on or off, activating pumps, and many others.
+The Hardware Controller is the crucial interface between the system's software and its physical components. Its unique role allows it to interpret instructions received from the Hardware Microservice and execute these commands through the appropriate hardware devices.
+
+### Key Features of the Hardware Controller:
+
+### Serial number: 
+Each Hardware Controller has a unique serial number, serving as an identifier that distinguishes it from other controllers in the system. This alphanumeric sequence ensures that each controller, along with the sensors and hardware it manages, can be addressed distinctly.
+
+### Ports: 
+The Hardware Controller utilizes a system of abstract ports to connect hardware and sensor devices. Each port must be unique within the context of a single hardware device or sensor, as it forms the addressing system for these entities. A port might correspond to a physical GPIO pin, a unique Bluetooth identifier, or even a Wi-Fi device's unique network information. This abstract design ensures flexibility and expandability in the system, allowing for a variety of devices to be added as needed.
+
+### Set of Hardware: 
+The Hardware Controller manages a set of hardware devices that can be turned on or off and optionally adjusted for intensity or "level". Each piece of hardware corresponds to a unique port and can be controlled independently.
+
+### Set of Sensors: 
+Alongside hardware devices, the Hardware Controller manages a set of sensors that can read and report data. Like hardware, each sensor is associated with a unique port. Even though a sensor must return only one value, sensors that can provide multiple data types can be accommodated by assigning them multiple ports. For example, a sensor that can measure both temperature and humidity could have two ports, each one returning a different value.
+
+The Hardware Microservice is aware of the existence of these hardware controllers, hardware devices, and sensors but does not dictate how they function. The specific functioning of each component is managed by the Hardware Controller, providing a modular design where each entity is responsible for its operation, thereby ensuring efficient system performance.
 
 ## Hardware
 
