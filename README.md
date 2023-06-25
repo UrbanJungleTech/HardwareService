@@ -94,13 +94,17 @@ The term "Hardware" within our system denotes any physical device that can modif
 
 ### Key aspects of Hardware:
 
-### Diverse Application: Hardware, in this context, is an all-encompassing term. It covers any device that can be toggled between "on" and "off" states, extending beyond conventional plant-care equipment. This approach ensures the system's flexibility, enabling it to accommodate any device contributing to an optimal plant growth environment.
+### Diverse Application:
+Hardware, in this context, is an all-encompassing term. It covers any device that can be toggled between "on" and "off" states, extending beyond conventional plant-care equipment. This approach ensures the system's flexibility, enabling it to accommodate any device contributing to an optimal plant growth environment.
 
-### Unique Port Assignment: Each hardware device corresponds to a unique port in the Hardware Controller. The port serves as the address for the device, and is used by the Hardware Controller to interact with the device and adjust its state.
+### Unique Port Assignment:
+Each hardware device corresponds to a unique port in the Hardware Controller. The port serves as the address for the device, and is used by the Hardware Controller to interact with the device and adjust its state.
 
-### Scheduled Operation: Hardware devices can be programmed for operation at specific times through our advanced scheduling capabilities. This intelligent automation ensures optimal plant growth by activating each device at precisely the right moment. Additionally, it conserves energy by ensuring devices are deactivated when not needed.
+### Scheduled Operation:
+Hardware devices can be programmed for operation at specific times through our advanced scheduling capabilities. This intelligent automation ensures optimal plant growth by activating each device at precisely the right moment. Additionally, it conserves energy by ensuring devices are deactivated when not needed.
 
-### Resilience: Our system is designed with a focus on resilience. If a Hardware Controller loses connectivity, any commands to change hardware states are queued rather than being lost or failed. When connectivity is re-established, the queued commands are then sent to the Hardware Controller, which executes them in sequence. This design ensures a continuity of service and minimizes potential disruptions caused by temporary network issues, thereby maintaining a consistent and controlled environment for your plants.
+### Resilience:
+Our system is designed with a focus on resilience. If a Hardware Controller loses connectivity, any commands to change hardware states are queued rather than being lost or failed. When connectivity is re-established, the queued commands are then sent to the Hardware Controller, which executes them in sequence. This design ensures a continuity of service and minimizes potential disruptions caused by temporary network issues, thereby maintaining a consistent and controlled environment for your plants.
 
 In essence, the role of hardware in our system is not confined to merely carrying out commands. By leveraging intelligent scheduling, unique addressing, and resilient design, each piece of hardware contributes actively and efficiently to maintaining the desired conditions for plant growth.
 
