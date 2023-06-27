@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.converter;
 
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.addition;
 
 import frentz.daniel.hardwareservice.dao.RegulatorDAO;
 import frentz.daniel.hardwareservice.schedule.service.RegulatorScheduleService;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

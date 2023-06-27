@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.jsonrpc.model.*;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
@@ -79,9 +79,6 @@ public class HardwareQueueServiceImpl implements HardwareQueueService {
         String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
         JsonRpcMessage result = this.mqttService
                 .publishWithResponse(serialNumber, message, 10000).blockingFirst();
-//        this.mqttService.publish(serialNumber, message);
-//        JsonRpcMessage result = new JsonRpcMessage();
-//        result.setResult(Map.of("reading", 0.0));
         return (Double) result.getResult().get("reading");
     }
 

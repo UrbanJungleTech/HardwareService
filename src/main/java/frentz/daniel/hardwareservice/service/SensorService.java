@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice.service;
 
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.client.model.Sensor;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.Sensor;
+import frentz.daniel.hardwareservice.model.SensorReading;
 
 public interface SensorService {
     SensorReading readSensor(long sensorId);

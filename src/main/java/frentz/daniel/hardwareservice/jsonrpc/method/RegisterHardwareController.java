@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.model.HardwareController;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

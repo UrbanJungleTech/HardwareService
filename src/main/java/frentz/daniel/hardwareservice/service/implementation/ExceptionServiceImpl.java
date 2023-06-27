@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
-import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
+import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.service.EntityNameService;
 import frentz.daniel.hardwareservice.service.ExceptionService;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,9 @@ public class ExceptionServiceImpl implements ExceptionService {
     }
 
     @Override
-    public StandardNotFoundException createNotFoundException(Class clazz, long id) {
+    public NotFoundException createNotFoundException(Class clazz, long id) {
         String name = this.entityNameService.getName(clazz);
-        StandardNotFoundException result = new StandardNotFoundException(name, id);
+        NotFoundException result = new NotFoundException(name, id);
         return result;
     }
 }

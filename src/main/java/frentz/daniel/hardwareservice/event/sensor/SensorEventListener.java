@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.event.sensor;
 
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.SensorService;
 import org.springframework.context.event.EventListener;

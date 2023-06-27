@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice.converter;
 
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
-import frentz.daniel.hardwareservice.client.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 
 import java.util.List;
 

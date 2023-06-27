@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.jsonrpc.method;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.service.HardwareService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

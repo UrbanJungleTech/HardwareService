@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.HardwareControllerTestService;
 import frentz.daniel.hardwareservice.HardwareTestService;
 import frentz.daniel.hardwareservice.MqttTestService;
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 import frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener;
 import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
 import frentz.daniel.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback;

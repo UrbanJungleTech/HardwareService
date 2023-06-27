@@ -3,12 +3,11 @@ package frentz.daniel.hardwareservice.dao.implementation;
 import frentz.daniel.hardwareservice.converter.HardwareControllerConverter;
 import frentz.daniel.hardwareservice.dao.HardwareControllerDAO;
 import frentz.daniel.hardwareservice.entity.*;
-import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
+import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.service.ExceptionService;
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
         HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository
                 .findBySerialNumber(serialNumber);
         if(hardwareControllerEntity == null){
-            throw new StandardNotFoundException(HardwareControllerEntity.class.getName(), serialNumber);
+            throw new NotFoundException(HardwareControllerEntity.class.getName(), serialNumber);
         }
         return hardwareControllerEntity;
     }
@@ -90,5 +89,10 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
     @Override
     public String getSerialNumber(long hardwareControllerId) {
         return this.hardwareControllerRepository.getSerialNumberById(hardwareControllerId);
+    }
+
+    @Override
+    public void deleteAll() {
+        this.hardwareControllerRepository.deleteAll();
     }
 }

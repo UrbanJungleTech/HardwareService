@@ -2,9 +2,9 @@ package frentz.daniel.hardwareservice.schedule.job;
 
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.dao.SensorDAO;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
-import frentz.daniel.hardwareservice.client.model.ONOFF;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.HardwareState;
+import frentz.daniel.hardwareservice.model.ONOFF;
+import frentz.daniel.hardwareservice.model.Regulator;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

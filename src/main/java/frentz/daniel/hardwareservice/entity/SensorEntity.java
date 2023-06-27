@@ -18,7 +18,7 @@ public class SensorEntity {
     private String sensorType;
     private long port;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorReadingEntity> readings;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ScheduledSensorReadingEntity> scheduledSensorReadings;

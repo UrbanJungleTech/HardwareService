@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.entity;
 
-import frentz.daniel.hardwareservice.client.model.ONOFF;
+import frentz.daniel.hardwareservice.model.ONOFF;
 
 import jakarta.persistence.*;
 

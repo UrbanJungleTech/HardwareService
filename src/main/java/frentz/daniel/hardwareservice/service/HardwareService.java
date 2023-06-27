@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.service;
 
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareState;
 
 import java.util.List;
 

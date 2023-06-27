@@ -2,8 +2,8 @@ package frentz.daniel.hardwareservice.converter;
 
 import frentz.daniel.hardwareservice.converter.implementation.HardwareStateConverterImpl;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
-import frentz.daniel.hardwareservice.client.model.ONOFF;
+import frentz.daniel.hardwareservice.model.HardwareState;
+import frentz.daniel.hardwareservice.model.ONOFF;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

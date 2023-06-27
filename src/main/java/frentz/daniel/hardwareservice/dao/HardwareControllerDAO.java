@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.dao;
 
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 
 import java.util.List;
 
@@ -15,4 +15,6 @@ public interface HardwareControllerDAO {
     String getHardwareControllerSerialNumber(long hardwareControllerId);
     void delete(Long id);
     String getSerialNumber(long hardwareControllerId);
+
+    void deleteAll();
 }

@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.schedule.service;
 
+import frentz.daniel.hardwareservice.model.Regulator;
 import frentz.daniel.hardwareservice.schedule.job.RegulatorJob;
-import frentz.daniel.hardwareservice.client.model.Regulator;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.service;
 
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 
 import java.util.List;
 

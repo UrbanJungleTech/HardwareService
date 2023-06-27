@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.service;
 
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
+
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 
 import java.util.List;
 

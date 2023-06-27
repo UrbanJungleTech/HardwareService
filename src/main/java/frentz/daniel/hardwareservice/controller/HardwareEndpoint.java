@@ -2,9 +2,11 @@ package frentz.daniel.hardwareservice.controller;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
+import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.service.HardwareService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.Timer;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +49,14 @@ public class HardwareEndpoint {
                                           @PathVariable("hardwareId") long hardwareId){
         timer = this.hardwareAdditionService.addTimer(hardwareId, timer);
         return ResponseEntity.created(null).body(timer);
+    }
+
+    /**
+     * Update the hardware state
+     */
+    @PutMapping("/{hardwareId}/state")
+    public ResponseEntity<HardwareState> updateHardwareState(@PathVariable("hardwareId") long hardwareId, @RequestBody HardwareState hardwareState){
+        return ResponseEntity.ok(hardwareState);
     }
 
 }

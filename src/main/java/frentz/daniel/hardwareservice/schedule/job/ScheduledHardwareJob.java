@@ -1,14 +1,14 @@
 package frentz.daniel.hardwareservice.schedule.job;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import frentz.daniel.hardwareservice.service.HardwareControllerSubscriptionService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +69,12 @@ public class HardwareControllerEndpoint {
     @DeleteMapping("/{hardwareControllerId}")
     public ResponseEntity deleteHardwareController(@PathVariable("hardwareControllerId") long hardwareControllerId){
         this.hardwareControllerAdditionService.delete(hardwareControllerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity deleteAllHardwareControllers(){
+        this.hardwareControllerAdditionService.deleteAll();
         return ResponseEntity.noContent().build();
     }
 

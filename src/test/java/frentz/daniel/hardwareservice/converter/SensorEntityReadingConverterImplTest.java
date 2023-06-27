@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.converter;
 
 import frentz.daniel.hardwareservice.converter.implementation.SensorReadingConverterImpl;
 import frentz.daniel.hardwareservice.entity.SensorReadingEntity;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.SensorReading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

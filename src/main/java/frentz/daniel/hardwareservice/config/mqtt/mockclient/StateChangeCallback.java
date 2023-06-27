@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.config.mqtt.mockclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

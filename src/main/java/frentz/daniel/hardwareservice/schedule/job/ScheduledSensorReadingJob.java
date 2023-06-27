@@ -3,7 +3,7 @@ package frentz.daniel.hardwareservice.schedule.job;
 import frentz.daniel.hardwareservice.dao.SensorReadingDAO;
 import frentz.daniel.hardwareservice.exception.ScheduledSensorReadingJobException;
 import frentz.daniel.hardwareservice.service.SensorService;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.SensorReading;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 

@@ -5,7 +5,7 @@ import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.jsonrpc.model.StateChangeRpcMessage;
-import frentz.daniel.hardwareservice.client.model.ONOFF;
+import frentz.daniel.hardwareservice.model.ONOFF;
 import frentz.daniel.hardwareservice.service.implementation.HardwareQueueServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

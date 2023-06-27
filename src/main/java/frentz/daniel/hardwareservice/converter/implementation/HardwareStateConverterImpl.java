@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.converter.implementation;
 
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.HardwareState;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -8,7 +8,7 @@ import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.service.implementation.SensorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

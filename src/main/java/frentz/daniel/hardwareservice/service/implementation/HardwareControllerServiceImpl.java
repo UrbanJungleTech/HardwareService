@@ -9,9 +9,9 @@ import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import org.springframework.stereotype.Service;
 

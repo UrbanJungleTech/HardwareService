@@ -6,7 +6,7 @@ import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.entity.SensorReadingEntity;
 import frentz.daniel.hardwareservice.repository.SensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.SensorReading;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

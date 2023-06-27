@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.service;
 
 import frentz.daniel.hardwareservice.exception.NameNotFoundException;
-import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
+import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.service.implementation.ExceptionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ class ExceptionServiceImplTest {
 
         when(entityNameService.getName(eq(Object.class))).thenReturn(expectedName);
 
-        StandardNotFoundException result = this.exceptionService.createNotFoundException(Object.class, expectedId);
+        NotFoundException result = this.exceptionService.createNotFoundException(Object.class, expectedId);
 
         assertEquals(expectedStatus, result.getStatus());
         assertEquals(expectedMessage, result.getMessage());

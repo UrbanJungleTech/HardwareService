@@ -4,13 +4,14 @@ import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.dao.ScheduledSensorReadingDAO;
 import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
 import frentz.daniel.hardwareservice.event.scheduledreading.ScheduledReadingEventPublisher;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.schedule.service.SensorScheduleService;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSensorReadingAdditionService{
@@ -56,14 +57,14 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     @Override
     public List<ScheduledSensorReading> updateList(List<ScheduledSensorReading> models) {
         List<ScheduledSensorReading> result = new ArrayList<>();
-        models.forEach((ScheduledSensorReading scheduledSensorReading) -> {
+        Optional.ofNullable(models).ifPresent((Empty) -> models.forEach((ScheduledSensorReading scheduledSensorReading) -> {
             if(scheduledSensorReading.getId() == null){
                 result.add(this.create(scheduledSensorReading));
             }
             else{
                 result.add(this.update(scheduledSensorReading.getSensorId(), scheduledSensorReading));
             }
-        });
+        }));
         return result;
     }
 }

@@ -1,10 +1,10 @@
 package frentz.daniel.hardwareservice.dao.implementation;
 
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
-import frentz.daniel.hardwareservice.dao.ScheduledHardwareJobDAO;
+import frentz.daniel.hardwareservice.dao.ScheduledHardwareDAO;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.repository.HardwareCronJobRepository;
-import frentz.daniel.hardwareservice.client.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ScheduledHardwareJobDAOImpl implements ScheduledHardwareJobDAO {
+public class ScheduledHardwareDAOImpl implements ScheduledHardwareDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledHardwareJobDAOImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledHardwareDAOImpl.class);
 
     private HardwareCronJobRepository hardwareCronJobRepository;
     private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
-    public ScheduledHardwareJobDAOImpl(HardwareCronJobRepository cronJobrepository,
-                                       ScheduledHardwareJobConverter scheduledHardwareJobConverter){
+    public ScheduledHardwareDAOImpl(HardwareCronJobRepository cronJobrepository,
+                                    ScheduledHardwareJobConverter scheduledHardwareJobConverter){
         this.hardwareCronJobRepository = cronJobrepository;
         this.scheduledHardwareJobConverter = scheduledHardwareJobConverter;
     }

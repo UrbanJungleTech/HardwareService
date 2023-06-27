@@ -4,7 +4,7 @@ import frentz.daniel.hardwareservice.converter.HardwareControllerConverter;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.converter.SensorConverter;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.model.HardwareController;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

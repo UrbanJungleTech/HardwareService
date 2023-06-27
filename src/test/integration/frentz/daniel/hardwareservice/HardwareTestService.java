@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice;
 
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Timer;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

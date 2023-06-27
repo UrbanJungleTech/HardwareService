@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
-import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.service.HardwareControllerSubscriptionService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

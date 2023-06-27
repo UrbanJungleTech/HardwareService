@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.dao;
 
 import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Sensor;
 
 import java.util.List;
 

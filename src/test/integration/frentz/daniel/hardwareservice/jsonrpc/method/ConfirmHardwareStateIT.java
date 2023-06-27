@@ -3,7 +3,7 @@ package frentz.daniel.hardwareservice.jsonrpc.method;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.HardwareTestService;
 import frentz.daniel.hardwareservice.MqttTestService;
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import org.junit.jupiter.api.BeforeEach;

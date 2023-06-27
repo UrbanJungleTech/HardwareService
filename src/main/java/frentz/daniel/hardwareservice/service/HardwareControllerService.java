@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice.service;
 
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 
 import java.util.List;
 

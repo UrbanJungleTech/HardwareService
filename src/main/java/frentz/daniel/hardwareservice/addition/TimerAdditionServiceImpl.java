@@ -1,11 +1,11 @@
 package frentz.daniel.hardwareservice.addition;
 
-import frentz.daniel.hardwareservice.client.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.converter.TimerConverter;
 import frentz.daniel.hardwareservice.dao.TimerDAO;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
 import frentz.daniel.hardwareservice.event.timer.TimerEventPublisher;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

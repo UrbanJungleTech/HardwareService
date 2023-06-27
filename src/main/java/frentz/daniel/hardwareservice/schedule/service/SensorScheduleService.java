@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.schedule.service;
 
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
+
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 
 public interface SensorScheduleService {
     void start(ScheduledSensorReading scheduledSensorReading);

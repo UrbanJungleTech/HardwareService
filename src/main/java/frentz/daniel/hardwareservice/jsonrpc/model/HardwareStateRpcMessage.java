@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.jsonrpc.model;
 
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.HardwareState;
 
 public class HardwareStateRpcMessage {
 

@@ -2,7 +2,7 @@ package frentz.daniel.hardwareservice.converter.implementation;
 
 import frentz.daniel.hardwareservice.converter.TimerConverter;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

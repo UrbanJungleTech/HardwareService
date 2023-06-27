@@ -1,10 +1,9 @@
 package frentz.daniel.hardwareservice.dao.implementation;
 
-import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.converter.HardwareControllerConverter;
-import frentz.daniel.hardwareservice.dao.implementation.HardwareControllerDAOImpl;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
-import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
+import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.service.ExceptionService;
 import org.junit.jupiter.api.Test;
@@ -91,12 +90,12 @@ class HardwareControllerDAOImplTest {
      */
     @Test
     public void getHardwareController_whenControllerIdIsNotValid_thenReturnNull(){
-        StandardNotFoundException exception = new StandardNotFoundException("Hardware", 1);
+        NotFoundException exception = new NotFoundException("Hardware", 1);
 
         when(this.hardwareControllerRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(this.exceptionService.createNotFoundException(any(), anyLong())).thenReturn(exception);
 
-        assertThrows(StandardNotFoundException.class, () -> this.hardwareControllerDAO.getHardwareController(1L));
+        assertThrows(NotFoundException.class, () -> this.hardwareControllerDAO.getHardwareController(1L));
     }
 
     @Test
@@ -160,11 +159,11 @@ class HardwareControllerDAOImplTest {
     @Test
     public void deleteHardwareController_whenControllerIdIsNotValid_thenThrowNotFoundException(){
         long hardwareControllerId = 1L;
-        StandardNotFoundException exception = new StandardNotFoundException("Hardware", hardwareControllerId);
+        NotFoundException exception = new NotFoundException("Hardware", hardwareControllerId);
 
         when(this.hardwareControllerRepository.existsById(anyLong())).thenReturn(false);
         when(this.exceptionService.createNotFoundException(any(), anyLong())).thenReturn(exception);
 
-        assertThrows(StandardNotFoundException.class, () -> this.hardwareControllerDAO.delete(hardwareControllerId));
+        assertThrows(NotFoundException.class, () -> this.hardwareControllerDAO.delete(hardwareControllerId));
     }
 }

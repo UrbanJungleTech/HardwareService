@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.converter;
 
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.converter.implementation.SensorConverterImpl;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;

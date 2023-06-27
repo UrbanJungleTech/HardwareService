@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.converter.TimerConverter;
 import frentz.daniel.hardwareservice.dao.TimerDAO;
 import frentz.daniel.hardwareservice.entity.TimerEntity;

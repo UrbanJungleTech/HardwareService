@@ -1,10 +1,10 @@
 package frentz.daniel.hardwareservice.addition;
 
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
-import frentz.daniel.hardwareservice.dao.ScheduledHardwareJobDAO;
+import frentz.daniel.hardwareservice.dao.ScheduledHardwareDAO;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.schedule.service.ScheduledHardwareScheduleService;
-import frentz.daniel.hardwareservice.client.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,27 +13,27 @@ import java.util.List;
 public class ScheduledHardwareJobAdditionServiceImpl implements ScheduledHardwareJobAdditionService{
 
     private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
-    private ScheduledHardwareJobDAO scheduledHardwareJobDAO;
+    private ScheduledHardwareDAO scheduledHardwareDAO;
     private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
 
     public ScheduledHardwareJobAdditionServiceImpl(ScheduledHardwareScheduleService scheduledHardwareScheduleService,
-                                                   ScheduledHardwareJobDAO scheduledHardwareJobDAO,
+                                                   ScheduledHardwareDAO scheduledHardwareDAO,
                                                    ScheduledHardwareJobConverter scheduledHardwareJobConverter){
         this.scheduledHardwareScheduleService = scheduledHardwareScheduleService;
-        this.scheduledHardwareJobDAO = scheduledHardwareJobDAO;
+        this.scheduledHardwareDAO = scheduledHardwareDAO;
         this.scheduledHardwareJobConverter = scheduledHardwareJobConverter;
     }
 
     @Override
     public ScheduledHardware create(ScheduledHardware scheduledHardware) {
-        ScheduledHardwareEntity result = this.scheduledHardwareJobDAO.addScheduledHardwareJob(scheduledHardware);
+        ScheduledHardwareEntity result = this.scheduledHardwareDAO.addScheduledHardwareJob(scheduledHardware);
         this.scheduledHardwareScheduleService.start(result);
         return this.scheduledHardwareJobConverter.toModel(result);
     }
 
     @Override
     public void delete(long scheduledHardwareId) {
-        this.scheduledHardwareJobDAO.delete(scheduledHardwareId);
+        this.scheduledHardwareDAO.delete(scheduledHardwareId);
     }
 
     @Override

@@ -5,7 +5,7 @@ import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.controller.HardwareEndpoint;
 import frentz.daniel.hardwareservice.helper.HardwareHelper;
 import frentz.daniel.hardwareservice.service.HardwareService;
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

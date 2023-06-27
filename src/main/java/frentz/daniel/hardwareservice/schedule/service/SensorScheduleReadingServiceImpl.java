@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.schedule.service;
 
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
 import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;

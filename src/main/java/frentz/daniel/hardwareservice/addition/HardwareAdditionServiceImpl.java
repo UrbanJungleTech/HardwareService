@@ -5,24 +5,23 @@ import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.event.hardware.HardwareDeleteEvent;
 import frentz.daniel.hardwareservice.event.hardware.HardwareEventPublisher;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareState;
+import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
-import frentz.daniel.hardwareservice.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
-public class HardwareAdditionServiceImpl implements HardwareAdditionService{
+public class HardwareAdditionServiceImpl implements HardwareAdditionService {
 
     private final HardwareDAO hardwareDAO;
     private final TimerAdditionService timerAdditionService;
@@ -40,7 +39,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
                                        HardwareConverter hardwareConverter,
                                        ObjectLoggerService objectLoggerService,
                                        HardwareStateConverter hardwareStateConverter,
-                                       HardwareEventPublisher hardwareEventPublisher){
+                                       HardwareEventPublisher hardwareEventPublisher) {
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
         this.hardwareStateBuilder = hardwareStateBuilder;
@@ -50,14 +49,13 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
         this.hardwareEventPublisher = hardwareEventPublisher;
     }
 
-    public List<Hardware> updateList(List<Hardware> hardwares){
+    public List<Hardware> updateList(List<Hardware> hardwares) {
         List<Hardware> results = new ArrayList<>();
-        for(Hardware hardware : hardwares){
-            if(hardware.getId() != null){
+        for (Hardware hardware : hardwares) {
+            if (hardware.getId() != null) {
                 Hardware result = this.update(hardware.getId(), hardware);
                 results.add(result);
-            }
-            else{
+            } else {
                 Hardware result = this.create(hardware);
                 results.add(result);
             }
@@ -69,28 +67,22 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     @Transactional
     public Hardware create(Hardware hardware) {
         this.objectLoggerService.logInfo("Creating hardware", hardware);
-        if(hardware.getDesiredState() == null){
+        if (hardware.getDesiredState() == null) {
             HardwareState hardwareState = this.hardwareStateBuilder.getOffHardwareState();
             hardware.setDesiredState(hardwareState);
         }
-        if(hardware.getCurrentState() == null){
+        if (hardware.getCurrentState() == null) {
             HardwareState hardwareState = this.hardwareStateBuilder.getOffHardwareState();
             hardware.setCurrentState(hardwareState);
         }
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
-        if(hardware.getTimers() != null) {
+        if (hardware.getTimers() != null) {
             hardware.getTimers().forEach((timer) -> {
                 timer.setHardwareId(result.getId());
                 this.timerAdditionService.create(timer);
             });
         }
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
-            }
-        });
-//        this.hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
+        hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
         return this.hardwareConverter.toModel(result);
     }
 
@@ -106,19 +98,20 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService{
     public Hardware update(long hardwareId, Hardware hardware) {
         hardware.setId(hardwareId);
         HardwareEntity current = this.hardwareDAO.getHardware(hardware.getId());
-        if(hardware.getDesiredState() == null){
+        if (hardware.getDesiredState() == null) {
             hardware.setDesiredState(hardwareStateConverter.toModel(current.getDesiredState()));
         }
-        if(hardware.getCurrentState() == null){
+        if (hardware.getCurrentState() == null) {
             hardware.setCurrentState(hardwareStateConverter.toModel(current.getCurrentState()));
         }
         boolean updateHardwareState = hardware.getDesiredState().getState() != current.getDesiredState().getState();
         HardwareEntity result = this.hardwareDAO.updateHardware(hardware);
-        hardware.getTimers().forEach((Timer timer) -> {
+        Optional.ofNullable(hardware.getTimers()).ifPresent(timers -> timers.forEach((Timer timer) -> {
             timer.setHardwareId(result.getId());
-        });
-        this.timerAdditionService.updateList(hardware.getTimers());
-        if(updateHardwareState) {
+        }));
+        Optional.ofNullable(hardware.getTimers())
+                .ifPresent((timers) -> this.timerAdditionService.updateList(timers));
+        if (updateHardwareState) {
             this.hardwareEventPublisher.publishUpdateHardwareStateEvent(result.getId());
         }
         Hardware hardwareResult = this.hardwareConverter.toModel(result);

@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.controller;
 
 import frentz.daniel.hardwareservice.addition.TimerAdditionService;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.service.TimerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

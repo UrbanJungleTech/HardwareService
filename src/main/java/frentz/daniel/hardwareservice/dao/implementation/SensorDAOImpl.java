@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.dao.implementation;
 
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.converter.SensorConverter;
 import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
@@ -40,7 +40,7 @@ public class SensorDAOImpl implements SensorDAO {
             return this.exceptionService.createNotFoundException(HardwareControllerEntity.class, sensor.getHardwareControllerId());
         });
         sensorEntity.setHardwareController(hardwareControllerEntity);
-        this.sensorRepository.save(sensorEntity);
+        sensorEntity = this.sensorRepository.save(sensorEntity);
         hardwareControllerEntity.getSensors().add(sensorEntity);
         this.hardwareControllerRepository.save(hardwareControllerEntity);
         return sensorEntity;

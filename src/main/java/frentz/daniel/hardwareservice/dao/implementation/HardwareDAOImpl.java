@@ -2,16 +2,15 @@ package frentz.daniel.hardwareservice.dao.implementation;
 
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
-import frentz.daniel.hardwareservice.entity.*;
+import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
+import frentz.daniel.hardwareservice.entity.HardwareEntity;
+import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.service.ExceptionService;
-import frentz.daniel.hardwareservice.client.model.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HardwareDAOImpl implements HardwareDAO {
@@ -84,7 +83,9 @@ public class HardwareDAOImpl implements HardwareDAO {
 
     @Override
     public void delete(long hardwareId) {
-        HardwareEntity hardwareEntity = hardwareRepository.findById(hardwareId).get();
+        HardwareEntity hardwareEntity = hardwareRepository.findById(hardwareId).orElseThrow(() -> {
+            return this.exceptionService.createNotFoundException(HardwareEntity.class, hardwareId);
+        });
         hardwareEntity.getHardwareController().getHardware().remove(hardwareEntity);
         this.hardwareControllerRepository.save(hardwareEntity.getHardwareController());
         this.hardwareRepository.deleteById(hardwareId);

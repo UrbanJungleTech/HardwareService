@@ -1,5 +1,7 @@
 package frentz.daniel.hardwareservice;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.quartz.QuartzEndpointAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @EnableAspectJAutoProxy
 @EnableScheduling
 @EnableAsync
+@OpenAPIDefinition(info = @Info(title = "HardwareService API", version = "v1", description = "API for interacting with the hardware service"))
 public class ControllerApplication {
 
 	public static void main(String[] args) {

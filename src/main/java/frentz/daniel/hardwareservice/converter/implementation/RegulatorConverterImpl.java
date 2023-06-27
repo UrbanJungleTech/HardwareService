@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.converter.implementation;
 
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 import frentz.daniel.hardwareservice.converter.RegulatorConverter;
 import frentz.daniel.hardwareservice.entity.RegulatorEntity;
 import org.springframework.stereotype.Service;

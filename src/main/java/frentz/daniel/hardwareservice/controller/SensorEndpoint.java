@@ -5,9 +5,9 @@ import frentz.daniel.hardwareservice.addition.ScheduledSensorReadingAdditionServ
 import frentz.daniel.hardwareservice.addition.SensorAdditionService;
 import frentz.daniel.hardwareservice.dao.SensorReadingDAO;
 import frentz.daniel.hardwareservice.service.SensorService;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.client.model.Sensor;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.Sensor;
+import frentz.daniel.hardwareservice.model.SensorReading;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +46,7 @@ public class SensorEndpoint {
     @GetMapping("/{sensorId}/reading")
     public ResponseEntity<SensorReading> readSensor(@PathVariable("sensorId") long sensorId){
         SensorReading result = this.sensorService.readSensor(sensorId);
+        result.setId(1L);
         return ResponseEntity.ok(result);
     }
 

@@ -3,7 +3,7 @@ package frentz.daniel.hardwareservice.controller;
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
 import frentz.daniel.hardwareservice.service.HardwareService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

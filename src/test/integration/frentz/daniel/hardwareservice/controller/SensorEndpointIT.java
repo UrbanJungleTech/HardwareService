@@ -3,10 +3,10 @@ package frentz.daniel.hardwareservice.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.SensorTestService;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.client.model.Sensor;
-import frentz.daniel.hardwareservice.client.model.SensorReading;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.Sensor;
+import frentz.daniel.hardwareservice.model.SensorReading;
 import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
@@ -15,7 +15,6 @@ import frentz.daniel.hardwareservice.repository.SensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
 import io.moquette.broker.Server;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -111,7 +109,7 @@ public class SensorEndpointIT {
                 Thread.sleep(10);
             }
         }
-        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor");
+        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort()));
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
         assertEquals(createdSensor.getPort(), Long.valueOf((int)message.getParams().get("port")));

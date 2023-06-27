@@ -3,8 +3,8 @@ package frentz.daniel.hardwareservice.converter.implementation;
 import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.converter.SensorConverter;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

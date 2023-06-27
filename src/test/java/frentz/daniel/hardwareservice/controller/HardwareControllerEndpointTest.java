@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import frentz.daniel.hardwareservice.service.HardwareControllerSubscriptionService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

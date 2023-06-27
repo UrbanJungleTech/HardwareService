@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.helper;
 
-import frentz.daniel.hardwareservice.client.model.*;
+import frentz.daniel.hardwareservice.model.*;
 
 import java.util.HashMap;
 import java.util.List;

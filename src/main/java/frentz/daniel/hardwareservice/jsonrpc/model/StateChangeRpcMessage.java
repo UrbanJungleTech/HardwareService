@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.jsonrpc.model;
 
-import frentz.daniel.hardwareservice.client.model.HardwareState;
+import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 
 public class StateChangeRpcMessage extends JsonRpcMessage {

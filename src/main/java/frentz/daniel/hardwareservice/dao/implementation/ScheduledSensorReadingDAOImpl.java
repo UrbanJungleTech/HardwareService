@@ -3,11 +3,10 @@ package frentz.daniel.hardwareservice.dao.implementation;
 import frentz.daniel.hardwareservice.converter.ScheduledSensorReadingConverter;
 import frentz.daniel.hardwareservice.dao.ScheduledSensorReadingDAO;
 import frentz.daniel.hardwareservice.entity.ScheduledSensorReadingEntity;
-import frentz.daniel.hardwareservice.exception.StandardNotFoundException;
 import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.service.ExceptionService;
 import org.springframework.stereotype.Service;
 

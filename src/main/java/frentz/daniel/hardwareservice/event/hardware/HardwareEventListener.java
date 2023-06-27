@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.event.hardware;
 
-import frentz.daniel.hardwareservice.client.model.Hardware;
+import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.HardwareService;
 import org.slf4j.Logger;

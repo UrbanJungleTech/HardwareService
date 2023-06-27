@@ -56,6 +56,9 @@ public class MockMqttClientListener implements IMqttMessageListener {
                 this.callbacks.get(method).add(callback);
                 logger.debug("Added callback for method " + method + " " + callback.getClass().getCanonicalName());
             }
+            else{
+                logger.debug("No callback for " + callback.getClass().getCanonicalName());
+            }
         }
     }
     @Override

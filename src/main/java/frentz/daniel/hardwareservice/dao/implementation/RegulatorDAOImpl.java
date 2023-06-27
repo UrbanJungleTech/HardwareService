@@ -4,7 +4,7 @@ import frentz.daniel.hardwareservice.converter.RegulatorConverter;
 import frentz.daniel.hardwareservice.dao.RegulatorDAO;
 import frentz.daniel.hardwareservice.entity.RegulatorEntity;
 import frentz.daniel.hardwareservice.repository.RegulatorRepository;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

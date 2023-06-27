@@ -2,9 +2,9 @@ package frentz.daniel.hardwareservice.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.exception.StandardError;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -291,23 +290,17 @@ public class HardwareControllerEndpointIT {
         hardwareController.setName("Test Hardware Controller");
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");
+        sensor.setName("Test Sensor");
         hardwareController.getSensors().add(sensor);
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
+        mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)
                         .contentType("application/json")
                         .content(hardwareControllerJson))
                 .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-
-        //retrieve the hardware controller from the db
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-
-        //check the values in the response
-        assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
-        assertEquals(1, createdHardwareController.getSensors().size());
-        assertEquals("temperature", createdHardwareController.getSensors().get(0).getSensorType());
+                .andExpect(jsonPath("$.sensors[0].sensorType").value(sensor.getSensorType()))
+                .andExpect(jsonPath("$.sensors[0].id").exists())
+                .andExpect(jsonPath("$.sensors[0].name").value(sensor.getName()));
     }
 
     /**

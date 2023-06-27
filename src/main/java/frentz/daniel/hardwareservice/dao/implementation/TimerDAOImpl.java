@@ -11,9 +11,9 @@ import frentz.daniel.hardwareservice.repository.HardwareCronJobRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
 import frentz.daniel.hardwareservice.service.ExceptionService;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
-import frentz.daniel.hardwareservice.client.model.ONOFF;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.HardwareState;
+import frentz.daniel.hardwareservice.model.ONOFF;
+import frentz.daniel.hardwareservice.model.Timer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

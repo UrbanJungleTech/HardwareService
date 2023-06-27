@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.event.scheduledreading;
 
 import frentz.daniel.hardwareservice.addition.ScheduledSensorReadingAdditionService;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.schedule.service.SensorScheduleService;
 import frentz.daniel.hardwareservice.service.ScheduledSensorReadingService;
 import org.springframework.stereotype.Service;

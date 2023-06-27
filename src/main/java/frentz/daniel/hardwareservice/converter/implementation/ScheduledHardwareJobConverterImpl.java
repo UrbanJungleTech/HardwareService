@@ -1,13 +1,13 @@
 package frentz.daniel.hardwareservice.converter.implementation;
 
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
-import frentz.daniel.hardwareservice.client.model.HardwareState;
-import frentz.daniel.hardwareservice.client.model.ONOFF;
-import frentz.daniel.hardwareservice.client.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.model.HardwareState;
+import frentz.daniel.hardwareservice.model.ONOFF;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

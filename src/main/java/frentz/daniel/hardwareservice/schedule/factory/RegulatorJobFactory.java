@@ -4,7 +4,7 @@ import frentz.daniel.hardwareservice.exception.RegulatorJobAlreadyRunningExcepti
 import frentz.daniel.hardwareservice.schedule.job.RegulatorJob;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.dao.SensorDAO;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 import org.quartz.*;
 import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;

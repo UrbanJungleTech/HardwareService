@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.dao;
 
 import frentz.daniel.hardwareservice.entity.RegulatorEntity;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 
 import java.util.List;
 

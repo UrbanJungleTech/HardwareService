@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.dao;
 
 import frentz.daniel.hardwareservice.entity.TimerEntity;
-import frentz.daniel.hardwareservice.client.model.Timer;
+import frentz.daniel.hardwareservice.model.Timer;
 
 import java.util.List;
 

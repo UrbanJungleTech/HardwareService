@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.controller;
 
 import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
-import frentz.daniel.hardwareservice.client.model.Regulator;
+import frentz.daniel.hardwareservice.model.Regulator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

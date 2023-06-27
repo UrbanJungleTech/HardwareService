@@ -6,9 +6,9 @@ import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.exception.DuplicateSerialNumberException;
 import frentz.daniel.hardwareservice.service.HardwareControllerSubscriptionService;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
-import frentz.daniel.hardwareservice.client.model.Hardware;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +44,7 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
             throw new DuplicateSerialNumberException();
         }
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);
-        long hardwareControllerId = result.getId();
+        Long hardwareControllerId = result.getId();
         hardwareController.getHardware().forEach((Hardware hardware) -> {
             hardware.setHardwareControllerId(hardwareControllerId);
         });
@@ -103,5 +103,10 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     public Sensor addSensor(long hardwareControllerId, Sensor sensor) {
         sensor.setHardwareControllerId(hardwareControllerId);
         return this.sensorAdditionService.create(sensor);
+    }
+
+    @Override
+    public void deleteAll() {
+        this.hardwareControllerDAO.deleteAll();
     }
 }

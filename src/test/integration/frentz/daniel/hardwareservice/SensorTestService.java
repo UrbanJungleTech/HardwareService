@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.client.model.HardwareController;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Sensor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;

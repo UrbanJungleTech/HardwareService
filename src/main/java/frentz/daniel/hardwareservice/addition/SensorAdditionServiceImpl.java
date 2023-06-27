@@ -5,13 +5,14 @@ import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.event.sensor.SensorEventPublisher;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
-import frentz.daniel.hardwareservice.client.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.client.model.Sensor;
+import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
+import frentz.daniel.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SensorAdditionServiceImpl implements SensorAdditionService{
@@ -35,9 +36,10 @@ public class SensorAdditionServiceImpl implements SensorAdditionService{
     @Override
     public Sensor create(Sensor sensor) {
         SensorEntity result = this.sensorDAO.addSensor(sensor);
-        sensor.getScheduledSensorReadings().forEach((ScheduledSensorReading scheduledSensorReading) -> {
-            scheduledSensorReading.setSensorId(result.getId());
-        });
+        Optional.ofNullable(sensor.getScheduledSensorReadings())
+                .ifPresent(readings -> readings
+                        .forEach((ScheduledSensorReading scheduledSensorReading)
+                                -> scheduledSensorReading.setSensorId(result.getId())));
         this.scheduledSensorReadingAdditionService.updateList(sensor.getScheduledSensorReadings());
         this.sensorEventPublisher.publishSensorCreateEvent(result.getId());
         return this.sensorConverter.toModel(result);

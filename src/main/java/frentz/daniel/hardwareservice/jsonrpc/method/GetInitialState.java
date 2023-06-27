@@ -1,6 +1,6 @@
 package frentz.daniel.hardwareservice.jsonrpc.method;
 
-import frentz.daniel.hardwareservice.client.model.HardwareController;
+import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.dao.HardwareControllerDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
