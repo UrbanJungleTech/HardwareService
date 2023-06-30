@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -234,9 +233,12 @@ public class HardwareEndpointIT {
                 .andReturn();
 
         Hardware updatedHardware = objectMapper.readValue(result.getResponse().getContentAsString(), Hardware.class);
-        HardwareState updatedHardwareState = updatedHardware.getDesiredState();
-        assertEquals(updatedState.getLevel(), updatedHardwareState.getLevel());
-        assertEquals(updatedState.getState(), updatedHardwareState.getState());
+        HardwareState updatedDesiredState = updatedHardware.getDesiredState();
+        assertEquals(updatedState.getLevel(), updatedDesiredState.getLevel());
+        assertEquals(updatedState.getState(), updatedDesiredState.getState());
+        HardwareState updatedCurrentState = updatedHardware.getCurrentState();
+        assertNotEquals(updatedState.getLevel(), updatedCurrentState.getLevel());
+        assertNotEquals(updatedState.getState(), updatedCurrentState.getState());
 
         boolean asserted = false;
         long startTime = System.currentTimeMillis();
@@ -249,9 +251,9 @@ public class HardwareEndpointIT {
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
-        HardwareState state = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
-        assertEquals(updatedState.getLevel(), state.getLevel());
-        assertEquals(updatedState.getState(), state.getState());
+        HardwareState desiredState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
+        assertEquals(updatedState.getLevel(), desiredState.getLevel());
+        assertEquals(updatedState.getState(), desiredState.getState());
     }
 
     /**
@@ -369,7 +371,7 @@ public class HardwareEndpointIT {
 
         Thread.sleep(10000);
 
-        List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange", Map.of("port", hardware.getPort()));
+        List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange", Map.of("port", (hardware.getPort().intValue())));
 
         //count the on and off states saved
         int onCount = 0;
@@ -385,6 +387,8 @@ public class HardwareEndpointIT {
 
         //check how often the on and off states were sent, given that we're dealing with seconds
         // its necessary to give a little margin of error
+        System.out.println("onCount: " + onCount);
+        System.out.println("offCount: " + offCount);
         assertTrue(onCount >= 2 && onCount <= 3);
         assertTrue(offCount >= 1 && offCount <= 2);
     }

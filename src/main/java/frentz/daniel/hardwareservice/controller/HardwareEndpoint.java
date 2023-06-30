@@ -10,6 +10,8 @@ import jakarta.websocket.server.PathParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/hardware")
 public class HardwareEndpoint {
@@ -26,13 +28,19 @@ public class HardwareEndpoint {
     }
 
     @GetMapping(value = "/{hardwareId}")
-    public ResponseEntity<Hardware> getHardware(@PathVariable long hardwareId){
+    public ResponseEntity<Hardware> getHardwareById(@PathVariable long hardwareId){
         Hardware hardware = this.hardwareService.getHardware(hardwareId);
         return ResponseEntity.ok(hardware);
     }
 
+    @GetMapping(value = "/")
+    public ResponseEntity<List<Hardware>> getAllHardware(){
+        List<Hardware> hardware = this.hardwareService.getAllHardware();
+        return ResponseEntity.ok(hardware);
+    }
+
     @DeleteMapping("/{hardwareId}")
-    public ResponseEntity removeHardware(@PathVariable("hardwareId") long hardwareId){
+    public ResponseEntity deleteHardwareById(@PathVariable("hardwareId") long hardwareId){
         this.hardwareAdditionService.delete(hardwareId);
         return ResponseEntity.noContent().build();
     }

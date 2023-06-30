@@ -10,4 +10,6 @@ public interface RegulatorDAO {
     RegulatorEntity save(RegulatorEntity regulator);
     List<Regulator> getAll();
     void delete(long regulatorId);
+
+    RegulatorEntity get(long regulatorId);
 }

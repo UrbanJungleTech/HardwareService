@@ -1,17 +1,13 @@
 package frentz.daniel.hardwareservice.converter.implementation;
 
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
-import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.model.ONOFF;
-import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobConverter {
@@ -23,37 +19,31 @@ public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobCo
     }
 
     @Override
-    public ScheduledHardware toModel(ScheduledHardwareEntity scheduledHardwareEntity) {
+    public ScheduledHardware toScheduledHardware(Timer timer, ONOFF onoff) {
         ScheduledHardware result = new ScheduledHardware();
-
-//        result.setPort(scheduledHardwareEntity.getPort());
-//        result.setCronString(scheduledHardwareEntity.getCronString());
-//        result.setHardwareState(this.hardwareStateConverter.toModel(scheduledHardwareEntity.getHardwareState()));
-//        result.setId(scheduledHardwareEntity.getId());
-//        result.setHardwareControllerSerialNumber(scheduledHardwareEntity.getHardwareControllerSerialNumber());
-//        result.setHardwareId(scheduledHardwareEntity.getHardwareId());
+        result.setCronString(onoff == ONOFF.ON ? timer.getOnCronString() : timer.getOffCronString());
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(onoff);
+        hardwareState.setLevel(timer.getOnLevel());
+        result.setHardwareState(hardwareState);
+        result.setTimerId(timer.getId());
         return result;
     }
 
     @Override
-    public List<ScheduledHardware> toModels(List<ScheduledHardwareEntity> scheduledHardwareJobEntities) {
-        return scheduledHardwareJobEntities.stream().map(this::toModel).collect(Collectors.toList());
+    public ScheduledHardware toScheduledHardware(ScheduledHardwareEntity scheduledHardwareEntity){
+        ScheduledHardware result = new ScheduledHardware();
+        result.setCronString(scheduledHardwareEntity.getCronString());
+        result.setTimerId(scheduledHardwareEntity.getTimerEntity().getId());
+        result.setHardwareId(scheduledHardwareEntity.getTimerEntity().getHardware().getId());
+        result.setHardwareState(this.hardwareStateConverter.toModel(scheduledHardwareEntity.getHardwareState()));
+        result.setId(scheduledHardwareEntity.getId());
+        return result;
     }
 
     @Override
-    public void fillOnEntity(Timer timer, ScheduledHardwareEntity scheduledHardwareEntity) {
-        scheduledHardwareEntity.setCronString(timer.getOnCronString());
-        HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(ONOFF.ON);
-        hardwareState.setLevel(timer.getOnLevel());
-        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), hardwareState);
-    }
-
-    @Override
-    public void fillOffEntity(Timer timer, ScheduledHardwareEntity scheduledHardwareEntity) {
-        scheduledHardwareEntity.setCronString(timer.getOffCronString());
-        HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(ONOFF.OFF);
-        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), hardwareState);
+    public void fillEntity(ScheduledHardware scheduledHardware, ScheduledHardwareEntity scheduledHardwareEntity) {
+        scheduledHardwareEntity.setCronString(scheduledHardware.getCronString());
+        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), scheduledHardware.getHardwareState());
     }
 }

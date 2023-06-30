@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class MockMqttClientListener implements IMqttMessageListener {
@@ -24,15 +25,16 @@ public class MockMqttClientListener implements IMqttMessageListener {
 
     public List<JsonRpcMessage> getCache(String method, Map<String, Object> params){
         List<JsonRpcMessage> cache = this.getCache(method);
-        cache.stream().filter(message -> {
+        return cache.stream().filter(message -> {
             for(String key : params.keySet()){
+                System.out.println("checking if " + key + " is in " + message.getParams() + " and equals " + params.get(key));
+
                 if(!message.getParams().containsKey(key) || !message.getParams().get(key).equals(params.get(key))){
                     return false;
                 }
             }
             return true;
-        });
-        return cache;
+        }).collect(Collectors.toList());
     }
 
     private List<JsonRpcMessage> cache;

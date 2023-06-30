@@ -2,19 +2,10 @@ package frentz.daniel.hardwareservice.model;
 
 public class ScheduledHardware {
     private long id;
-    private String hardwareControllerSerialNumber;
-    private long port;
     private String cronString;
     private HardwareState hardwareState;
     private long hardwareId;
-
-    public long getPort() {
-        return port;
-    }
-
-    public void setPort(long port) {
-        this.port = port;
-    }
+    private Long timerId;
 
     public HardwareState getHardwareState() {
         return hardwareState;
@@ -40,19 +31,19 @@ public class ScheduledHardware {
         this.cronString = cronString;
     }
 
-    public String getHardwareControllerSerialNumber() {
-        return hardwareControllerSerialNumber;
-    }
-
-    public void setHardwareControllerSerialNumber(String hardwareControllerSerialNumber) {
-        this.hardwareControllerSerialNumber = hardwareControllerSerialNumber;
-    }
-
     public long getHardwareId() {
         return hardwareId;
     }
 
     public void setHardwareId(long hardwareId) {
         this.hardwareId = hardwareId;
+    }
+
+    public Long getTimerId() {
+        return timerId;
+    }
+
+    public void setTimerId(Long timerId) {
+        this.timerId = timerId;
     }
 }

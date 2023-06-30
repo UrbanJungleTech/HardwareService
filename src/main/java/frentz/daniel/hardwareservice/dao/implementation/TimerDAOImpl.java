@@ -1,12 +1,14 @@
 package frentz.daniel.hardwareservice.dao.implementation;
 
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
+import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
 import frentz.daniel.hardwareservice.converter.TimerConverter;
 import frentz.daniel.hardwareservice.dao.TimerDAO;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.repository.HardwareCronJobRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
@@ -14,6 +16,7 @@ import frentz.daniel.hardwareservice.service.ExceptionService;
 import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.model.ONOFF;
 import frentz.daniel.hardwareservice.model.Timer;
+import frentz.daniel.hardwareservice.service.ScheduledHardwareService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,19 +30,23 @@ public class TimerDAOImpl implements TimerDAO {
     private ExceptionService exceptionService;
     private TimerConverter timerConverter;
     private HardwareStateConverter hardwareStateConverter;
+    private ScheduledHardwareService scheduledHardwareService;
+    private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
 
     public TimerDAOImpl(TimerRepository timerRepository,
                         HardwareCronJobRepository cronJobrepository,
                         HardwareRepository hardwareRepository,
                         ExceptionService exceptionService,
                         TimerConverter timerConverter,
-                        HardwareStateConverter hardwareStateConverter){
+                        HardwareStateConverter hardwareStateConverter,
+                        ScheduledHardwareService scheduledHardwareService){
         this.timerRepository = timerRepository;
         this.cronJobrepository = cronJobrepository;
         this.hardwareRepository = hardwareRepository;
         this.exceptionService = exceptionService;
         this.timerConverter = timerConverter;
         this.hardwareStateConverter = hardwareStateConverter;
+        this.scheduledHardwareService = scheduledHardwareService;
     }
 
     @Override
@@ -49,30 +56,7 @@ public class TimerDAOImpl implements TimerDAO {
         });
         TimerEntity timerEntity = new TimerEntity();
         timerEntity = this.timerRepository.save(timerEntity);
-
-        ScheduledHardwareEntity onCronJobEntity = new ScheduledHardwareEntity();
-        onCronJobEntity.setCronString(timer.getOnCronString());
-        HardwareState onState = new HardwareState();
-        onState.setState(ONOFF.ON);
-        onState.setLevel(timer.getOnLevel());
-        HardwareStateEntity onHardwareStateEntity = this.hardwareStateConverter.toEntity(onState);
-        onCronJobEntity.setHardwareState(onHardwareStateEntity);
-        onCronJobEntity.setTimerEntity(timerEntity);
-        onCronJobEntity = this.cronJobrepository.save(onCronJobEntity);
-
-        ScheduledHardwareEntity offCronJobEntity = new ScheduledHardwareEntity();
-        offCronJobEntity.setCronString(timer.getOffCronString());
-        HardwareState offState = new HardwareState();
-        offState.setState(ONOFF.OFF);
-        offState.setLevel(0);
-        HardwareStateEntity offHardwareStateEntity = this.hardwareStateConverter.toEntity(offState);
-        offCronJobEntity.setHardwareState(offHardwareStateEntity);
-        offCronJobEntity.setTimerEntity(timerEntity);
-        offCronJobEntity = this.cronJobrepository.save(offCronJobEntity);
-
         timerEntity.setHardware(hardwareEntity);
-        timerEntity.setOnCronJob(onCronJobEntity);
-        timerEntity.setOffCronJob(offCronJobEntity);
 
         hardwareEntity.getTimers().add(timerEntity);
         timerEntity = this.timerRepository.save(timerEntity);

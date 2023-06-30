@@ -22,7 +22,8 @@ public class HardwareControllerEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)
     private List<SensorEntity> Sensors;
-
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<RegulatorEntity> regulators;
 
     public HardwareControllerEntity(){
         this.hardware = new ArrayList<>();
@@ -68,5 +69,13 @@ public class HardwareControllerEntity {
 
     public void setSensors(List<SensorEntity> Sensors) {
         this.Sensors = Sensors;
+    }
+
+    public List<RegulatorEntity> getRegulators() {
+        return regulators;
+    }
+
+    public void setRegulators(List<RegulatorEntity> regulators) {
+        this.regulators = regulators;
     }
 }

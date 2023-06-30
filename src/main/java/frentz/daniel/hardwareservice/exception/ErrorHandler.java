@@ -14,16 +14,16 @@ public class ErrorHandler {
 
 
     @ExceptionHandler(value=StandardErrorException.class)
-    public ResponseEntity<StandardError> handleError(StandardErrorException exception){
-        StandardError error = new StandardError();
+    public ResponseEntity<WebRequestException> handleError(StandardErrorException exception){
+        WebRequestException error = new WebRequestException();
         error.setMessage(exception.getMessage());
         error.setHttpStatus(exception.getStatus().value());
         return ResponseEntity.status(exception.getStatus()).body(error);
     }
 
     @ExceptionHandler(value=RuntimeException.class)
-    public ResponseEntity<StandardError> fallback(Exception ex){
-        StandardError error = new StandardError();
+    public ResponseEntity<WebRequestException> fallback(Exception ex){
+        WebRequestException error = new WebRequestException();
         error.setMessage("Unknown error");
         error.setHttpStatus(500);
         logger.debug("unknown error is {}: ", ex.getMessage());

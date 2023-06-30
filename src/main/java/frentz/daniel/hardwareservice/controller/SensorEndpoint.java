@@ -1,9 +1,11 @@
 package frentz.daniel.hardwareservice.controller;
 
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
+import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
 import frentz.daniel.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import frentz.daniel.hardwareservice.addition.SensorAdditionService;
 import frentz.daniel.hardwareservice.dao.SensorReadingDAO;
+import frentz.daniel.hardwareservice.model.Regulator;
 import frentz.daniel.hardwareservice.service.SensorService;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
@@ -24,17 +26,20 @@ public class SensorEndpoint {
     private final SensorReadingDAO sensorReadingDAO;
     private final SensorAdditionService sensorAdditionService;
     private final HardwareControllerAdditionService hardwareControllerAdditionService;
+    private final RegulatorAdditionService regulatorAdditionService;
 
     public SensorEndpoint(ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
                           SensorService sensorService,
                           SensorReadingDAO sensorReadingDAO,
                           SensorAdditionService sensorAdditionService,
-                          HardwareControllerAdditionService hardwareControllerAdditionService){
+                          HardwareControllerAdditionService hardwareControllerAdditionService,
+                          RegulatorAdditionService regulatorAdditionService){
         this.sensorService = sensorService;
         this.sensorReadingDAO = sensorReadingDAO;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorAdditionService = sensorAdditionService;
         this.hardwareControllerAdditionService = hardwareControllerAdditionService;
+        this.regulatorAdditionService = regulatorAdditionService;
     }
 
     @GetMapping("/{sensorId}")
@@ -44,14 +49,13 @@ public class SensorEndpoint {
     }
 
     @GetMapping("/{sensorId}/reading")
-    public ResponseEntity<SensorReading> readSensor(@PathVariable("sensorId") long sensorId){
+    public ResponseEntity<SensorReading> readSensorById(@PathVariable("sensorId") long sensorId){
         SensorReading result = this.sensorService.readSensor(sensorId);
-        result.setId(1L);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{sensorId}/readings")
-    public ResponseEntity<List<SensorReading>> getReadings(@PathVariable("sensorId") long sensorId,
+    public ResponseEntity<List<SensorReading>> getReadingsBySensorId(@PathVariable("sensorId") long sensorId,
                                                            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
                                                            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate){
         List<SensorReading> result = this.sensorReadingDAO.getReadings(sensorId, startDate, endDate);
@@ -59,14 +63,14 @@ public class SensorEndpoint {
     }
 
     @PostMapping("/{sensorId}/scheduledReading/")
-    public ResponseEntity<ScheduledSensorReading> createScheduledSensorReading(@PathVariable("sensorId") long sensorId,
+    public ResponseEntity<ScheduledSensorReading> addScheduledSensorReading(@PathVariable("sensorId") long sensorId,
                                                                                @RequestBody ScheduledSensorReading scheduledSensorReading){
         ScheduledSensorReading result = this.sensorAdditionService.addScheduledReading(sensorId, scheduledSensorReading);
         return ResponseEntity.created(null).body(result);
     }
 
     @DeleteMapping("/{sensorId}")
-    public ResponseEntity deleteSensor(@PathVariable("sensorId") long sensorId){
+    public ResponseEntity deleteSensorById(@PathVariable("sensorId") long sensorId){
         this.sensorAdditionService.delete(sensorId);
         return ResponseEntity.noContent().build();
     }

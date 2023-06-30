@@ -1,8 +1,8 @@
 package frentz.daniel.hardwareservice.schedule.config;
 
-import frentz.daniel.hardwareservice.schedule.factory.RegulatorJobFactory;
-import frentz.daniel.hardwareservice.schedule.factory.ScheduledHardwareJobFactory;
-import frentz.daniel.hardwareservice.schedule.factory.ScheduledSensorReadingJobFactory;
+import frentz.daniel.hardwareservice.schedule.regulator.RegulatorJobFactory;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareJobFactory;
+import frentz.daniel.hardwareservice.schedule.sensor.ScheduledSensorReadingJobFactory;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;

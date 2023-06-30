@@ -5,6 +5,7 @@ import frentz.daniel.hardwareservice.dao.RegulatorDAO;
 import frentz.daniel.hardwareservice.entity.RegulatorEntity;
 import frentz.daniel.hardwareservice.repository.RegulatorRepository;
 import frentz.daniel.hardwareservice.model.Regulator;
+import frentz.daniel.hardwareservice.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +15,14 @@ public class RegulatorDAOImpl implements RegulatorDAO {
 
     private RegulatorRepository regulatorRepository;
     private RegulatorConverter regulatorConverter;
+    private ExceptionService exceptionService;
 
     public RegulatorDAOImpl(RegulatorRepository regulatorRepository,
-                            RegulatorConverter regulatorConverter){
+                            RegulatorConverter regulatorConverter,
+                            ExceptionService exceptionService){
         this.regulatorRepository = regulatorRepository;
         this.regulatorConverter = regulatorConverter;
+        this.exceptionService = exceptionService;
     }
 
     @Override
@@ -43,6 +47,16 @@ public class RegulatorDAOImpl implements RegulatorDAO {
 
     @Override
     public void delete(long regulatorId) {
+        if(!this.regulatorRepository.existsById(regulatorId)){
+            throw this.exceptionService.createNotFoundException(Regulator.class, regulatorId);
+        }
         this.regulatorRepository.deleteById(regulatorId);
+    }
+
+    @Override
+    public RegulatorEntity get(long regulatorId) {
+        RegulatorEntity result = this.regulatorRepository.findById(regulatorId).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(Regulator.class, regulatorId));
+        return result;
     }
 }

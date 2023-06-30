@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.model;
 
 public class Regulator {
-    private long id;
+    private Long id;
     private long sensorId;
     private long minimumCorrectionHardwareId;
     private long maximumCorrectionHardwareId;
@@ -42,11 +42,11 @@ public class Regulator {
         this.checkInterval = checkInterval;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

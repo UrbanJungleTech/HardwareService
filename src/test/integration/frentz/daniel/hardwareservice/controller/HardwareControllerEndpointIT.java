@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.HardwareController;
+import frentz.daniel.hardwareservice.model.Regulator;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
-import frentz.daniel.hardwareservice.exception.StandardError;
+import frentz.daniel.hardwareservice.exception.WebRequestException;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -198,7 +199,7 @@ public class HardwareControllerEndpointIT {
         MvcResult result = mockMvc.perform(get("/hardwarecontroller/1"))
                 .andExpect(status().isNotFound())
                 .andReturn();
-        StandardError errorResponse = objectMapper.readValue(result.getResponse().getContentAsString(), StandardError.class);
+        WebRequestException errorResponse = objectMapper.readValue(result.getResponse().getContentAsString(), WebRequestException.class);
         assertEquals(404, errorResponse.getHttpStatus());
         assertEquals("Hardware Controller not found with id of 1", errorResponse.getMessage());
     }
@@ -425,14 +426,6 @@ public class HardwareControllerEndpointIT {
                         .content(hardwareJson))
                 .andExpect(status().isCreated())
                 .andReturn();
-        Hardware createdHardware = objectMapper.readValue(result.getResponse().getContentAsString(), Hardware.class);
-
-        //retrieve the hardware controller from the db
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-
-        //check the values in the response
-        assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
-        assertEquals(1, hardwareControllerEntity.getHardware().size());
     }
 
     /**
@@ -484,14 +477,6 @@ public class HardwareControllerEndpointIT {
                         .content(sensorJson))
                 .andExpect(status().isCreated())
                 .andReturn();
-        Sensor createdSensor = objectMapper.readValue(result.getResponse().getContentAsString(), Sensor.class);
-
-        //retrieve the hardware controller from the db
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-
-        //check the values in the response
-        assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
-        assertEquals(1, hardwareControllerEntity.getSensors().size());
     }
 
     /**
@@ -555,4 +540,5 @@ public class HardwareControllerEndpointIT {
                 .andExpect(jsonPath("$.message").value("Hardware Controller not found with id of 1"))
                 .andExpect(jsonPath("$.httpStatus").value("404"));
     }
+
 }

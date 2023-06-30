@@ -8,6 +8,7 @@ public class HardwareController {
     private String name;
     private List<Hardware> hardware;
     private List<Sensor> sensors;
+    private List<Regulator> regulators;
     private String serialNumber;
 
     public HardwareController(){
@@ -57,5 +58,13 @@ public class HardwareController {
 
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
+    }
+
+    public List<Regulator> getRegulators() {
+        return regulators;
+    }
+
+    public void setRegulators(List<Regulator> regulators) {
+        this.regulators = regulators;
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -151,25 +152,27 @@ public class TimerEndpointIT {
     public void testUpdateTimer() throws Exception {
         HardwareController hardwareController = hardwareTestService.createBasicHardwareWithTimer();
         Hardware hardware = hardwareController.getHardware().get(0);
-        Timer createdTimer = hardware.getTimers().get(0);
-        long timerId = createdTimer.getId();
-        createdTimer.setOnLevel(50);
-        createdTimer.setOnCronString("0 0 0 1 1 ? 2011");
-        createdTimer.setOffCronString("1 0 0 1 1 ? 2011");
-        String timerJson = objectMapper.writeValueAsString(createdTimer);
+        Timer updatedTimer = hardware.getTimers().get(0);
+        long timerId = updatedTimer.getId();
+        updatedTimer.setOnLevel(50);
+        updatedTimer.setOnCronString("0 0 0 1 1 ? 2011");
+        updatedTimer.setOffCronString("1 0 0 1 1 ? 2011");
+        String timerJson = objectMapper.writeValueAsString(updatedTimer);
         this.mockMvc.perform(put("/timer/" + timerId)
                         .contentType("application/json")
                         .content(timerJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(timerId))
+                .andExpect(jsonPath("$.onLevel").value(50))
+                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
+                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
+
         this.mockMvc.perform(get("/timer/" + timerId))
                 .andExpect(status().isOk())
-                .andExpect(result -> {
-                    String contentAsString = result.getResponse().getContentAsString();
-                    Timer timer = objectMapper.readValue(contentAsString, Timer.class);
-                    assertEquals(createdTimer.getOnLevel(), timer.getOnLevel());
-                    assertEquals(createdTimer.getOnCronString(), timer.getOnCronString());
-                    assertEquals(createdTimer.getOffCronString(), timer.getOffCronString());
-                });
+                .andExpect(jsonPath("$.id").value(timerId))
+                .andExpect(jsonPath("$.onLevel").value(updatedTimer.getOnLevel()))
+                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
+                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
     }
 
     /**

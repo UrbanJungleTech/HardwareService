@@ -22,7 +22,7 @@ public class TimerEndpoint {
     }
 
     @DeleteMapping("/{timerId}")
-    public ResponseEntity deleteTimer(@PathVariable("timerId") long timerId){
+    public ResponseEntity deleteTimerById(@PathVariable("timerId") long timerId){
         this.timerAdditionService.delete(timerId);
         return ResponseEntity.noContent().build();
     }
@@ -35,13 +35,13 @@ public class TimerEndpoint {
     }
 
     @GetMapping("/{timerId}")
-    public ResponseEntity<Timer> getTimer(@PathVariable("timerId") long timerId){
+    public ResponseEntity<Timer> getTimerById(@PathVariable("timerId") long timerId){
         Timer timer = this.timerService.getTimer(timerId);
         return ResponseEntity.ok(timer);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Timer>> getTimers(){
+    public ResponseEntity<List<Timer>> getAllTimers(){
         List<Timer> result = this.timerService.getTimers();
         return ResponseEntity.ok(result);
     }

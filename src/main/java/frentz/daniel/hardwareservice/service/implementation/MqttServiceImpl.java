@@ -58,6 +58,7 @@ public class MqttServiceImpl implements MqttService {
 
     @Override
     public Observable<JsonRpcMessage> publishWithResponse(String serialNumber, JsonRpcMessage payload, long timeout) {
+        logger.debug("Publishing with response: {}", payload);
         long id = this.sequenceGenerator.getAndIncrement() + 1;
         payload.setId(id);
         Observable<JsonRpcMessage> result = this.rpcResponseProcessor.awaitResponse(id, timeout);

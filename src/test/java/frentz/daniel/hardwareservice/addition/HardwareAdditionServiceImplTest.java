@@ -1,25 +1,15 @@
 package frentz.daniel.hardwareservice.addition;
 
+import frentz.daniel.hardwareservice.addition.implementation.HardwareAdditionServiceImpl;
 import frentz.daniel.hardwareservice.builder.HardwareStateBuilder;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
-import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
 import frentz.daniel.hardwareservice.model.Hardware;
-import frentz.daniel.hardwareservice.model.HardwareState;
-import frentz.daniel.hardwareservice.model.Timer;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HardwareAdditionServiceImplTest {

@@ -39,7 +39,7 @@ public class LoggingMqttMessageInterceptor implements InterceptHandler {
 
     @Override
     public void onPublish(InterceptPublishMessage interceptPublishMessage) {
-        LOGGER.info("Message was published. Topic: {}. Payload: {}", interceptPublishMessage.getTopicName(), interceptPublishMessage.getPayload());
+        LOGGER.info("Message was published. Topic: {}. Payload: {}", interceptPublishMessage.getTopicName(), interceptPublishMessage.getPayload().toString());
     }
 
     @Override

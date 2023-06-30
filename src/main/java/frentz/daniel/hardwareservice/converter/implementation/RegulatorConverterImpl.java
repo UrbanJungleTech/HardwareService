@@ -18,7 +18,6 @@ public class RegulatorConverterImpl implements RegulatorConverter {
         result.setCorrectionInterval(regulatorEntity.getCorrectionInterval());
         result.setMaximumCorrectionHardwareId(regulatorEntity.getMaximumCorrectionHardwareId());
         result.setMinimumCorrectionHardwareId(regulatorEntity.getMinimumCorrectionHardwareId());
-        result.setSensorId(regulatorEntity.getSensorId());
         result.setMaximumReading(regulatorEntity.getMaximumReading());
         result.setMinimumReading(regulatorEntity.getMinimumReading());
         return result;
@@ -38,7 +37,6 @@ public class RegulatorConverterImpl implements RegulatorConverter {
         regulatorEntity.setMinimumCorrectionHardwareId(regulator.getMinimumCorrectionHardwareId());
         regulatorEntity.setMaximumReading(regulator.getMaximumReading());
         regulatorEntity.setMinimumReading(regulator.getMinimumReading());
-        regulatorEntity.setSensorId(regulator.getSensorId());
         regulatorEntity.setCorrectionInterval(regulator.getCorrectionInterval());
     }
 }

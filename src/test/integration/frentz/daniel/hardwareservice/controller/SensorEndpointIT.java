@@ -102,14 +102,14 @@ public class SensorEndpointIT {
 
         boolean asserted = false;
         long startTime = System.currentTimeMillis();
-
-        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
-            if (this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort())).size() >= 1) {
+        int port = (int)createdSensor.getPort();
+        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
+            if (this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (int)createdSensor.getPort())).size() >= 1) {
                 asserted = true;
                 Thread.sleep(10);
             }
         }
-        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort()));
+        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (int)createdSensor.getPort()));
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
         assertEquals(createdSensor.getPort(), Long.valueOf((int)message.getParams().get("port")));

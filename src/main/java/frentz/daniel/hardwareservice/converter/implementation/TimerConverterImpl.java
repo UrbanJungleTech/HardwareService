@@ -2,6 +2,8 @@ package frentz.daniel.hardwareservice.converter.implementation;
 
 import frentz.daniel.hardwareservice.converter.TimerConverter;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
+import frentz.daniel.hardwareservice.model.ONOFF;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.model.Timer;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,9 @@ public class TimerConverterImpl implements TimerConverter {
 
     @Override
     public void fillEntity(TimerEntity timerEntity, Timer timer) {
-        this.scheduledHardwareJobConverter.fillOnEntity(timer, timerEntity.getOnCronJob());
-        this.scheduledHardwareJobConverter.fillOffEntity(timer, timerEntity.getOffCronJob());
+        ScheduledHardware onScheduledHardware = this.scheduledHardwareJobConverter.toScheduledHardware(timer, ONOFF.ON);
+        this.scheduledHardwareJobConverter.fillEntity(onScheduledHardware, timerEntity.getOnCronJob());
+        ScheduledHardware offScheduledHardware = this.scheduledHardwareJobConverter.toScheduledHardware(timer, ONOFF.OFF);
+        this.scheduledHardwareJobConverter.fillEntity(offScheduledHardware, timerEntity.getOffCronJob());
     }
 }

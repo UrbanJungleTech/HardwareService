@@ -38,7 +38,7 @@ public class HardwareControllerEndpointTest {
         Hardware expectedHardware = new Hardware();
 
         when(this.hardwareControllerAdditionService.addHardware(hardwareId, hardware)).thenReturn(expectedHardware);
-        ResponseEntity<Hardware> result = this.hardwareControllerEndpoint.createHardware(hardwareId, hardware);
+        ResponseEntity<Hardware> result = this.hardwareControllerEndpoint.addHardware(hardwareId, hardware);
 
         verify(this.hardwareControllerAdditionService).addHardware(hardwareId, hardware);
         assertEquals(201, result.getStatusCodeValue());

@@ -17,7 +17,7 @@ public class ScheduledReadingEndpoint {
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
     }
     @DeleteMapping("/scheduledReading/{scheduledReadingId}")
-    public ResponseEntity deleteScheduledReading(@PathVariable("scheduledReadingId") long scheduledReadingId){
+    public ResponseEntity deleteScheduledReadingById(@PathVariable("scheduledReadingId") long scheduledReadingId){
         this.scheduledSensorReadingAdditionService.delete(scheduledReadingId);
         return ResponseEntity.noContent().build();
     }

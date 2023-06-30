@@ -8,13 +8,14 @@ public class RegulatorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private long minimumCorrectionHardwareId;
-    private long maximumCorrectionHardwareId;
-    private long sensorId;
+    private Long minimumCorrectionHardwareId;
+    private Long maximumCorrectionHardwareId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private HardwareControllerEntity hardwareControllerEntity;
     private String checkInterval;
-    private long minimumReading;
-    private long maximumReading;
-    private long correctionInterval;
+    private Long minimumReading;
+    private Long maximumReading;
+    private Long correctionInterval;
 
 
     public String getCheckInterval() {
@@ -39,14 +40,6 @@ public class RegulatorEntity {
 
     public void setMaximumReading(long maximumReading) {
         this.maximumReading = maximumReading;
-    }
-
-    public long getSensorId() {
-        return sensorId;
-    }
-
-    public void setSensorId(long sensorId) {
-        this.sensorId = sensorId;
     }
 
     public Long getId() {
@@ -79,5 +72,13 @@ public class RegulatorEntity {
 
     public void setCorrectionInterval(long correctionInterval) {
         this.correctionInterval = correctionInterval;
+    }
+
+    public HardwareControllerEntity getHardwareControllerEntity() {
+        return hardwareControllerEntity;
+    }
+
+    public void setHardwareControllerEntity(HardwareControllerEntity hardwareControllerEntity) {
+        this.hardwareControllerEntity = hardwareControllerEntity;
     }
 }

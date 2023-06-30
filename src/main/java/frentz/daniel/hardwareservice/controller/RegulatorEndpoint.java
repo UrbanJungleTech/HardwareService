@@ -22,7 +22,7 @@ public class RegulatorEndpoint {
     }
 
     @DeleteMapping("/{regulatorId}")
-    public ResponseEntity deleteRegulator(@PathVariable("regulatorId") long regulatorId){
+    public ResponseEntity deleteRegulatorById(@PathVariable("regulatorId") long regulatorId){
         this.regulatorAdditionService.delete(regulatorId);
         return ResponseEntity.noContent().build();
     }

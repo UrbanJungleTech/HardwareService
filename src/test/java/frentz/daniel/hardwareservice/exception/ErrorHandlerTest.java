@@ -22,7 +22,7 @@ class ErrorHandlerTest {
         standardErrorException.setStatus(httpStatus);
         standardErrorException.setMessage(message);
 
-        ResponseEntity<StandardError> response = this.errorHandler.handleError(standardErrorException);
+        ResponseEntity<WebRequestException> response = this.errorHandler.handleError(standardErrorException);
 
         assertEquals(httpStatus.value(), response.getStatusCodeValue());
         assertEquals(message, response.getBody().getMessage());
@@ -31,7 +31,7 @@ class ErrorHandlerTest {
     @Test
     void fallback() {
         RuntimeException runtimeException = new RuntimeException("error message");
-        ResponseEntity<StandardError> response = this.errorHandler.fallback(runtimeException);
+        ResponseEntity<WebRequestException> response = this.errorHandler.fallback(runtimeException);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatusCodeValue());
         assertEquals("Unknown error", response.getBody().getMessage());
     }

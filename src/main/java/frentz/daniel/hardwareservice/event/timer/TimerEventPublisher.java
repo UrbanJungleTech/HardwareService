@@ -22,4 +22,9 @@ public class TimerEventPublisher {
         TimerDeleteEvent timerDeleteEvent = new TimerDeleteEvent(timerId);
         this.applicationEventPublisher.publishEvent(timerDeleteEvent);
     }
+
+    public void publishUpdateTimerEvent(long timerId){
+        TimerUpdateEvent timerUpdateEvent = new TimerUpdateEvent(timerId);
+        this.applicationEventPublisher.publishEvent(timerUpdateEvent);
+    }
 }
