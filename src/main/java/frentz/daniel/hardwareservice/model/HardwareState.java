@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.model;
 
 public class HardwareState {
+    private Long id;
     private long level;
     private ONOFF state;
 
@@ -25,5 +26,13 @@ public class HardwareState {
 
     public void setState(ONOFF state) {
         this.state = state;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
