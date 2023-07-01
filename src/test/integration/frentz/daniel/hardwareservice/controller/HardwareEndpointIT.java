@@ -216,29 +216,22 @@ public class HardwareEndpointIT {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
-        //retrieve the hardware controller from the db
+        HardwareState updatedState = createdHardware.getDesiredState();
 
-        HardwareState updatedState = new HardwareState();
-        updatedState.setLevel(10);
-        updatedState.setState(ONOFF.ON);
-        createdHardware.setDesiredState(updatedState);
+        createdHardware.getDesiredState().setLevel(10);
+        createdHardware.getDesiredState().setState(ONOFF.ON);
+
 
         String updatedHardwareJson = objectMapper.writeValueAsString(createdHardware);
 
-        MvcResult result = mockMvc.perform(put("/hardware/" + createdHardware.getId())
+        mockMvc.perform(put("/hardware/" + createdHardware.getId())
                         .content(updatedHardwareJson)
                         .contentType("application/json")
                         .content(updatedHardwareJson))
                 .andExpect(status().isOk())
-                .andReturn();
-
-        Hardware updatedHardware = objectMapper.readValue(result.getResponse().getContentAsString(), Hardware.class);
-        HardwareState updatedDesiredState = updatedHardware.getDesiredState();
-        assertEquals(updatedState.getLevel(), updatedDesiredState.getLevel());
-        assertEquals(updatedState.getState(), updatedDesiredState.getState());
-        HardwareState updatedCurrentState = updatedHardware.getCurrentState();
-        assertNotEquals(updatedState.getLevel(), updatedCurrentState.getLevel());
-        assertNotEquals(updatedState.getState(), updatedCurrentState.getState());
+                .andExpect(jsonPath("$.desiredState.id").value(createdHardware.getDesiredState().getId()))
+                .andExpect(jsonPath("$.desiredState.level").value(updatedState.getLevel()))
+                .andExpect(jsonPath("$.desiredState.state").value(updatedState.getState().toString()));
 
         boolean asserted = false;
         long startTime = System.currentTimeMillis();

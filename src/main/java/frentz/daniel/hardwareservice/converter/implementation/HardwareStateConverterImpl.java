@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class HardwareStateConverterImpl implements HardwareStateConverter {
     @Override
-    public HardwareState toModel(HardwareStateEntity hardwareState) {
+    public HardwareState toModel(HardwareStateEntity hardwareStateEntity) {
         HardwareState result = new HardwareState();
-        result.setLevel(hardwareState.getLevel());
-        result.setState(hardwareState.getState());
+        result.setId(hardwareStateEntity.getStateId());
+        result.setLevel(hardwareStateEntity.getLevel());
+        result.setState(hardwareStateEntity.getState());
         return result;
     }
 

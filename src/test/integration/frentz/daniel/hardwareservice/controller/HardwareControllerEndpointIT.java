@@ -263,16 +263,17 @@ public class HardwareControllerEndpointIT {
                         .contentType("application/json")
                         .content(hardwareControllerJson))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.hardware").isNotEmpty())
+                .andExpect(jsonPath("$.hardware[0].type").value("light"))
+                .andExpect(jsonPath("$.hardware[0].id").isNumber())
+                .andExpect(jsonPath("$.hardware[0].desiredState").isNotEmpty())
+                .andExpect(jsonPath("$.hardware[0].desiredState.id").isNumber())
+                .andExpect(jsonPath("$.hardware[0].desiredState.state").value("OFF"))
+                .andExpect(jsonPath("$.hardware[0].currentState").isNotEmpty())
+                .andExpect(jsonPath("$.hardware[0].currentState.id").isNumber())
+                .andExpect(jsonPath("$.hardware[0].currentState.state").value("OFF"))
                 .andReturn();
         HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-
-        //retrieve the hardware controller from the db
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-
-        //check the values in the response
-        assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
-        assertEquals(1, createdHardwareController.getHardware().size());
-        assertEquals("light", createdHardwareController.getHardware().get(0).getType());
     }
 
     /**
