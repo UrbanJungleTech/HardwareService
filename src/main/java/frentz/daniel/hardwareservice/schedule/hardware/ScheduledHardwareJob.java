@@ -6,6 +6,8 @@ import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.model.Hardware;
+import frentz.daniel.hardwareservice.model.ScheduledHardware;
+import frentz.daniel.hardwareservice.service.HardwareService;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,27 +17,23 @@ import org.slf4j.LoggerFactory;
 public class ScheduledHardwareJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledHardwareJob.class);
-    private ScheduledHardwareEntity scheduledHardware;
+    private ScheduledHardware scheduledHardware;
     private HardwareAdditionService hardwareAdditionService;
-    private HardwareConverter hardwareConverter;
+    private HardwareService hardwareService;
 
-    public ScheduledHardwareJob(ScheduledHardwareEntity scheduledHardware,
+    public ScheduledHardwareJob(ScheduledHardware scheduledHardware,
                                 HardwareAdditionService hardwareAdditionService,
-                                HardwareConverter hardwareConverter){
+                                HardwareService hardwareService){
         this.scheduledHardware = scheduledHardware;
         this.hardwareAdditionService = hardwareAdditionService;
-        this.hardwareConverter = hardwareConverter;
+        this.hardwareService = hardwareService;
     }
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.debug("Executing hardware scheduled job with state {}", scheduledHardware.getHardwareState().getState());
-        HardwareEntity hardware = scheduledHardware.getTimerEntity().getHardware();
-        Hardware hardwareModel = hardwareConverter.toModel(hardware);
-        HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(scheduledHardware.getHardwareState().getState());
-        hardwareState.setLevel(scheduledHardware.getHardwareState().getLevel());
-        hardwareModel.setDesiredState(hardwareState);
-        this.hardwareAdditionService.update(hardware.getId(), hardwareModel);
+        Hardware hardware = hardwareService.getHardware(scheduledHardware.getHardwareId());
+        hardware.setDesiredState(scheduledHardware.getHardwareState());
+        this.hardwareAdditionService.update(hardware.getId(), hardware);
     }
 }

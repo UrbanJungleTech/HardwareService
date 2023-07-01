@@ -32,7 +32,7 @@ class HardwareEndpointTest {
 
         when(this.hardwareService.getHardware(hardwareControllerId)).thenReturn(expectedHardware);
 
-        ResponseEntity<Hardware> result = this.hardwareEndpoint.getHardware(hardwareControllerId);
+        ResponseEntity<Hardware> result = this.hardwareEndpoint.getHardwareById(hardwareControllerId);
 
         verify(this.hardwareService).getHardware(hardwareControllerId);
         assertEquals(200, result.getStatusCodeValue());
@@ -43,7 +43,7 @@ class HardwareEndpointTest {
     @Test
     void removeHardware() {
         int hardwareId = 1;
-        ResponseEntity result = this.hardwareEndpoint.removeHardware(hardwareId);
+        ResponseEntity result = this.hardwareEndpoint.deleteHardwareById(hardwareId);
 
         verify(this.hardwareAdditionService).delete(hardwareId);
         assertEquals(204, result.getStatusCode().value());

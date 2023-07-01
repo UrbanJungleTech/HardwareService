@@ -1,6 +1,5 @@
 package frentz.daniel.hardwareservice.schedule.config;
 
-import frentz.daniel.hardwareservice.schedule.regulator.RegulatorJobFactory;
 import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareJobFactory;
 import frentz.daniel.hardwareservice.schedule.sensor.ScheduledSensorReadingJobFactory;
 import org.quartz.Scheduler;
@@ -24,25 +23,6 @@ public class SchedulerConfig {
             Properties config = new Properties();
             config.setProperty("org.quartz.scheduler.instanceName", "HardwareScheduler");
             config.setProperty("org.quartz.threadPool.threadCount", "20");
-            SchedulerFactory schedulerFactory = new StdSchedulerFactory(config);
-            Scheduler scheduler = schedulerFactory.getScheduler();
-            scheduler.setJobFactory(jobFactory);
-            scheduler.start();
-            return scheduler;
-        }
-        catch(Exception ex){
-            logger.error("Failed to start scheduler.");
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    @Bean("RegulatorScheduler")
-    Scheduler getRegulatorScheduler(RegulatorJobFactory jobFactory){
-        try {
-            Properties config = new Properties();
-            config.setProperty("org.quartz.scheduler.instanceName", "RegulatorScheduler");
-            config.setProperty("org.quartz.threadPool.threadCount", "2");
             SchedulerFactory schedulerFactory = new StdSchedulerFactory(config);
             Scheduler scheduler = schedulerFactory.getScheduler();
             scheduler.setJobFactory(jobFactory);

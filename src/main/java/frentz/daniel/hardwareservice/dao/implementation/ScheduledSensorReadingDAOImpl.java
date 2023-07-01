@@ -54,17 +54,16 @@ public class ScheduledSensorReadingDAOImpl implements ScheduledSensorReadingDAO 
     @Override
     public ScheduledSensorReadingEntity getScheduledSensorReading(long scheduledSensorReadingId) {
         return this.scheduledSensorReadingRepository.findById(scheduledSensorReadingId).orElseThrow(
-                () -> this.exceptionService.createNotFoundException(ScheduledSensorReadingEntity.class, scheduledSensorReadingId)
-        );
+                () -> this.exceptionService.createNotFoundException(ScheduledSensorReadingEntity.class, scheduledSensorReadingId));
     }
 
     @Override
     public void delete(long scheduledSensorReadingId) {
-        ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingRepository.findById(scheduledSensorReadingId).get();
+        ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingRepository.findById(scheduledSensorReadingId)
+                .orElseThrow(
+                        () -> this.exceptionService.createNotFoundException(ScheduledSensorReadingEntity.class, scheduledSensorReadingId));
         SensorEntity sensorEntity = scheduledSensorReadingEntity.getSensor();
-        sensorEntity.getScheduledSensorReadings().removeIf((scheduledReading -> {
-            return scheduledReading.getId() == scheduledSensorReadingId;
-        }));
+        sensorEntity.getScheduledSensorReadings().removeIf((scheduledReading -> scheduledReading.getId() == scheduledSensorReadingId));
         sensorRepository.save(sensorEntity);
         this.scheduledSensorReadingRepository.deleteById(scheduledSensorReadingId);
     }

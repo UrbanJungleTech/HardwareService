@@ -2,14 +2,12 @@ package frentz.daniel.hardwareservice.addition.implementation;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
-import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
 import frentz.daniel.hardwareservice.addition.SensorAdditionService;
 import frentz.daniel.hardwareservice.converter.HardwareControllerConverter;
 import frentz.daniel.hardwareservice.dao.HardwareControllerDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.exception.DuplicateSerialNumberException;
 import frentz.daniel.hardwareservice.model.Regulator;
-import frentz.daniel.hardwareservice.service.HardwareControllerSubscriptionService;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.HardwareController;
@@ -28,7 +26,6 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     private SensorAdditionService sensorAdditionService;
     private HardwareControllerConverter hardwareControllerConverter;
     private ObjectLoggerService objectLoggerService;
-    private RegulatorAdditionService regulatorAdditionService;
 
     public HardwareControllerAdditionServiceImpl(HardwareControllerDAO hardwareControllerDAO,
                                                  HardwareAdditionService hardwareAdditionService,
@@ -120,12 +117,5 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     @Transactional
     public void deleteAll() {
         this.hardwareControllerDAO.deleteAll();
-    }
-
-    @Override
-    @Transactional
-    public Regulator addRegulator(long hardwareControllerId, Regulator regulator) {
-        Regulator result = this.regulatorAdditionService.create(regulator);
-        return result;
     }
 }

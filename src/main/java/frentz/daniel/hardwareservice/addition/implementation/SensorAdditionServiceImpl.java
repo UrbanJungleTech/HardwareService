@@ -1,6 +1,5 @@
 package frentz.daniel.hardwareservice.addition.implementation;
 
-import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
 import frentz.daniel.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import frentz.daniel.hardwareservice.addition.SensorAdditionService;
 import frentz.daniel.hardwareservice.converter.SensorConverter;
@@ -8,7 +7,6 @@ import frentz.daniel.hardwareservice.dao.SensorDAO;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.event.sensor.SensorEventPublisher;
 import frentz.daniel.hardwareservice.model.Regulator;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
@@ -25,18 +23,15 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     private SensorConverter sensorConverter;
     private ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
     private SensorEventPublisher sensorEventPublisher;
-    private RegulatorAdditionService regulatorAdditionService;
 
     public SensorAdditionServiceImpl(SensorDAO sensorDAO,
                                      SensorConverter sensorConverter,
                                      ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
-                                     SensorEventPublisher sensorEventPublisher,
-                                     RegulatorAdditionService regulatorAdditionService){
+                                     SensorEventPublisher sensorEventPublisher){
         this.sensorDAO = sensorDAO;
         this.sensorConverter = sensorConverter;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorEventPublisher = sensorEventPublisher;
-        this.regulatorAdditionService = regulatorAdditionService;
     }
 
     @Transactional
@@ -92,13 +87,5 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     public ScheduledSensorReading addScheduledReading(long sensorId, ScheduledSensorReading scheduledSensorReading) {
         scheduledSensorReading.setSensorId(sensorId);
         return this.scheduledSensorReadingAdditionService.create(scheduledSensorReading);
-    }
-
-    @Override
-    @Transactional
-    public Regulator addRegulator(long sensorId, Regulator regulator) {
-        regulator.setSensorId(sensorId);
-        regulator = this.regulatorAdditionService.create(regulator);
-        return regulator;
     }
 }

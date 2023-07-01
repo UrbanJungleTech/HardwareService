@@ -16,6 +16,7 @@ public class ScheduledHardwareServiceImpl implements ScheduledHardwareService {
     public ScheduledHardwareServiceImpl(ScheduledHardwareDAO scheduledHardwareDAO,
                                         ScheduledHardwareJobConverter scheduledHardwareJobConverter){
         this.scheduledHardwareDAO = scheduledHardwareDAO;
+        this.scheduledHardwareConverter = scheduledHardwareJobConverter;
     }
     @Override
     public void createScheduledHardware(ScheduledHardware scheduledHardware) {

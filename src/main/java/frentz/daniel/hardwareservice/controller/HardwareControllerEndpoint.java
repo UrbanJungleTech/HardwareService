@@ -3,7 +3,6 @@ package frentz.daniel.hardwareservice.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
-import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.Regulator;
@@ -26,18 +25,15 @@ public class HardwareControllerEndpoint {
     private final HardwareControllerAdditionService hardwareControllerAdditionService;
     private final HardwareControllerSubscriptionService hardwareControllerSubscriptionService;
     private final HardwareControllerService hardwareControllerService;
-    private final RegulatorAdditionService regulatorAdditionService;
 
     public HardwareControllerEndpoint(ObjectMapper objectMapper,
                                       HardwareControllerAdditionService hardwareControllerAdditionService,
                                       HardwareControllerSubscriptionService hardwareControllerSubscriptionService,
-                                      HardwareControllerService hardwareControllerService,
-                                      RegulatorAdditionService regulatorAdditionService){
+                                      HardwareControllerService hardwareControllerService){
         this.objectMapper = objectMapper;
         this.hardwareControllerService = hardwareControllerService;
         this.hardwareControllerAdditionService = hardwareControllerAdditionService;
         this.hardwareControllerSubscriptionService = hardwareControllerSubscriptionService;
-        this.regulatorAdditionService = regulatorAdditionService;
     }
 
     @PostMapping("/")
@@ -133,11 +129,5 @@ public class HardwareControllerEndpoint {
     public ResponseEntity<List<Sensor>> getSensorByHardwareControllerId(@PathVariable("hardwareControllerId") long hardwareControllerId){
         List<Sensor> result = this.hardwareControllerService.getSensors(hardwareControllerId);
         return ResponseEntity.ok(result);
-    }
-
-    @PostMapping(value = "/{hardwareControllerId}/regulator")
-    public ResponseEntity<Regulator> addRegulator(@RequestBody Regulator regulator, @PathVariable("hardwareControllerId") long hardwareControllerId){
-        Regulator result = this.hardwareControllerAdditionService.addRegulator(hardwareControllerId, regulator);
-        return ResponseEntity.created(null).body(result);
     }
 }

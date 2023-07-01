@@ -392,4 +392,31 @@ public class HardwareEndpointIT {
         assertTrue(onCount >= 2 && onCount <= 3);
         assertTrue(offCount >= 1 && offCount <= 2);
     }
+
+    /**
+     * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
+     * When a PUT request is made to /hardware/{hardwareId}/currentstate with a HardwareState object
+     * Then a 200 status code is returned
+     * And the state has been updated accordingly
+     * And a call to /hardware/{hardwareId}/ should return the hardware with the updated state
+     */
+    @Test
+    public void updateHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
+        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(ONOFF.ON);
+        String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
+
+        mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/currentstate")
+                        .content(hardwareStateJson)
+                        .contentType("application/json")
+                        .content(hardwareStateJson))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentState.state").value(hardwareState.getState().toString()));
+    }
 }

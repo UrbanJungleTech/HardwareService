@@ -1,11 +1,9 @@
 package frentz.daniel.hardwareservice.controller;
 
 import frentz.daniel.hardwareservice.addition.HardwareControllerAdditionService;
-import frentz.daniel.hardwareservice.addition.RegulatorAdditionService;
 import frentz.daniel.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import frentz.daniel.hardwareservice.addition.SensorAdditionService;
 import frentz.daniel.hardwareservice.dao.SensorReadingDAO;
-import frentz.daniel.hardwareservice.model.Regulator;
 import frentz.daniel.hardwareservice.service.SensorService;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
@@ -25,21 +23,15 @@ public class SensorEndpoint {
     private final ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
     private final SensorReadingDAO sensorReadingDAO;
     private final SensorAdditionService sensorAdditionService;
-    private final HardwareControllerAdditionService hardwareControllerAdditionService;
-    private final RegulatorAdditionService regulatorAdditionService;
 
     public SensorEndpoint(ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
                           SensorService sensorService,
                           SensorReadingDAO sensorReadingDAO,
-                          SensorAdditionService sensorAdditionService,
-                          HardwareControllerAdditionService hardwareControllerAdditionService,
-                          RegulatorAdditionService regulatorAdditionService){
+                          SensorAdditionService sensorAdditionService){
         this.sensorService = sensorService;
         this.sensorReadingDAO = sensorReadingDAO;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorAdditionService = sensorAdditionService;
-        this.hardwareControllerAdditionService = hardwareControllerAdditionService;
-        this.regulatorAdditionService = regulatorAdditionService;
     }
 
     @GetMapping("/{sensorId}")

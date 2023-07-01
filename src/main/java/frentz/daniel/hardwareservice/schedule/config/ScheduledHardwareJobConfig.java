@@ -22,7 +22,7 @@ public class ScheduledHardwareJobConfig implements ApplicationListener<ContextRe
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         this.scheduledHardwareDAO.getAll().forEach((ScheduledHardwareEntity job) -> {
-            this.scheduledHardwareScheduleService.start(job);
+            this.scheduledHardwareScheduleService.start(job.getId());
         });
     }
 }
