@@ -70,20 +70,61 @@ The Hardware Microservice is a critical component that acts as the communication
 
 ## Hardware Controller
 
-At the heart of the system lies the Hardware Controller. This microcontroller plays the indispensable role of controlling the hardware, executing the instructions it receives from the Hardware Microservice. However, the role of the Hardware Controller goes beyond mere execution of commands. It acts as the system's "hands and feet," interacting with the physical world and performing the actual tasks that maintain the plant's environment. It is the gateway between the software and the real world, carrying out tasks such as turning lights on or off, activating pumps, and many others.
+The Hardware Controller is the crucial interface between the system's software and its physical components. Its unique role allows it to interpret instructions received from the Hardware Microservice and execute these commands through the appropriate hardware devices.
+
+### Key Features of the Hardware Controller:
+
+### Serial number: 
+Each Hardware Controller has a unique serial number, serving as an identifier that distinguishes it from other controllers in the system. This alphanumeric sequence ensures that each controller, along with the sensors and hardware it manages, can be addressed distinctly.
+
+### Ports: 
+The Hardware Controller utilizes a system of abstract ports to connect hardware and sensor devices. Each port must be unique within the context of a single hardware device or sensor, as it forms the addressing system for these entities. A port might correspond to a physical GPIO pin, a unique Bluetooth identifier, or even a Wi-Fi device's unique network information. This abstract design ensures flexibility and expandability in the system, allowing for a variety of devices to be added as needed.
+
+### Set of Hardware: 
+The Hardware Controller manages a set of hardware devices that can be turned on or off and optionally adjusted for intensity or "level". Each piece of hardware corresponds to a unique port and can be controlled independently.
+
+### Set of Sensors: 
+Alongside hardware devices, the Hardware Controller manages a set of sensors that can read and report data. Like hardware, each sensor is associated with a unique port. Even though a sensor must return only one value, sensors that can provide multiple data types can be accommodated by assigning them multiple ports. For example, a sensor that can measure both temperature and humidity could have two ports, each one returning a different value.
+
+The Hardware Microservice is aware of the existence of these hardware controllers, hardware devices, and sensors but does not dictate how they function. The specific functioning of each component is managed by the Hardware Controller, providing a modular design where each entity is responsible for its operation, thereby ensuring efficient system performance.
 
 ## Hardware
 
-Hardware
-The term "Hardware" refers to the physical devices that the system uses to affect the environment. This can be anything from lighting fixtures, watering pumps, fans, heaters, to any other equipment that can be switched on or off. But hardware in this context isn't limited to these examples. Indeed, any device that can be turned on or off, and that can contribute to creating an optimal environment for plant growth, could be considered hardware.
+The term "Hardware" within our system denotes any physical device that can modify the environment through its states, primarily "on" or "off". This hardware can be diverse, including lights, fans, heaters, watering pumps, and more, with the key characteristic being that their operation can influence the growth conditions for plants.
 
-This flexible definition allows our system to be versatile and adaptable, capable of integrating a wide range of devices to serve the needs of diverse plant species. Moreover, our advanced scheduling capabilities mean that hardware can be programmed to activate or deactivate at precise times. This intelligent automation ensures that each piece of hardware performs its function at exactly the right moment to optimize the environment for plant growth, while also conserving energy when it's not needed.
+### Key aspects of Hardware:
 
-Should the controller for these hardware devices be offline at any given point, the system is designed with resiliency in mind. Messages to activate or deactivate the hardware are queued and patiently wait for the controller to regain connectivity. Once the controller is back online, it promptly receives the queued messages and executes the instructions accordingly. This ensures continuity of service and minimizes any potential disruption caused by temporary network issues, preserving the smooth operation of your plant cultivation environment.
+### Diverse Application:
+Hardware, in this context, is an all-encompassing term. It covers any device that can be toggled between "on" and "off" states, extending beyond conventional plant-care equipment. This approach ensures the system's flexibility, enabling it to accommodate any device contributing to an optimal plant growth environment.
+
+### Unique Port Assignment:
+Each hardware device corresponds to a unique port in the Hardware Controller. The port serves as the address for the device, and is used by the Hardware Controller to interact with the device and adjust its state.
+
+### Scheduled Operation:
+Hardware devices can be programmed for operation at specific times through our advanced scheduling capabilities. This intelligent automation ensures optimal plant growth by activating each device at precisely the right moment. Additionally, it conserves energy by ensuring devices are deactivated when not needed.
+
+### Resilience:
+Our system is designed with a focus on resilience. If a Hardware Controller loses connectivity, any commands to change hardware states are queued rather than being lost or failed. When connectivity is re-established, the queued commands are then sent to the Hardware Controller, which executes them in sequence. This design ensures a continuity of service and minimizes potential disruptions caused by temporary network issues, thereby maintaining a consistent and controlled environment for your plants.
+
+In essence, the role of hardware in our system is not confined to merely carrying out commands. By leveraging intelligent scheduling, unique addressing, and resilient design, each piece of hardware contributes actively and efficiently to maintaining the desired conditions for plant growth.
 
 ## Sensor
 
-Sensors are the eyes and ears of our system. They continually monitor the environment, gathering vital data such as temperature, humidity, light intensity, soil moisture, and more. This data is not merely collected; it is interpreted and used to make decisions. The role of sensors extends beyond simple data collection; they provide the system with the capability to understand the state of its environment and adjust accordingly. Through precise measurements and reliable operation, our sensors ensure that our system can make accurate decisions, thereby creating and maintaining the optimal conditions for plant health.
+Sensors serve as the primary data collection units of our system, acting as the conduits through which the system perceives its environment. The information these sensors gather encompasses various environmental parameters, including but not limited to temperature, humidity, light intensity, and soil moisture.
+
+### Key Aspects of Sensors:
+Versatile Monitoring: Sensors in our system continuously capture essential data about the environment. This data, however, is not just accumulated. It is used by the system to gauge the state of the environment and dynamically adjust the operation of hardware components based on these readings. This allows the system to respond to changes in the environment, providing an adaptive, real-time response.
+
+### Unique Port Assignment: 
+Similar to hardware, each sensor is also assigned a unique port on the Hardware Controller. This port serves as the unique identifier for the sensor and enables the Hardware Controller to read the sensor's data. If a sensor can capture more than one type of data, it can be assigned multiple ports, each corresponding to a specific data type.
+
+### Precision and Reliability:
+Our sensors are selected and implemented with a focus on precision and reliability. They ensure that our system can make informed decisions based on accurate, reliable data, thereby creating and maintaining an optimal environment for plant health.
+
+### Data Driven Decisions:
+The collected sensor data forms the basis for the system's decision-making processes. Changes in sensor data trigger adjustments in hardware operation, allowing the system to proactively manage the plant growth environment.
+
+By going beyond simple data collection to providing actionable insights for the system's operation, our sensors play a pivotal role in ensuring that your plants are always nurtured under optimal conditions.
 
 ## MQTT in the System
 
