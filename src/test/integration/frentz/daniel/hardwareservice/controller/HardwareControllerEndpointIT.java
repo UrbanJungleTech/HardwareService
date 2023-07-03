@@ -10,8 +10,11 @@ import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.exception.WebRequestException;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import frentz.daniel.hardwareservice.schedule.sensor.SensorScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,11 +40,17 @@ public class HardwareControllerEndpointIT {
     private HardwareRepository hardwareRepository;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    @Autowired
+    private SensorScheduleService sensorScheduleService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SchedulerException {
         hardwareControllerRepository.deleteAll();
         hardwareRepository.deleteAll();
+        this.scheduledHardwareScheduleService.deleteAllSchedules();
+        this.sensorScheduleService.deleteAll();
     }
 
     /**

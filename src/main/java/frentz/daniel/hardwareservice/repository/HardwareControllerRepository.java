@@ -10,6 +10,6 @@ public interface HardwareControllerRepository extends JpaRepository<HardwareCont
     @Query("Select h.id from HardwareControllerEntity h where :serialNumber = :serialNumber")
     long findIdBySerialNumber(@Param("serialNumber") String serialNumber);
     boolean existsBySerialNumber(String serialNumber);
-    @Query("Select h.serialNumber from HardwareControllerEntity h where :hardwareControllerId = id")
+    @Query("Select h.serialNumber from HardwareControllerEntity h where :hardwareControllerId = h.id")
     String getSerialNumberById(long hardwareControllerId);
 }

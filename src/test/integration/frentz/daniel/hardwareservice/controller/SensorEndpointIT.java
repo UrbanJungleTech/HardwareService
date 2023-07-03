@@ -3,20 +3,23 @@ package frentz.daniel.hardwareservice.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.SensorTestService;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
+import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.model.SensorReading;
-import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
-import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorReadingRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import frentz.daniel.hardwareservice.schedule.sensor.SensorScheduleService;
 import io.moquette.broker.Server;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,14 +62,16 @@ public class SensorEndpointIT {
     MockMqttClientListener mockMqttClientListener;
     @Autowired
     Server mqttBroker;
-
+    @Autowired
+    private SensorScheduleService sensorScheduleService;
+    @Autowired
+    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
     @BeforeEach
-    void setUp() {
-        this.scheduledSensorReadingRepository.deleteAll();
-        this.sensorReadingRepository.deleteAll();
-        this.sensorRepository.deleteAll();
+    void setUp() throws SchedulerException {
         this.hardwareControllerRepository.deleteAll();
         this.mockMqttClientListener.clear();
+        this.sensorScheduleService.deleteAll();
+        this.scheduledHardwareScheduleService.deleteAllSchedules();
     }
 
     /**

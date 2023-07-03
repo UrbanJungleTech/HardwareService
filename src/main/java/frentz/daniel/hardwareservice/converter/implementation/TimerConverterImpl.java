@@ -26,7 +26,7 @@ public class TimerConverterImpl implements TimerConverter {
         result.setHardwareId(timerEntity.getHardware().getId());
         result.setOnCronString(timerEntity.getOnCronJob().getCronString());
         result.setOffCronString(timerEntity.getOffCronJob().getCronString());
-        result.setOnLevel(timerEntity.getOnCronJob().getHardwareState().getLevel());
+        result.setOnLevel(timerEntity.getOnCronJob().getLevel());
         return result;
     }
 

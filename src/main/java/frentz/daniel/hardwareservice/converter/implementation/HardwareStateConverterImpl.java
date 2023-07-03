@@ -10,9 +10,10 @@ public class HardwareStateConverterImpl implements HardwareStateConverter {
     @Override
     public HardwareState toModel(HardwareStateEntity hardwareStateEntity) {
         HardwareState result = new HardwareState();
-        result.setId(hardwareStateEntity.getStateId());
+        result.setId(hardwareStateEntity.getId());
         result.setLevel(hardwareStateEntity.getLevel());
         result.setState(hardwareStateEntity.getState());
+        result.setHardwareId(hardwareStateEntity.getHardware().getId());
         return result;
     }
 

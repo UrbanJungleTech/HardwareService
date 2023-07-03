@@ -37,7 +37,7 @@ class HardwareStateConverterImplTest {
         hardwareState.setLevel(1);
         hardwareState.setState(ONOFF.ON);
         HardwareStateEntity result = this.hardwareStateConverter.toEntity(hardwareState);
-        assertEquals(0, result.getStateId());
+        assertEquals(0, result.getId());
         assertEquals(hardwareState.getState(), result.getState());
         assertEquals(hardwareState.getLevel(), result.getLevel());
     }

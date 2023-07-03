@@ -12,4 +12,6 @@ public interface HardwareRepository extends JpaRepository<HardwareEntity, Long> 
     Optional<HardwareEntity> findHardwareBySerialNumberAndPort(@Param("serialNumber") String serialNumber, @Param("port") Long port);
     @Query(value="SELECT hardware FROM HardwareEntity hardware WHERE hardware.port = :port and hardware.hardwareController.id = :hardwareControllerId")
     Optional<HardwareEntity> findHardwareByHardwareIdAndPort(@Param("hardwareControllerId") long hardwareControllerId, @Param("port") Long port);
+    @Query(value="SELECT hardware FROM HardwareEntity hardware WHERE hardware.desiredState.id = :hardwareStateId or hardware.currentState.id = :hardwareStateId")
+    Optional<HardwareEntity> findHardwareByHardwareStateId(long hardwareStateId);
 }

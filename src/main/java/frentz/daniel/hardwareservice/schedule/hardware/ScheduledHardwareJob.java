@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.schedule.hardware;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
+import frentz.daniel.hardwareservice.addition.HardwareStateAdditionService;
 import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
@@ -18,22 +19,25 @@ public class ScheduledHardwareJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledHardwareJob.class);
     private ScheduledHardware scheduledHardware;
-    private HardwareAdditionService hardwareAdditionService;
+    private HardwareStateAdditionService hardwareStateAdditionService;
     private HardwareService hardwareService;
 
     public ScheduledHardwareJob(ScheduledHardware scheduledHardware,
-                                HardwareAdditionService hardwareAdditionService,
+                                HardwareStateAdditionService hardwareStateAdditionService,
                                 HardwareService hardwareService){
         this.scheduledHardware = scheduledHardware;
-        this.hardwareAdditionService = hardwareAdditionService;
+        this.hardwareStateAdditionService = hardwareStateAdditionService;
         this.hardwareService = hardwareService;
     }
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        logger.debug("Executing hardware scheduled job with state {}", scheduledHardware.getHardwareState().getState());
-        Hardware hardware = hardwareService.getHardware(scheduledHardware.getHardwareId());
-        hardware.setDesiredState(scheduledHardware.getHardwareState());
-        this.hardwareAdditionService.update(hardware.getId(), hardware);
+        logger.debug("Executing hardware scheduled job with state {}", scheduledHardware.getOnoff());
+        long hardwareStateId = this.hardwareService.getHardware(scheduledHardware.getHardwareId()).getDesiredState().getId();
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(scheduledHardware.getOnoff());
+        hardwareState.setLevel(scheduledHardware.getLevel());
+        hardwareState.setHardwareId(scheduledHardware.getHardwareId());
+        this.hardwareStateAdditionService.update(hardwareStateId, hardwareState);
     }
 }

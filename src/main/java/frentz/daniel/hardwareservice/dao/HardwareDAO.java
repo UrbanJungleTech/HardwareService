@@ -15,4 +15,5 @@ public interface HardwareDAO {
     void delete(long hardwareId);
 
     List<HardwareEntity> getHardwareByHardwareControllerId(long hardwareControllerId);
+    HardwareEntity getHardwareByStateId(long hardwareStateId);
 }

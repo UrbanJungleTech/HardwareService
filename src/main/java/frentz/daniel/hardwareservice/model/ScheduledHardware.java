@@ -3,17 +3,10 @@ package frentz.daniel.hardwareservice.model;
 public class ScheduledHardware {
     private long id;
     private String cronString;
-    private HardwareState hardwareState;
+    private ONOFF onoff;
+    private long level;
     private long hardwareId;
     private Long timerId;
-
-    public HardwareState getHardwareState() {
-        return hardwareState;
-    }
-
-    public void setHardwareState(HardwareState hardwareState) {
-        this.hardwareState = hardwareState;
-    }
 
     public long getId() {
         return id;
@@ -45,5 +38,21 @@ public class ScheduledHardware {
 
     public void setTimerId(Long timerId) {
         this.timerId = timerId;
+    }
+
+    public ONOFF getOnoff() {
+        return onoff;
+    }
+
+    public void setOnoff(ONOFF onoff) {
+        this.onoff = onoff;
+    }
+
+    public long getLevel() {
+        return level;
+    }
+
+    public void setLevel(long level) {
+        this.level = level;
     }
 }

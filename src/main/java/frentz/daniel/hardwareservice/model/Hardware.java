@@ -1,5 +1,8 @@
 package frentz.daniel.hardwareservice.model;
 
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

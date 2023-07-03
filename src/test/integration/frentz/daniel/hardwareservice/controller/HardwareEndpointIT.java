@@ -16,8 +16,11 @@ import frentz.daniel.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import frentz.daniel.hardwareservice.schedule.sensor.SensorScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,12 +58,17 @@ public class HardwareEndpointIT {
     @Autowired
     MockMqttClientListener mqttCacheListener;
 
+    @Autowired
+    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    @Autowired
+    private SensorScheduleService sensorScheduleService;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws SchedulerException {
         this.hardwareControllerRepository.deleteAll();
-        this.hardwareRepository.deleteAll();
-        this.timerRepository.deleteAll();
         this.mqttCacheListener.clear();
+        this.scheduledHardwareScheduleService.deleteAllSchedules();
+        this.sensorScheduleService.deleteAll();
     }
 
     /**
@@ -394,7 +402,38 @@ public class HardwareEndpointIT {
      * And a call to /hardware/{hardwareId}/ should return the hardware with the updated state
      */
     @Test
-    public void updateHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
+    public void updateCurrentHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
+        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState(ONOFF.ON);
+        hardwareState.setLevel(10);
+        String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
+
+        mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/currentstate")
+                        .content(hardwareStateJson)
+                        .contentType("application/json")
+                        .content(hardwareStateJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value(hardwareState.getState().toString()))
+                .andExpect(jsonPath("$.level").value(hardwareState.getLevel()));
+
+        mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentState.state").value(hardwareState.getState().toString()))
+                .andExpect(jsonPath("$.currentState.level").value(hardwareState.getLevel()));
+    }
+
+    /**
+     * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
+     * When a PUT request is made to /hardware/{hardwareId}/desiredstate with a HardwareState object
+     * Then a 200 status code is returned
+     * And the state has been updated accordingly
+     * And a call to /hardware/{hardwareId}/ should return the hardware with the updated state as desiredState
+     */
+    @Test
+    public void updateDesiredHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
@@ -402,14 +441,16 @@ public class HardwareEndpointIT {
         hardwareState.setState(ONOFF.ON);
         String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
 
-        mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/currentstate")
+        mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/desiredstate")
                         .content(hardwareStateJson)
                         .contentType("application/json")
                         .content(hardwareStateJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value(hardwareState.getState().toString()))
+                .andExpect(jsonPath("$.level").value(hardwareState.getLevel()));
 
         mockMvc.perform(get("/hardware/" + createdHardware.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.currentState.state").value(hardwareState.getState().toString()));
+                .andExpect(jsonPath("$.desiredState.state").value(hardwareState.getState().toString()));
     }
 }

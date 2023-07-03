@@ -8,8 +8,11 @@ import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.Timer;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import frentz.daniel.hardwareservice.schedule.sensor.SensorScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,11 +43,17 @@ public class TimerEndpointIT {
     private ObjectMapper objectMapper;
     @Autowired
     HardwareControllerRepository hardwareControllerRepository;
+    @Autowired
+    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    @Autowired
+    private SensorScheduleService sensorScheduleService;
 
     @BeforeEach
-    public void setup() {
-        timerRepository.deleteAll();
+    public void setup() throws SchedulerException {
         hardwareControllerRepository.deleteAll();
+        hardwareControllerRepository.flush();
+        this.sensorScheduleService.deleteAll();
+        this.scheduledHardwareScheduleService.deleteAllSchedules();
     }
 
     /**

@@ -58,4 +58,19 @@ public class HardwareEndpoint {
         timer = this.hardwareAdditionService.addTimer(hardwareId, timer);
         return ResponseEntity.created(null).body(timer);
     }
+
+
+    @PutMapping("/{hardwareId}/currentstate")
+    public ResponseEntity<HardwareState> updateCurrentState(@PathVariable("hardwareId") long hardwareId,
+                                                            @RequestBody HardwareState hardwareState){
+        hardwareState = this.hardwareAdditionService.updateCurrentState(hardwareId, hardwareState);
+        return ResponseEntity.ok(hardwareState);
+    }
+
+    @PutMapping("/{hardwareId}/desiredstate")
+    public ResponseEntity<HardwareState> updateDesiredState(@PathVariable("hardwareId") long hardwareId,
+                                                            @RequestBody HardwareState hardwareState){
+        hardwareState = this.hardwareAdditionService.updateDesiredState(hardwareId, hardwareState);
+        return ResponseEntity.ok(hardwareState);
+    }
 }

@@ -16,9 +16,11 @@ public class HardwareEntity {
     private Long port;
     private String name;
     private String hardwareCategory;
-    @Embedded()
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @JoinColumn(name = "desired_hardwarestate_id")
     private HardwareStateEntity desiredState;
-    @Embedded()
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @JoinColumn(name = "current_hardwarestate_id")
     private HardwareStateEntity currentState;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "hardware_id")

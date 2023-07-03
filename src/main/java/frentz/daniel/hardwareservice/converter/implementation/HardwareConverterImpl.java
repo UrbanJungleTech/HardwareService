@@ -52,8 +52,6 @@ public class HardwareConverterImpl implements HardwareConverter {
     @Override
     public void fillEntity(HardwareEntity hardwareEntity, Hardware hardware) {
         hardwareEntity.setHardwareCategory(hardware.getType());
-        hardwareEntity.setCurrentState(this.hardwareStateConverter.toEntity(hardware.getCurrentState()));
-        hardwareEntity.setDesiredState(this.hardwareStateConverter.toEntity(hardware.getDesiredState()));
         hardwareEntity.setMetadata(hardware.getMetadata());
         hardwareEntity.setPort(hardware.getPort());
         hardwareEntity.setHardwareCategory(hardware.getType());

@@ -1,15 +1,19 @@
 package frentz.daniel.hardwareservice.entity;
 
+import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.ONOFF;
 
 import jakarta.persistence.*;
 
-@Embeddable
+@Entity
 public class HardwareStateEntity {
-    private long stateId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private long level;
     private ONOFF state;
-
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) 
+    private HardwareEntity hardware;
     public long getLevel() {
         return level;
     }
@@ -26,12 +30,19 @@ public class HardwareStateEntity {
         this.state = state;
     }
 
-
-    public long getStateId() {
-        return stateId;
+    public Long getId() {
+        return id;
     }
 
-    public void setStateId(long stateId) {
-        this.stateId = stateId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public HardwareEntity getHardware() {
+        return hardware;
+    }
+
+    public void setHardware(HardwareEntity hardware) {
+        this.hardware = hardware;
     }
 }

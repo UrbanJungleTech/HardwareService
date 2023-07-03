@@ -56,5 +56,10 @@ public class SensorScheduleReadingServiceImpl implements SensorScheduleService{
 
     }
 
+    @Override
+    public void deleteAll() throws SchedulerException {
+        this.scheduler.clear();
+    }
+
 
 }

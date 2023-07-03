@@ -4,6 +4,7 @@ public class HardwareState {
     private Long id;
     private long level;
     private ONOFF state;
+    private Long hardwareId;
 
     public HardwareState(){
     }
@@ -34,5 +35,13 @@ public class HardwareState {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getHardwareId() {
+        return hardwareId;
+    }
+
+    public void setHardwareId(Long hardwareId) {
+        this.hardwareId = hardwareId;
     }
 }
