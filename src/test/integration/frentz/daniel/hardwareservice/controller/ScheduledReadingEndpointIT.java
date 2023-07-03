@@ -6,7 +6,6 @@ import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
-import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
