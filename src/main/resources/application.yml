@@ -61,6 +61,7 @@ entity:
     frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
     frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
     frentz.daniel.hardwareservice.entity.TimerEntity: Timer
+    frentz.daniel.hardwareservice.entity.HardwareStateEntity: Hardware State
 
 rpc:
   methods:
