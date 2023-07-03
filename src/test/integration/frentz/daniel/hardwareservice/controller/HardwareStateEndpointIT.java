@@ -2,6 +2,8 @@ package frentz.daniel.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.HardwareTestService;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
+import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.model.ONOFF;
@@ -12,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +35,8 @@ public class HardwareStateEndpointIT {
     private ObjectMapper objectMapper;
     @Autowired
     private HardwareControllerRepository hardwareControllerRepository;
-
+    @Autowired
+    private MockMqttClientListener mockMqttClientListener;
     @BeforeEach
     public void setup(){
         hardwareControllerRepository.deleteAll();
@@ -94,6 +101,24 @@ public class HardwareStateEndpointIT {
                 .andExpect(jsonPath("$.hardwareId").value(desiredState.getHardwareId()))
                 .andExpect(jsonPath("$.state").value(desiredState.getState().toString()))
                 .andExpect(jsonPath("$.level").value(desiredState.getLevel()));
+
+        boolean asserted = false;
+        long startTime = System.currentTimeMillis();
+
+        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
+            if (this.mockMqttClientListener.getCache("StateChange").size() >= 1) {
+                asserted = true;
+            }
+        }
+        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("StateChange");
+        assertEquals(1, results.size());
+        JsonRpcMessage message = results.get(0);
+        System.out.println(message.getParams().toString());
+        HardwareState hardwareState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
+        assertEquals(desiredState.getLevel(), hardwareState.getLevel());
+        assertEquals(desiredState.getState(), hardwareState.getState());
+        assertEquals(desiredState.getHardwareId(), hardwareState.getHardwareId());
+        assertEquals(desiredState.getId(), hardwareState.getId());
     }
 
     /**
