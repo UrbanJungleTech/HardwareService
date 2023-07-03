@@ -38,13 +38,12 @@ public class ScheduledHardwareDAOImpl implements ScheduledHardwareDAO {
     @Override
     public ScheduledHardwareEntity addScheduledHardwareJob(ScheduledHardware scheduledHardware) {
         ScheduledHardwareEntity scheduledHardwareEntity = new ScheduledHardwareEntity();
-        scheduledHardwareEntity.setHardwareState(new HardwareStateEntity());
         this.scheduledHardwareJobConverter.fillEntity(scheduledHardware, scheduledHardwareEntity);
         TimerEntity timerEntity = this.timerRepository.findById(scheduledHardware.getTimerId())
                 .orElseThrow(() -> this.exceptionService.createNotFoundException(TimerEntity.class, scheduledHardware.getTimerId()));
         scheduledHardwareEntity.setTimerEntity(timerEntity);
         scheduledHardwareEntity = this.hardwareCronJobRepository.save(scheduledHardwareEntity);
-        if(scheduledHardware.getHardwareState().getState() == ONOFF.ON){
+        if(scheduledHardware.getOnoff() == ONOFF.ON){
             timerEntity.setOnCronJob(scheduledHardwareEntity);
         }
         else{

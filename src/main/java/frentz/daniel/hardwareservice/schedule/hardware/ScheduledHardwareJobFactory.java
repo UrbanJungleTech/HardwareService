@@ -1,6 +1,7 @@
 package frentz.daniel.hardwareservice.schedule.hardware;
 
 import frentz.daniel.hardwareservice.addition.HardwareAdditionService;
+import frentz.daniel.hardwareservice.addition.HardwareStateAdditionService;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.model.ScheduledHardware;
@@ -15,19 +16,19 @@ import org.springframework.stereotype.Service;
 @Service("HardwareCronJobFactory")
 public class ScheduledHardwareJobFactory extends SimpleJobFactory {
 
-    private HardwareAdditionService hardwareAdditionService;
+    private HardwareStateAdditionService hardwareStateAdditionService;
     private HardwareService hardwareService;
 
-    public ScheduledHardwareJobFactory(HardwareAdditionService hardwareAdditionService,
+    public ScheduledHardwareJobFactory(HardwareStateAdditionService hardwareStateAdditionService,
                                        HardwareService hardwareService){
-        this.hardwareAdditionService = hardwareAdditionService;
+        this.hardwareStateAdditionService = hardwareStateAdditionService;
         this.hardwareService = hardwareService;
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
         ScheduledHardware scheduledHardware = (ScheduledHardware) bundle.getJobDetail().getJobDataMap().get("scheduledHardware");
-        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, hardwareAdditionService, hardwareService);
+        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, hardwareStateAdditionService, hardwareService);
         return result;
     }
 }

@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.event.hardware;
 
+import frentz.daniel.hardwareservice.event.hardwarestate.HardwareStateUpdateEvent;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import frentz.daniel.hardwareservice.service.HardwareService;
@@ -23,9 +24,9 @@ public class HardwareEventListener {
 
     @Async
     @TransactionalEventListener
-    public void handleHardwareCreateEvent(HardwareCreateEvent hardwareCreateEvent){
+    public void handleHardwareCreateEvent(HardwareCreateEvent HardwareCreateEvent){
         logger.debug("Sending hardware create event to hardware queue.");
-        Hardware hardware = this.hardwareService.getHardware(hardwareCreateEvent.getHardwareId());
+        Hardware hardware = this.hardwareService.getHardware(HardwareCreateEvent.getHardwareId());
         this.hardwareQueueService.registerHardware(hardware);
     }
 
@@ -36,10 +37,4 @@ public class HardwareEventListener {
         this.hardwareQueueService.deregisterHardware(hardware);
     }
 
-    @Async
-    @TransactionalEventListener
-    public void handleHardwareUpdateStateEvent(HardwareUpdateStateEvent hardwareUpdateStateEvent){
-        Hardware hardware = this.hardwareService.getHardware(hardwareUpdateStateEvent.getHardwareId());
-        this.hardwareQueueService.sendStateToController(hardware);
-    }
 }

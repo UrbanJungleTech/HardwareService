@@ -6,6 +6,9 @@ import frentz.daniel.hardwareservice.SensorTestService;
 import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import frentz.daniel.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import frentz.daniel.hardwareservice.schedule.sensor.SensorScheduleService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,6 +37,15 @@ public class DeregisterSensorIT {
     private MqttTestService mqttTestService;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    @Autowired
+    private SensorScheduleService sensorScheduleService;
+    @BeforeEach
+    public void setup() throws Exception {
+        scheduledHardwareScheduleService.deleteAllSchedules();
+        sensorScheduleService.deleteAll();
+    }
 
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" with a sensor with the port 1

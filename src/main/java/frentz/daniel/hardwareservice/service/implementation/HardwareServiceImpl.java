@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.service.implementation;
 
+import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
@@ -38,5 +39,11 @@ public class HardwareServiceImpl implements HardwareService {
     public Hardware getHardware(String serialNumber, long hardwarePort) {
         HardwareEntity hardwareEntity = this.hardwareDAO.getHardware(serialNumber, hardwarePort);
         return this.hardwareConverter.toModel(hardwareEntity);
+    }
+
+    @Override
+    public Hardware getHardwareByDesiredState(long hardwareStateId) {
+        HardwareEntity result = this.hardwareDAO.getHardwareByStateId(hardwareStateId);
+        return this.hardwareConverter.toModel(result);
     }
 }

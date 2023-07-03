@@ -1,11 +1,12 @@
 package frentz.daniel.hardwareservice.schedule.hardware;
 
-import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.exception.ScheduledHardwareDeleteException;
 import frentz.daniel.hardwareservice.exception.ScheduledHardwareStartException;
 import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.service.ScheduledHardwareService;
 import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalScheduledHardwareScheduleService implements ScheduledHardwareScheduleService {
 
+    Logger logger = LoggerFactory.getLogger(LocalScheduledHardwareScheduleService.class);
     private Scheduler scheduler;
     private ScheduledHardwareService scheduledHardwareService;
 
@@ -26,6 +28,7 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
     @Override
     public void start(long scheduledHardwareId) {
         try {
+            logger.info("Starting scheduled hardware with id {}", scheduledHardwareId);
             ScheduledHardware scheduledHardware = this.scheduledHardwareService.getById(scheduledHardwareId);
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put("scheduledHardware", scheduledHardware);
@@ -61,5 +64,10 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
         catch(Exception ex){
             throw new ScheduledHardwareDeleteException(scheduledHardwareId, ex);
         }
+    }
+
+    @Override
+    public void deleteAllSchedules() throws SchedulerException {
+        this.scheduler.clear();
     }
 }

@@ -25,7 +25,8 @@ public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobCo
         HardwareState hardwareState = new HardwareState();
         hardwareState.setState(onoff);
         hardwareState.setLevel(timer.getOnLevel());
-        result.setHardwareState(hardwareState);
+        result.setLevel(timer.getOnLevel());
+        result.setOnoff(onoff);
         result.setTimerId(timer.getId());
         return result;
     }
@@ -36,7 +37,8 @@ public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobCo
         result.setCronString(scheduledHardwareEntity.getCronString());
         result.setTimerId(scheduledHardwareEntity.getTimerEntity().getId());
         result.setHardwareId(scheduledHardwareEntity.getTimerEntity().getHardware().getId());
-        result.setHardwareState(this.hardwareStateConverter.toModel(scheduledHardwareEntity.getHardwareState()));
+        result.setOnoff(scheduledHardwareEntity.getOnoff());
+        result.setLevel(scheduledHardwareEntity.getLevel());
         result.setId(scheduledHardwareEntity.getId());
         return result;
     }
@@ -44,6 +46,7 @@ public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobCo
     @Override
     public void fillEntity(ScheduledHardware scheduledHardware, ScheduledHardwareEntity scheduledHardwareEntity) {
         scheduledHardwareEntity.setCronString(scheduledHardware.getCronString());
-        this.hardwareStateConverter.fillEntity(scheduledHardwareEntity.getHardwareState(), scheduledHardware.getHardwareState());
+        scheduledHardwareEntity.setOnoff(scheduledHardware.getOnoff());
+        scheduledHardwareEntity.setLevel(scheduledHardware.getLevel());
     }
 }

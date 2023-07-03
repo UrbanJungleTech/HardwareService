@@ -1,5 +1,6 @@
 package frentz.daniel.hardwareservice.entity;
 
+import frentz.daniel.hardwareservice.model.ONOFF;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +10,10 @@ public class ScheduledHardwareEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String cronString;
-    @Embedded
-    private HardwareStateEntity hardwareState;
+
+    private ONOFF onoff;
+    private long level;
+    private Long hardwareId;
     @ManyToOne(cascade = CascadeType.PERSIST)
     private TimerEntity timerEntity;
 
@@ -30,13 +33,6 @@ public class ScheduledHardwareEntity {
         this.id = id;
     }
 
-    public HardwareStateEntity getHardwareState() {
-        return hardwareState;
-    }
-
-    public void setHardwareState(HardwareStateEntity hardwareState) {
-        this.hardwareState = hardwareState;
-    }
 
     public TimerEntity getTimerEntity() {
         return timerEntity;
@@ -44,5 +40,29 @@ public class ScheduledHardwareEntity {
 
     public void setTimerEntity(TimerEntity timerEntity) {
         this.timerEntity = timerEntity;
+    }
+
+    public long getLevel() {
+        return level;
+    }
+
+    public void setLevel(long level) {
+        this.level = level;
+    }
+
+    public ONOFF getOnoff() {
+        return onoff;
+    }
+
+    public void setOnoff(ONOFF onoff) {
+        this.onoff = onoff;
+    }
+
+    public Long getHardwareId() {
+        return hardwareId;
+    }
+
+    public void setHardwareId(Long hardwareId) {
+        this.hardwareId = hardwareId;
     }
 }

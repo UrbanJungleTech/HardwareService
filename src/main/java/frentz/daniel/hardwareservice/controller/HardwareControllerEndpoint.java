@@ -130,4 +130,5 @@ public class HardwareControllerEndpoint {
         List<Sensor> result = this.hardwareControllerService.getSensors(hardwareControllerId);
         return ResponseEntity.ok(result);
     }
+
 }
