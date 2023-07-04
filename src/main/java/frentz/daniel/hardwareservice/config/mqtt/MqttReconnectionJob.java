@@ -41,7 +41,7 @@ public class MqttReconnectionJob {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 100)
     public void reconnect() {
         try {
             if (mqttClient.isConnected() == false) {

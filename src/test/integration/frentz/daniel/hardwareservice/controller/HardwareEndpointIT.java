@@ -3,16 +3,11 @@ package frentz.daniel.hardwareservice.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.HardwareControllerTestService;
 import frentz.daniel.hardwareservice.HardwareTestService;
-import frentz.daniel.hardwareservice.MqttTestService;
-import frentz.daniel.hardwareservice.model.*;
-import frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener;
 import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
-import frentz.daniel.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback;
-import frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import frentz.daniel.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
+import frentz.daniel.hardwareservice.model.*;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
@@ -24,20 +19,21 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareEndpointIT {
 
     @Autowired
@@ -247,6 +243,7 @@ public class HardwareEndpointIT {
         while (!asserted && System.currentTimeMillis() - startTime < 2000) {
             if (this.mqttCacheListener.getCache("StateChange").size() >= 1) {
                 asserted = true;
+                System.out.println("asserted");
             }
         }
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");

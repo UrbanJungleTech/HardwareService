@@ -1,13 +1,17 @@
 package frentz.daniel.hardwareservice.config.mqtt.mockclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientCallback;
+import frentz.daniel.hardwareservice.config.mqtt.mockclient.MqttMockClientConfig;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,18 +27,18 @@ public class MockMqttClientListener implements IMqttMessageListener {
         return cache;
     }
 
-    public List<JsonRpcMessage> getCache(String method, Map<String, Object> params){
-        List<JsonRpcMessage> cache = this.getCache(method);
-        return cache.stream().filter(message -> {
-            for(String key : params.keySet()){
-                System.out.println("checking if " + key + " is in " + message.getParams() + " and equals " + params.get(key));
-
-                if(!message.getParams().containsKey(key) || !message.getParams().get(key).equals(params.get(key))){
-                    return false;
-                }
-            }
-            return true;
-        }).collect(Collectors.toList());
+    public Mono<List<JsonRpcMessage>> getCache(String method, Map<String, Object> params, Duration timeout) {
+        return Mono.delay(timeout)
+                .flatMap(i -> Mono.error(new RuntimeException("Timeout")))
+                .switchIfEmpty(Mono.defer(() -> {
+                    List<JsonRpcMessage> cache = this.getCache(method);
+                    List<JsonRpcMessage> filteredCache = cache.stream()
+                            .filter(message -> params.entrySet().stream()
+                                    .allMatch(entry -> message.getParams().containsKey(entry.getKey())
+                                            && message.getParams().get(entry.getKey()).equals(entry.getValue())))
+                            .collect(Collectors.toList());
+                    return Mono.just(filteredCache);
+                }));
     }
 
     private List<JsonRpcMessage> cache;
@@ -45,32 +49,32 @@ public class MockMqttClientListener implements IMqttMessageListener {
 
     public MockMqttClientListener(ObjectMapper objectMapper,
                                   MqttMockClientConfig mqttMockClientConfig,
-                                  List<MockMqttClientCallback> callbacks){
+                                  List<MockMqttClientCallback> callbacks) {
         this.objectMapper = objectMapper;
         this.callbacks = new HashMap<>();
         this.cache = new CopyOnWriteArrayList<>();
-        for(MockMqttClientCallback callback : callbacks){
-            if(mqttMockClientConfig.getCallbacks().containsKey(callback.getClass().getCanonicalName())){
+        for (MockMqttClientCallback callback : callbacks) {
+            if (mqttMockClientConfig.getCallbacks().containsKey(callback.getClass().getCanonicalName())) {
                 String method = mqttMockClientConfig.getCallbacks().get(callback.getClass().getCanonicalName());
-                if(!this.callbacks.containsKey(method)){
+                if (!this.callbacks.containsKey(method)) {
                     this.callbacks.put(method, new ArrayList<>());
                 }
                 this.callbacks.get(method).add(callback);
                 logger.debug("Added callback for method " + method + " " + callback.getClass().getCanonicalName());
-            }
-            else{
+            } else {
                 logger.debug("No callback for " + callback.getClass().getCanonicalName());
             }
         }
     }
+
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         logger.info("Got an RPC message -> {}", mqttMessage.getPayload().toString());
         JsonRpcMessage jsonRpcMessage = this.objectMapper.readValue(new String(mqttMessage.getPayload()), JsonRpcMessage.class);
         this.cache.add(jsonRpcMessage);
         List<MockMqttClientCallback> callback = this.callbacks.get(jsonRpcMessage.getMethod());
-        if(callback != null){
-            for(MockMqttClientCallback mockMqttClientCallback : callback){
+        if (callback != null) {
+            for (MockMqttClientCallback mockMqttClientCallback : callback) {
                 mockMqttClientCallback.callback(jsonRpcMessage);
             }
         }
@@ -80,11 +84,9 @@ public class MockMqttClientListener implements IMqttMessageListener {
         this.cache = cache;
     }
 
-    public void clear(){
-        this.cache = new CopyOnWriteArrayList <>();
+    public void clear() {
+        this.cache = new CopyOnWriteArrayList<>();
     }
 
-    public List<JsonRpcMessage> getCache(String method){
-        return this.cache.stream().filter(jsonRpcMessage -> jsonRpcMessage.getMethod().equals(method)).toList();
-    }
-}
+    public List<JsonRpcMessage> getCache(String method) {
+        return this.cache.stream().filter(jsonRpcMessage -> jsonRpc

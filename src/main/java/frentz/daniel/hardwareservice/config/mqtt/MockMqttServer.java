@@ -2,6 +2,7 @@ package frentz.daniel.hardwareservice.config.mqtt;
 
 
 import io.moquette.broker.Server;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,13 @@ public class MockMqttServer {
     public Server mqttServer() {
         Server result = new Server();
         return result;
+    }
+
+    @Bean
+    public DisposableBean mqttServerShutdownHook(Server mqttServer) {
+        return () -> {
+            mqttServer.stopServer();
+        };
     }
 
 }
