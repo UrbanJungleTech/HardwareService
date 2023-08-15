@@ -77,10 +77,6 @@ rpc:
 mqtt:
   server: tcp://localhost:1883
   queue: HardwareServer
-  listeners:
-    frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener: 1234ToMicrocontroller
-    frentz.daniel.hardwareservice.config.mqtt.listener.MqttCacheListener: 1234ToMicrocontroller
-    frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener: FromMicrocontroller
 
 management:
   endpoints:

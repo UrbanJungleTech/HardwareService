@@ -4,11 +4,10 @@ import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

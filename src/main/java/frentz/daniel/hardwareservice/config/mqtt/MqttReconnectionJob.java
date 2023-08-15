@@ -1,54 +1,51 @@
 package frentz.daniel.hardwareservice.config.mqtt;
 
-import frentz.daniel.hardwareservice.config.mqtt.listener.MqttSubscriptionListener;
+import frentz.daniel.hardwareservice.config.ControllerConfiguration;
+import frentz.daniel.hardwareservice.config.ListenerConfiguration;
 import frentz.daniel.hardwareservice.exception.MqttConnectionException;
+import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MqttReconnectionJob {
 
     private AtomicBoolean connecting;
-    Logger logger = LoggerFactory.getLogger(MqttReconnectionJob.class);
-    private IMqttClient mqttClient;
-    private MqttConnectOptions mqttConnectOptions;
-    private MqttConfig mqttConfig;
-    private List<MqttSubscriptionListener> mqttSubscriptionListeners;
+    private Logger logger = LoggerFactory.getLogger(MqttReconnectionJob.class);
+    private Map<String, IMqttClient> clients;
+    private Map<String, IMqttMessageListener> listeners;
+    private ControllerConfiguration controllerConfiguration;
+    private HardwareControllerService hardwareControllerService;
 
-    public MqttReconnectionJob(IMqttClient mqttClient,
-                               List<IMqttMessageListener> mqttMessageListeners,
-                               MqttConnectOptions mqttConnectOptions,
-                               MqttConfig mqttConfig) {
-        this.mqttConfig = mqttConfig;
-        this.mqttClient = mqttClient;
-        connecting = new AtomicBoolean(false);
-        this.mqttConnectOptions = mqttConnectOptions;
-        this.mqttSubscriptionListeners = new java.util.ArrayList<>();
-        for(IMqttMessageListener listener : mqttMessageListeners){
-            String topic = this.mqttConfig.getListeners().get(listener.getClass().getCanonicalName());
-            if(topic != null) {
-                this.mqttSubscriptionListeners.add(new MqttSubscriptionListener(topic, listener));
-            }
-        }
+    public MqttReconnectionJob(@Qualifier("MqttClients") Map<String, IMqttClient> clients,
+                               Map<String, IMqttMessageListener> listeners,
+                               ControllerConfiguration controllerConfiguration) {
+        this.clients = clients;
+        this.listeners = listeners;
+        this.controllerConfiguration = controllerConfiguration;
     }
 
     @Scheduled(fixedDelay = 100)
     public void reconnect() {
         try {
-            if (mqttClient.isConnected() == false) {
-                IMqttToken token = mqttClient.connectWithResult(mqttConnectOptions);
-                for(MqttSubscriptionListener mqttSubscriptionListener : this.mqttSubscriptionListeners){
-                    mqttClient.subscribe(mqttSubscriptionListener.getTopic(), mqttSubscriptionListener.getListener());
-                    logger.debug("Successfully registered the mqtt rpc callback on topic {} with nane {}", mqttSubscriptionListener.getTopic(), mqttSubscriptionListener.getListener().getClass().getCanonicalName() );
+            for (String mqttClient : this.controllerConfiguration.getClients().getMqtt().keySet()) {
+                IMqttClient client = this.clients.get(mqttClient);
+                if (client.isConnected() == false) {
+                    client.connect();
+                    logger.info("Registering listeners {} ", controllerConfiguration.getClients().getMqtt().get(mqttClient).getListeners());
+                    for (ListenerConfiguration listenerConfiguration : controllerConfiguration.getClients().getMqtt().get(mqttClient).getListeners()) {
+                        IMqttMessageListener listener = this.listeners.get(listenerConfiguration.getName());
+                        client.subscribe(listenerConfiguration.getQueue(), listener);
+                        logger.debug("Successfully registered the mqtt rpc callback on topic {} with nane {}", listenerConfiguration.getQueue(), listenerConfiguration.getName());
+                    }
                 }
             }
         } catch (Exception ex) {

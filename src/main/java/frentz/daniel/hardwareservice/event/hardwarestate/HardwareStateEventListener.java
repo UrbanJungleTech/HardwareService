@@ -1,7 +1,7 @@
 package frentz.daniel.hardwareservice.event.hardwarestate;
 
 import frentz.daniel.hardwareservice.model.Hardware;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import frentz.daniel.hardwareservice.service.HardwareService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -11,18 +11,17 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class HardwareStateEventListener {
 
     private HardwareService hardwareService;
-    private HardwareQueueService hardwareQueueService;
+    private ControllerCommunicationService controllerCommunicationService;
 
     public HardwareStateEventListener(HardwareService hardwareService,
-                                      HardwareQueueService hardwareQueueService){
+                                      ControllerCommunicationService controllerCommunicationService){
         this.hardwareService = hardwareService;
-        this.hardwareQueueService = hardwareQueueService;
+        this.controllerCommunicationService = controllerCommunicationService;
     }
     @Async
     @TransactionalEventListener
     public void handleHardwareUpdateStateEvent(HardwareStateUpdateEvent hardwareUpdateStateEvent){
         Hardware hardware = this.hardwareService.getHardwareByDesiredState(hardwareUpdateStateEvent.getHardwareStateId());
-        System.out.println("got hardware with state " + hardware.getDesiredState().getState());
-        this.hardwareQueueService.sendStateToController(hardware);
+        this.controllerCommunicationService.sendStateToController(hardware);
     }
 }

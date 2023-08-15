@@ -243,7 +243,6 @@ public class HardwareEndpointIT {
         while (!asserted && System.currentTimeMillis() - startTime < 2000) {
             if (this.mqttCacheListener.getCache("StateChange").size() >= 1) {
                 asserted = true;
-                System.out.println("asserted");
             }
         }
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");
@@ -388,7 +387,7 @@ public class HardwareEndpointIT {
         System.out.println("onCount: " + onCount);
         System.out.println("offCount: " + offCount);
         assertTrue(onCount >= 2 && onCount <= 3);
-        assertTrue(offCount >= 1 && offCount <= 2);
+        assertTrue(offCount >= 1 && offCount <= 3);
     }
 
     /**

@@ -1,26 +1,25 @@
-package frentz.daniel.hardwareservice.service.implementation;
+package frentz.daniel.hardwareservice.service.controllercommunication.implementation;
 
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.jsonrpc.model.*;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
-import frentz.daniel.hardwareservice.service.MqttService;
+import frentz.daniel.hardwareservice.service.mqtt.MqttService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationServiceImplementation;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@Service
-public class HardwareQueueServiceImpl implements HardwareQueueService {
+@Service("mqtt")
+public class MqttControllerCommunicationService implements ControllerCommunicationServiceImplementation {
 
     private final MqttService mqttService;
 
     private final HardwareControllerService hardwareControllerService;
 
-    public HardwareQueueServiceImpl(MqttService mqttService,
-                                    HardwareControllerService hardwareControllerService) {
+    public MqttControllerCommunicationService(MqttService mqttService,
+                                              HardwareControllerService hardwareControllerService) {
         this.mqttService = mqttService;
         this.hardwareControllerService = hardwareControllerService;
     }

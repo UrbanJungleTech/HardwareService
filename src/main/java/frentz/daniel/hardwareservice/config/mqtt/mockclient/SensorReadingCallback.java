@@ -2,10 +2,10 @@ package frentz.daniel.hardwareservice.config.mqtt.mockclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frentz.daniel.hardwareservice.config.mqtt.SensorReadingException;
-import frentz.daniel.hardwareservice.controller.HardwareControllerEndpoint;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +21,19 @@ public class SensorReadingCallback implements MockMqttClientCallback {
     private ObjectMapper objectMapper;
     private double reading;
 
-    public SensorReadingCallback(IMqttClient mqttClient,
-                                 ObjectMapper objectMapper){
-        this.mqttClient = mqttClient;
+    public SensorReadingCallback(ObjectMapper objectMapper) throws MqttException {
         this.objectMapper = objectMapper;
         this.reading = 1.0;
+        this.mqttClient = new MqttClient("tcp://localhost:1883", "sad");
     }
 
     @Override
     public void callback(JsonRpcMessage jsonRpcMessage) {
         try {
+            while(this.mqttClient.isConnected() == false) {
+                this.mqttClient.connect();
+                Thread.sleep(1000);
+            }
             this.logger.info("Received sensor read message: {}", jsonRpcMessage);
             JsonRpcMessage response = new JsonRpcMessage();
             response.setId(jsonRpcMessage.getId());
@@ -43,7 +46,8 @@ public class SensorReadingCallback implements MockMqttClientCallback {
             message.setRetained(false);
             new Thread(() -> {
                 try {
-                    mqttClient.publish("FromMicrocontroller", message);
+                    logger.info("Publishing sensor reading: {}", message.getPayload().toString());
+                    mqttClient.publish("HardwareServer", message);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

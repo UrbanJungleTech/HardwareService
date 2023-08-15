@@ -2,13 +2,11 @@ package frentz.daniel.hardwareservice.service.implementation;
 
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.Sensor;
-import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.entity.SensorEntity;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 
 import java.util.List;
 
-public class HardwareQueueServiceAzure implements HardwareQueueService {
+public class ControllerCommunicationServiceAzure implements ControllerCommunicationService {
     @Override
     public void sendStateToController(Hardware hardware) {
     }

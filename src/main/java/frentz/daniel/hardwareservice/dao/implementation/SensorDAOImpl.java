@@ -7,8 +7,7 @@ import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

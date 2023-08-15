@@ -16,6 +16,8 @@ public class HardwareEntity {
     private Long port;
     private String name;
     private String hardwareCategory;
+    @ManyToOne
+    private HardwareEntity backup;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "desired_hardwarestate_id")
     private HardwareStateEntity desiredState;
@@ -111,5 +113,13 @@ public class HardwareEntity {
 
     public void setHardwareCategory(String hardwareCategory) {
         this.hardwareCategory = hardwareCategory;
+    }
+
+    public HardwareEntity getBackup() {
+        return backup;
+    }
+
+    public void setBackup(HardwareEntity backup) {
+        this.backup = backup;
     }
 }

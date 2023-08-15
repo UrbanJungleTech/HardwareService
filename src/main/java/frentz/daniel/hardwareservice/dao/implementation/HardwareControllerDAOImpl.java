@@ -5,7 +5,7 @@ import frentz.daniel.hardwareservice.dao.HardwareControllerDAO;
 import frentz.daniel.hardwareservice.entity.*;
 import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import frentz.daniel.hardwareservice.model.*;
 import org.springframework.stereotype.Service;
 
@@ -94,5 +94,12 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
     @Override
     public void deleteAll() {
         this.hardwareControllerRepository.deleteAll();
+    }
+
+    @Override
+    public String getControllerType(String serialNumber) {
+        return this.hardwareControllerRepository.getControllerType(serialNumber).orElseThrow(() -> {
+            return this.exceptionService.createNotFoundException(HardwareControllerEntity.class, serialNumber);
+        });
     }
 }

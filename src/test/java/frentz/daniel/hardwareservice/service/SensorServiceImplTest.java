@@ -9,6 +9,7 @@ import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.model.Sensor;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import frentz.daniel.hardwareservice.service.implementation.SensorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ class SensorServiceImplTest {
     @Mock
     HardwareControllerRepository hardwareControllerRepository;
     @Mock
-    HardwareQueueService hardwareQueueService;
+    ControllerCommunicationService controllerCommunicationService;
     @Mock
     HardwareControllerDAO hardwareControllerDAO;
     @Mock
@@ -66,7 +67,7 @@ class SensorServiceImplTest {
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         when(sensorDAO.findByHardwareControllerIdAndSensorType(anyLong(), any())).thenReturn(sensors);
         when(hardwareControllerDAO.getHardwareController(anyLong())).thenReturn(hardwareControllerEntity);
-        when(hardwareQueueService.getAverageSensorReading(any(), eq(sensorPorts))).thenReturn(2.0);
+        when(controllerCommunicationService.getAverageSensorReading(any(), eq(sensorPorts))).thenReturn(2.0);
         double result = this.sensorService.readAverageSensor(1, "temperature");
         assertEquals(2.0, result);
     }

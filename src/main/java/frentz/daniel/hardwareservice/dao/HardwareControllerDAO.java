@@ -17,4 +17,5 @@ public interface HardwareControllerDAO {
     String getSerialNumber(long hardwareControllerId);
 
     void deleteAll();
+    String getControllerType(String serialNumber);
 }

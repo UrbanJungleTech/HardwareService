@@ -19,7 +19,8 @@ public class RpcManagerImpl implements RpcManager{
     private Map<String, RpcMethod> methods;
     private RpcResponseProcessor rpcResponseProcessor;
 
-    public RpcManagerImpl(RpcResponseProcessor rpcResponseProcessor, @Qualifier("rpcMethods")Map<String, RpcMethod> methods){
+    public RpcManagerImpl(RpcResponseProcessor rpcResponseProcessor,
+                          @Qualifier("rpcMethods")Map<String, RpcMethod> methods){
         this.rpcResponseProcessor = rpcResponseProcessor;
         this.methods = methods;
     }

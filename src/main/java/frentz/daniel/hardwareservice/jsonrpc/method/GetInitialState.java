@@ -1,10 +1,8 @@
 package frentz.daniel.hardwareservice.jsonrpc.method;
 
 import frentz.daniel.hardwareservice.model.HardwareController;
-import frentz.daniel.hardwareservice.dao.HardwareControllerDAO;
-import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
 import frentz.daniel.hardwareservice.service.HardwareControllerService;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -13,12 +11,12 @@ import java.util.Map;
 public class GetInitialState implements RpcMethod{
 
     private HardwareControllerService hardwareControllerService;
-    private HardwareQueueService hardwareQueueService;
+    private ControllerCommunicationService controllerCommunicationService;
 
     public GetInitialState(HardwareControllerService hardwareControllerService,
-                           HardwareQueueService hardwareQueueService){
+                           ControllerCommunicationService controllerCommunicationService){
         this.hardwareControllerService = hardwareControllerService;
-        this.hardwareQueueService = hardwareQueueService;
+        this.controllerCommunicationService = controllerCommunicationService;
     }
 
     @Override
@@ -27,7 +25,7 @@ public class GetInitialState implements RpcMethod{
 
         HardwareController hardwareController = this.hardwareControllerService.getHardwareControllerBySerialNumber(serialNumber);
         if(hardwareController != null){
-            this.hardwareQueueService.sendInitialState(serialNumber, hardwareController.getHardware());
+            this.controllerCommunicationService.sendInitialState(serialNumber, hardwareController.getHardware());
         }
     }
 }

@@ -173,6 +173,7 @@ public class HardwareControllerEndpointIT {
         HardwareController hardwareController = new HardwareController();
         hardwareController.setSerialNumber("123456789");
         hardwareController.setName("Test Hardware Controller");
+        hardwareController.setType("mqtt");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)
@@ -194,6 +195,7 @@ public class HardwareControllerEndpointIT {
         assertEquals(hardwareController.getSerialNumber(), retrievedHardwareController.getSerialNumber());
         assertEquals(hardwareController.getName(), retrievedHardwareController.getName());
         assertEquals(createdHardwareController.getId(), retrievedHardwareController.getId());
+        assertEquals(hardwareController.getType(), retrievedHardwareController.getType());
 
     }
 

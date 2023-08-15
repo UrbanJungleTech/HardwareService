@@ -2,14 +2,13 @@ package frentz.daniel.hardwareservice.dao.implementation;
 
 import frentz.daniel.hardwareservice.converter.ScheduledHardwareJobConverter;
 import frentz.daniel.hardwareservice.dao.ScheduledHardwareDAO;
-import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.entity.ScheduledHardwareEntity;
 import frentz.daniel.hardwareservice.entity.TimerEntity;
 import frentz.daniel.hardwareservice.model.ONOFF;
 import frentz.daniel.hardwareservice.repository.HardwareCronJobRepository;
 import frentz.daniel.hardwareservice.model.ScheduledHardware;
 import frentz.daniel.hardwareservice.repository.TimerRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

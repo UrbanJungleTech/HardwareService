@@ -4,7 +4,7 @@ import frentz.daniel.hardwareservice.addition.implementation.HardwareAdditionSer
 import frentz.daniel.hardwareservice.builder.HardwareStateBuilder;
 import frentz.daniel.hardwareservice.converter.HardwareConverter;
 import frentz.daniel.hardwareservice.dao.HardwareDAO;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import frentz.daniel.hardwareservice.service.ObjectLoggerService;
 import frentz.daniel.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ class HardwareAdditionServiceImplTest {
     private TimerAdditionService timerAdditionService;
 
     @Mock
-    private HardwareQueueService hardwareQueueService;
+    private ControllerCommunicationService controllerCommunicationService;
 
     @Mock
     private HardwareStateBuilder hardwareStateBuilder;

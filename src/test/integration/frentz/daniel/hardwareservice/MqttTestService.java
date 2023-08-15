@@ -8,10 +8,14 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("test")
 public class MqttTestService {
-    public void sendMessage(String payload) throws MqttException {
+    public void sendMessage(String payload) throws MqttException, InterruptedException {
         MqttClient client = new MqttClient("tcp://localhost:1883", "test");
         client.connect();
-        client.publish("FromMicrocontroller", payload.getBytes(), 0, false);
+        while(client.isConnected() == false){
+            System.out.println("Waiting for connection");
+            Thread.sleep(1000);
+        }
+        client.publish("HardwareServer", payload.getBytes(), 0, false);
         client.disconnect();
     }
 }

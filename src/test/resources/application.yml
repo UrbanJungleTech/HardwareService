@@ -75,13 +75,31 @@ rpc:
     "frentz.daniel.hardwareservice.jsonrpc.method.RegisterSensor": "RegisterSensor"
 
 
-mqtt:
-  server: tcp://localhost:1883
-  queue: HardwareServer
-  listeners:
-    frentz.daniel.hardwareservice.config.mqtt.mockclient.MockMqttClientListener: 1234ToMicrocontroller
-    frentz.daniel.hardwareservice.config.mqtt.listener.MqttCacheListener: 1234ToMicrocontroller
-    frentz.daniel.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener: FromMicrocontroller
+controller:
+  types:
+    mqtt1:
+      protocol: mqtt
+      client: mqtt1Client
+    rgb1:
+      protocol: rgb
+      client: localRgbClient
+
+  clients:
+    mqtt:
+      mqtt1Client:
+        server: tcp://localhost:1883
+        queue: HardwareServer
+        clientId: happy
+        listeners:
+          - name: mockMqttClientListener
+            queue: 1234ToMicrocontroller
+          - name: microcontrollerMessageListener
+            queue: HardwareServer
+    rgb:
+        localRgbClient:
+            host: localhost
+            port: 8080
+            path: /rgb
 
 management:
   endpoints:

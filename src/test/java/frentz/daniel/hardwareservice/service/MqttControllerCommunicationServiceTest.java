@@ -1,27 +1,22 @@
 package frentz.daniel.hardwareservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.entity.HardwareControllerEntity;
-import frentz.daniel.hardwareservice.entity.HardwareEntity;
-import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
 import frentz.daniel.hardwareservice.jsonrpc.model.StateChangeRpcMessage;
-import frentz.daniel.hardwareservice.model.ONOFF;
-import frentz.daniel.hardwareservice.service.implementation.HardwareQueueServiceImpl;
+import frentz.daniel.hardwareservice.service.controllercommunication.implementation.MqttControllerCommunicationService;
+import frentz.daniel.hardwareservice.service.mqtt.MqttService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class HardwareQueueServiceImplTest {
+class MqttControllerCommunicationServiceTest {
 
     @InjectMocks
-    HardwareQueueServiceImpl hardwareQueueService;
+    MqttControllerCommunicationService hardwareQueueService;
 
     @Mock
     ObjectMapper objectMapper;

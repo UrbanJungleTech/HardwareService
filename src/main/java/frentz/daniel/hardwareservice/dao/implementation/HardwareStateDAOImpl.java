@@ -1,7 +1,6 @@
 package frentz.daniel.hardwareservice.dao.implementation;
 
 import frentz.daniel.hardwareservice.converter.HardwareStateConverter;
-import frentz.daniel.hardwareservice.dao.HardwareDAO;
 import frentz.daniel.hardwareservice.dao.HardwareStateDAO;
 import frentz.daniel.hardwareservice.entity.HardwareEntity;
 import frentz.daniel.hardwareservice.entity.HardwareStateEntity;
@@ -9,7 +8,7 @@ import frentz.daniel.hardwareservice.model.HardwareState;
 import frentz.daniel.hardwareservice.model.HardwareStateType;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
 import frentz.daniel.hardwareservice.repository.HardwareStateRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import org.springframework.stereotype.Service;
 
 @Service

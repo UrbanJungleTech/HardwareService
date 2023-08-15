@@ -16,6 +16,7 @@ public class HardwareControllerEntity {
     private String name;
     @Column(unique = true)
     private String serialNumber;
+    private String type;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.REMOVE)
     private List<HardwareEntity> hardware;
@@ -24,6 +25,8 @@ public class HardwareControllerEntity {
     private List<SensorEntity> Sensors;
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<RegulatorEntity> regulators;
+
+    private String service;
 
     public HardwareControllerEntity(){
         this.hardware = new ArrayList<>();
@@ -77,5 +80,21 @@ public class HardwareControllerEntity {
 
     public void setRegulators(List<RegulatorEntity> regulators) {
         this.regulators = regulators;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

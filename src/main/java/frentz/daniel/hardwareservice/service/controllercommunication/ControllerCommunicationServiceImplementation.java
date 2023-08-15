@@ -1,0 +1,6 @@
+package frentz.daniel.hardwareservice.service.controllercommunication;
+
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+
+public interface ControllerCommunicationServiceImplementation extends ControllerCommunicationService {
+}

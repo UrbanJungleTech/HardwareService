@@ -6,10 +6,12 @@ import java.util.List;
 public class HardwareController {
     private Long id;
     private String name;
+    private String type;
     private List<Hardware> hardware;
     private List<Sensor> sensors;
     private List<Regulator> regulators;
     private String serialNumber;
+    private String service;
 
     public HardwareController(){
         this.sensors = new ArrayList<>();
@@ -66,5 +68,21 @@ public class HardwareController {
 
     public void setRegulators(List<Regulator> regulators) {
         this.regulators = regulators;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -7,7 +7,7 @@ import frentz.daniel.hardwareservice.exception.NotFoundException;
 import frentz.daniel.hardwareservice.helper.HardwareHelper;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import frentz.daniel.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

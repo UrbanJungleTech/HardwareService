@@ -42,7 +42,6 @@ public class HardwareStateAdditionServiceImpl implements HardwareStateAdditionSe
         HardwareState result = this.hardwareStateConverter.toModel(hardwareStateEntity);
         if(hardwareStateEntity.getHardware().getDesiredState().getId() == hardwareStateEntity.getId()
     && updateState){
-            System.out.println("creating update event");
             this.hardwareStateEventPublisher.publishHardwareStateUpdateEvent(hardwareStateEntity.getId());
         }
         return result;

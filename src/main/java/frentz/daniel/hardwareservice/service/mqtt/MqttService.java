@@ -1,4 +1,4 @@
-package frentz.daniel.hardwareservice.service;
+package frentz.daniel.hardwareservice.service.mqtt;
 
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import io.reactivex.Observable;

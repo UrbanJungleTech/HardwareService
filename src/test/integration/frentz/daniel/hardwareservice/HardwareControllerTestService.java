@@ -56,6 +56,7 @@ public class HardwareControllerTestService {
     public HardwareController createBasicHardwareController() {
         HardwareController hardwareController = new HardwareController();
         hardwareController.setSerialNumber("1234");
+        hardwareController.setType("mqtt1");
         return hardwareController;
     }
 }

@@ -1,7 +1,8 @@
-package frentz.daniel.hardwareservice.service;
+package frentz.daniel.hardwareservice.service.exception;
 
 import frentz.daniel.hardwareservice.exception.NotFoundException;
 
 public interface ExceptionService {
     NotFoundException createNotFoundException(Class clazz, long id);
+    NotFoundException createNotFoundException(Class clazz, String id);
 }

@@ -13,4 +13,5 @@ public interface HardwareControllerService {
     List<Sensor> getSensors(long hardwareControllerId);
     String getSerialNumber(long hardwareControllerId);
     HardwareController getHardwareControllerBySerialNumber(String serialNumber);
+    String getControllerType(String serialNumber);
 }

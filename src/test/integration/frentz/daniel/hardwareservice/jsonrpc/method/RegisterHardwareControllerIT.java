@@ -19,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RegisterHardwareControllerIT {
-
-    @Autowired
-    private MockMvc mockMvc;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -47,6 +44,7 @@ public class RegisterHardwareControllerIT {
     public void testRegisterHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
         hardwareController.setSerialNumber("1234");
+        hardwareController.setType("mqtt1");
         String payload = this.objectMapper.writeValueAsString(hardwareController);
         Map<String, Object> params = new HashMap<>();
         params.put("hardwareController", hardwareController);

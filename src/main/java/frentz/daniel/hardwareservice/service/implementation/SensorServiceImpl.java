@@ -12,7 +12,7 @@ import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
 import frentz.daniel.hardwareservice.model.Sensor;
 import frentz.daniel.hardwareservice.model.SensorReading;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
+import frentz.daniel.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import frentz.daniel.hardwareservice.service.SensorService;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ import java.util.stream.LongStream;
 public class SensorServiceImpl implements SensorService {
 
     private final HardwareControllerDAO hardwareControllerDAO;
-    private final HardwareQueueService hardwareQueueService;
+    private final ControllerCommunicationService controllerCommunicationService;
     private final HardwareControllerRepository hardwareControllerRepository;
     private final ScheduledSensorReadingDAO scheduledSensorReadingDAO;
     private final SensorDAO sensorDAO;
@@ -32,14 +32,14 @@ public class SensorServiceImpl implements SensorService {
     private final SensorConverter sensorConverter;
 
     public SensorServiceImpl(HardwareControllerRepository hardwareControllerRepository,
-                             HardwareQueueService hardwareQueueService,
+                             ControllerCommunicationService controllerCommunicationService,
                              HardwareControllerDAO hardwareControllerDAO,
                              ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                              SensorDAO sensorDAO,
                              ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                              SensorConverter sensorConverter){
         this.hardwareControllerRepository = hardwareControllerRepository;
-        this.hardwareQueueService = hardwareQueueService;
+        this.controllerCommunicationService = controllerCommunicationService;
         this.hardwareControllerDAO = hardwareControllerDAO;
         this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorDAO = sensorDAO;
@@ -50,7 +50,7 @@ public class SensorServiceImpl implements SensorService {
     @Override
     public SensorReading readSensor(long sensorId) {
         Sensor sensor = this.getSensor(sensorId);
-        double reading = this.hardwareQueueService.getSensorReading(sensor);
+        double reading = this.controllerCommunicationService.getSensorReading(sensor);
         SensorReading result = new SensorReading();
         result.setReading(reading);
         result.setSensorId(sensorId);
@@ -66,7 +66,7 @@ public class SensorServiceImpl implements SensorService {
         long[] sensorPorts = sensors.stream().flatMapToLong((sensor) -> {
             return LongStream.of(sensor.getPort());
         }).toArray();
-        return this.hardwareQueueService.getAverageSensorReading(hardwareControllerSerialNumber, sensorPorts);
+        return this.controllerCommunicationService.getAverageSensorReading(hardwareControllerSerialNumber, sensorPorts);
     }
 
     @Override

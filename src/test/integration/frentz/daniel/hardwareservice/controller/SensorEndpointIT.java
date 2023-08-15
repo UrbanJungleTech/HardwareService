@@ -55,10 +55,6 @@ public class SensorEndpointIT {
     @Autowired
     private HardwareControllerRepository hardwareControllerRepository;
     @Autowired
-    private ScheduledSensorReadingRepository scheduledSensorReadingRepository;
-    @Autowired
-    IMqttClient mqttClient;
-    @Autowired
     private SensorTestService sensorTestService;
     @Autowired
     MockMqttClientListener mockMqttClientListener;
@@ -349,7 +345,7 @@ public class SensorEndpointIT {
                 .andExpect(jsonPath("$.cronString").value("0/1 * * * * ?"))
                 .andExpect(jsonPath("$.id").exists());
         //give it enough time to get at least one reading
-        Thread.sleep(3000);
+        Thread.sleep(10000);
         String endTime = LocalDateTime.now().format(formatter);
         MvcResult result = mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/readings").queryParam("startDate", startTime).queryParam("endDate", endTime))
                 .andExpect(status().isOk())

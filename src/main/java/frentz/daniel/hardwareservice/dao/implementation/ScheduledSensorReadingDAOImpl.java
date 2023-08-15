@@ -7,7 +7,7 @@ import frentz.daniel.hardwareservice.repository.ScheduledSensorReadingRepository
 import frentz.daniel.hardwareservice.entity.SensorEntity;
 import frentz.daniel.hardwareservice.repository.SensorRepository;
 import frentz.daniel.hardwareservice.model.ScheduledSensorReading;
-import frentz.daniel.hardwareservice.service.ExceptionService;
+import frentz.daniel.hardwareservice.service.exception.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

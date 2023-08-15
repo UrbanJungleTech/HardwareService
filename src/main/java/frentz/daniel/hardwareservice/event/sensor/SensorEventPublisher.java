@@ -1,6 +1,5 @@
 package frentz.daniel.hardwareservice.event.sensor;
 
-import frentz.daniel.hardwareservice.service.HardwareQueueService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 

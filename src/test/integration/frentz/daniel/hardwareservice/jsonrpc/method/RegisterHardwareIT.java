@@ -1,30 +1,26 @@
 package frentz.daniel.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.HardwareControllerTestService;
 import frentz.daniel.hardwareservice.HardwareTestService;
 import frentz.daniel.hardwareservice.MqttTestService;
 import frentz.daniel.hardwareservice.model.Hardware;
 import frentz.daniel.hardwareservice.model.HardwareController;
 import frentz.daniel.hardwareservice.repository.HardwareControllerRepository;
 import frentz.daniel.hardwareservice.repository.HardwareRepository;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
+import frentz.daniel.hardwareservice.service.mqtt.MqttClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,20 +41,14 @@ public class RegisterHardwareIT {
     HardwareTestService hardwareTestService;
 
     @Autowired
-    IMqttClient mqttClient;
+    MqttClient mqttClient;
     @Autowired
     HardwareControllerRepository hardwareControllerRepository;
 
     @BeforeEach
     public void setUp() {
+        this.hardwareRepository.deleteAll();
         this.hardwareControllerRepository.deleteAll();
-        while(mqttClient.isConnected() == false){
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**

@@ -1,14 +1,10 @@
-package frentz.daniel.hardwareservice.service.implementation;
+package frentz.daniel.hardwareservice.service.mqtt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frentz.daniel.hardwareservice.exception.MqttPublishException;
 import frentz.daniel.hardwareservice.jsonrpc.RpcResponseProcessor;
 import frentz.daniel.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import frentz.daniel.hardwareservice.service.MqttService;
+import frentz.daniel.hardwareservice.service.HardwareControllerService;
 import io.reactivex.Observable;
-import org.apache.logging.log4j.message.Message;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,25 +17,25 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class MqttServiceImpl implements MqttService {
 
-    Logger logger = LoggerFactory.getLogger(MqttServiceImpl.class);
-    private IMqttClient mqttClient;
-    private MqttConnectOptions mqttConnectOptions;
-    private ObjectMapper objectMapper;
-    private AtomicLong sequenceGenerator;
-    private RpcResponseProcessor rpcResponseProcessor;
-    private Map<String, List<MqttMessage>> failedMessages;
+    private final Logger logger = LoggerFactory.getLogger(MqttServiceImpl.class);
+    private final ObjectMapper objectMapper;
+    private final AtomicLong sequenceGenerator;
+    private final RpcResponseProcessor rpcResponseProcessor;
+    private final Map<String, List<MqttMessage>> failedMessages;
+    private HardwareControllerService hardwareControllerService;
+    private MqttClient mqttClient;
 
-    public MqttServiceImpl(IMqttClient mqttClient,
-                           MqttConnectOptions mqttConnectOptions,
-                           ObjectMapper objectMapper,
+    public MqttServiceImpl(ObjectMapper objectMapper,
                            AtomicLong sequenceGenerator,
-                           RpcResponseProcessor rpcResponseProcessor){
-        this.mqttClient = mqttClient;
-        this.mqttConnectOptions = mqttConnectOptions;
+                           RpcResponseProcessor rpcResponseProcessor,
+                           HardwareControllerService hardwareControllerService,
+                           MqttClient mqttClient){
         this.objectMapper = objectMapper;
         this.sequenceGenerator = sequenceGenerator;
         this.rpcResponseProcessor = rpcResponseProcessor;
         this.failedMessages = new HashMap<>();
+        this.hardwareControllerService = hardwareControllerService;
+        this.mqttClient = mqttClient;
     }
 
     @Override
@@ -50,7 +46,7 @@ public class MqttServiceImpl implements MqttService {
             message = new MqttMessage(payload.getBytes());
             message.setQos(2);
             message.setRetained(true);
-            this.mqttClient.publish(serialNumber + "ToMicrocontroller", message);
+            this.mqttClient.publish(serialNumber, message);
             logger.debug("Sent RPC message -> {} ", message);
         }
         catch(Exception ex){
@@ -64,7 +60,6 @@ public class MqttServiceImpl implements MqttService {
                 }
             });
             ex.printStackTrace();
-//            throw new MqttPublishException(ex);
         }
     }
 
@@ -85,7 +80,8 @@ public class MqttServiceImpl implements MqttService {
             List<MqttMessage> messages = this.failedMessages.get(serialNumber);
             messages.forEach(message -> {
                 try {
-                    this.mqttClient.publish(serialNumber + "ToMicrocontroller", message);
+                    this.failedMessages.remove(message);
+                    this.mqttClient.publish(serialNumber, message);
                 }
                 catch(Exception ex){
                     ex.printStackTrace();

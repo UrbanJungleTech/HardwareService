@@ -30,6 +30,7 @@ public class HardwareControllerConverterImpl implements HardwareControllerConver
         result.setSerialNumber(hardwareControllerEntity.getSerialNumber());
         result.setHardware(this.hardwareConverter.toModels(hardwareControllerEntity.getHardware()));
         result.setSensors(this.sensorConverter.toModels(hardwareControllerEntity.getSensors()));
+        result.setType(hardwareControllerEntity.getType());
         return result;
     }
 
@@ -46,5 +47,6 @@ public class HardwareControllerConverterImpl implements HardwareControllerConver
     public void fillEntity(HardwareControllerEntity hardwareControllerEntity, HardwareController hardwareController) {
         hardwareControllerEntity.setName(hardwareController.getName());
         hardwareControllerEntity.setSerialNumber(hardwareController.getSerialNumber());
+        hardwareControllerEntity.setType(hardwareController.getType());
     }
 }
