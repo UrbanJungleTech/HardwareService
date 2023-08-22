@@ -12,7 +12,7 @@
         <version>3.1.0</version>
         <relativePath/>
     </parent>
-    <groupId>frentz.daniel</groupId>
+    <groupId>urbanjungletech</groupId>
     <artifactId>controller</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>controller</name>

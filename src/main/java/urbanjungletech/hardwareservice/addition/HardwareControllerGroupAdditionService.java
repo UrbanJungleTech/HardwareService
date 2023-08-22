@@ -1,0 +1,6 @@
+package urbanjungletech.hardwareservice.addition;
+
+import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
+
+public interface HardwareControllerGroupAdditionService extends AdditionService<HardwareControllerGroup>{
+}

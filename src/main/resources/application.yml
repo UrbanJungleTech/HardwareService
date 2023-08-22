@@ -34,7 +34,7 @@ server:
 logging:
   level:
     root: INFO
-    frentz.daniel: DEBUG
+    urbanjungletech: DEBUG
     org.hibernate.SQL: INFO
   mqtt:
     level: INFO
@@ -52,31 +52,51 @@ development:
       enabled: true
       serialNumber: "1234"
       callbacks:
-        frentz.daniel.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
-        frentz.daniel.hardwareservice.config.mqtt.mockclient.StateChangeCallback : StateChange
-        frentz.daniel.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback: RegisterHardware
+        urbanjungletech.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
+        urbanjungletech.hardwareservice.config.mqtt.mockclient.StateChangeCallback : StateChange
+        urbanjungletech.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback: RegisterHardware
 entity:
   names:
-    frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
-    frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
-    frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
-    frentz.daniel.hardwareservice.entity.TimerEntity: Timer
-    frentz.daniel.hardwareservice.entity.HardwareStateEntity: Hardware State
+    urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
+    urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
+    urbanjungletech.hardwareservice.entity.HardwareEntity: Hardware
+    urbanjungletech.hardwareservice.entity.TimerEntity: Timer
+    urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity: Scheduled Sensor Reading
+    urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
+    urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
+    urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
 
 rpc:
   methods:
-    "frentz.daniel.hardwareservice.jsonrpc.method.ConfirmHardwareState": "ConfirmHardwareState"
-    "frentz.daniel.hardwareservice.jsonrpc.method.DeregisterHardware": "DeregisterHardware"
-    "frentz.daniel.hardwareservice.jsonrpc.method.DeregisterSensor": "DeregisterSensor"
-    "frentz.daniel.hardwareservice.jsonrpc.method.GetInitialState": "GetInitialState"
-    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterHardware": "RegisterHardware"
-    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterHardwareController": "RegisterHardwareController"
-    "frentz.daniel.hardwareservice.jsonrpc.method.RegisterSensor": "RegisterSensor"
+    "urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState": "ConfirmHardwareState"
+    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterHardware": "DeregisterHardware"
+    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterSensor": "DeregisterSensor"
+    "urbanjungletech.hardwareservice.jsonrpc.method.GetInitialState": "GetInitialState"
+    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardware": "RegisterHardware"
+    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardwareController": "RegisterHardwareController"
+    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterSensor": "RegisterSensor"
 
 
-mqtt:
-  server: tcp://localhost:1883
-  queue: HardwareServer
+controller:
+  types:
+    mqtt1:
+      protocol: mqtt
+      client: mqtt1Client
+    rgb1:
+      protocol: rgb
+      client: localRgbClient
+
+  clients:
+    mqtt:
+      mqtt1Client:
+        server: tcp://localhost:1883
+        queue: HardwareServer
+        clientId: happy
+        listeners:
+          - name: mockMqttClientListener
+            queue: 1234ToMicrocontroller
+          - name: microcontrollerMessageListener
+            queue: HardwareServer
 
 management:
   endpoints:
