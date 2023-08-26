@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.schedule.hardware;
 
-import urbanjungletech.hardwareservice.exception.ScheduledHardwareDeleteException;
-import urbanjungletech.hardwareservice.exception.ScheduledHardwareStartException;
+import urbanjungletech.hardwareservice.exception.exception.ScheduledHardwareDeleteException;
+import urbanjungletech.hardwareservice.exception.exception.ScheduledHardwareStartException;
 import urbanjungletech.hardwareservice.model.ScheduledHardware;
-import urbanjungletech.hardwareservice.service.ScheduledHardwareService;
+import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +17,19 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
 
     Logger logger = LoggerFactory.getLogger(LocalScheduledHardwareScheduleService.class);
     private Scheduler scheduler;
-    private ScheduledHardwareService scheduledHardwareService;
+    private ScheduledHardwareQueryService scheduledHardwareQueryService;
 
     public LocalScheduledHardwareScheduleService(@Qualifier("HardwareScheduler") Scheduler scheduler,
-                                                  ScheduledHardwareService scheduledHardwareService){
+                                                  ScheduledHardwareQueryService scheduledHardwareQueryService){
         this.scheduler = scheduler;
-        this.scheduledHardwareService = scheduledHardwareService;
+        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
     }
 
     @Override
     public void start(long scheduledHardwareId) {
         try {
             logger.info("Starting scheduled hardware with id {}", scheduledHardwareId);
-            ScheduledHardware scheduledHardware = this.scheduledHardwareService.getById(scheduledHardwareId);
+            ScheduledHardware scheduledHardware = this.scheduledHardwareQueryService.getById(scheduledHardwareId);
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put("scheduledHardware", scheduledHardware);
             JobDetail details = JobBuilder.newJob(ScheduledHardwareJob.class)

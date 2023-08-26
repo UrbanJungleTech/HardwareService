@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.service.HardwareService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,20 +21,20 @@ public class ConfirmHardwareState implements RpcMethod {
     private final HardwareDAO hardwareDAO;
     private final HardwareConverter hardwareConverter;
     private final HardwareStateConverter hardwareStateConverter;
-    private final HardwareService hardwareService;
+    private final HardwareQueryService hardwareQueryService;
 
     public ConfirmHardwareState(HardwareDAO hardwareDAO,
                                 HardwareAdditionService hardwareAdditionService,
                                 ObjectMapper objectMapper,
                                 HardwareConverter hardwareConverter,
                                 HardwareStateConverter hardwareStateConverter,
-                                HardwareService hardwareService){
+                                HardwareQueryService hardwareQueryService){
         this.hardwareAdditionService = hardwareAdditionService;
         this.objectMapper = objectMapper;
         this.hardwareDAO = hardwareDAO;
         this.hardwareConverter = hardwareConverter;
         this.hardwareStateConverter = hardwareStateConverter;
-        this.hardwareService = hardwareService;
+        this.hardwareQueryService = hardwareQueryService;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ConfirmHardwareState implements RpcMethod {
         HardwareState hardwareState = objectMapper.convertValue(hardwareStateJson, HardwareState.class);
         String serialNumber = (String)params.get("serialNumber");
         Long port = Long.valueOf((Integer)params.get("port"));
-        Hardware hardware = this.hardwareService.getHardware(serialNumber, port);
+        Hardware hardware = this.hardwareQueryService.getHardware(serialNumber, port);
         hardware.setCurrentState(hardwareState);
         this.hardwareAdditionService.update(hardware.getId(), hardware);
     }

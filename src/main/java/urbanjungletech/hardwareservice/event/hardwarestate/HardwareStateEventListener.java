@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.event.hardwarestate;
 
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
-import urbanjungletech.hardwareservice.service.HardwareService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -10,18 +10,18 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Service
 public class HardwareStateEventListener {
 
-    private HardwareService hardwareService;
+    private HardwareQueryService hardwareQueryService;
     private ControllerCommunicationService controllerCommunicationService;
 
-    public HardwareStateEventListener(HardwareService hardwareService,
+    public HardwareStateEventListener(HardwareQueryService hardwareQueryService,
                                       ControllerCommunicationService controllerCommunicationService){
-        this.hardwareService = hardwareService;
+        this.hardwareQueryService = hardwareQueryService;
         this.controllerCommunicationService = controllerCommunicationService;
     }
     @Async
     @TransactionalEventListener
     public void handleHardwareUpdateStateEvent(HardwareStateUpdateEvent hardwareUpdateStateEvent){
-        Hardware hardware = this.hardwareService.getHardwareByDesiredState(hardwareUpdateStateEvent.getHardwareStateId());
+        Hardware hardware = this.hardwareQueryService.getHardwareByDesiredState(hardwareUpdateStateEvent.getHardwareStateId());
         this.controllerCommunicationService.sendStateToController(hardware);
     }
 }

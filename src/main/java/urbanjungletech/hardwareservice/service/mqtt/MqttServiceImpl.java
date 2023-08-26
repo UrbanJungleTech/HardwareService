@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.service.mqtt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import urbanjungletech.hardwareservice.jsonrpc.RpcResponseProcessor;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.service.HardwareControllerService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import io.reactivex.Observable;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
@@ -22,19 +22,19 @@ public class MqttServiceImpl implements MqttService {
     private final AtomicLong sequenceGenerator;
     private final RpcResponseProcessor rpcResponseProcessor;
     private final Map<Long, List<MqttMessage>> failedMessages;
-    private HardwareControllerService hardwareControllerService;
+    private HardwareControllerQueryService hardwareControllerQueryService;
     private MqttClient mqttClient;
 
     public MqttServiceImpl(ObjectMapper objectMapper,
                            AtomicLong sequenceGenerator,
                            RpcResponseProcessor rpcResponseProcessor,
-                           HardwareControllerService hardwareControllerService,
+                           HardwareControllerQueryService hardwareControllerQueryService,
                            MqttClient mqttClient){
         this.objectMapper = objectMapper;
         this.sequenceGenerator = sequenceGenerator;
         this.rpcResponseProcessor = rpcResponseProcessor;
         this.failedMessages = new HashMap<>();
-        this.hardwareControllerService = hardwareControllerService;
+        this.hardwareControllerQueryService = hardwareControllerQueryService;
         this.mqttClient = mqttClient;
     }
 

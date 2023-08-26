@@ -9,7 +9,7 @@ import urbanjungletech.hardwareservice.event.scheduledreading.ScheduledReadingEv
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReadingAlert;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
-import urbanjungletech.hardwareservice.service.ScheduledSensorReadingService;
+import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,20 +25,20 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     private ScheduledSensorReadingConverter scheduledSensorReadingConverter;
     private ScheduledReadingEventPublisher scheduledReadingEventPublisher;
     private SensorReadingAlertAdditionService sensorReadingAlertAdditionService;
-    private ScheduledSensorReadingService scheduledSensorReadingService;
+    private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
 
     public ScheduledSensorReadingAdditionServiceImpl(ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                                                      SensorScheduleService sensorScheduleService,
                                                      ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                                                      ScheduledReadingEventPublisher scheduledReadingEventPublisher,
                                                      SensorReadingAlertAdditionService sensorReadingAlertAdditionService,
-                                                     ScheduledSensorReadingService scheduledSensorReadingService){
+                                                     ScheduledSensorReadingQueryService scheduledSensorReadingQueryService){
         this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorScheduleService = sensorScheduleService;
         this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
         this.scheduledReadingEventPublisher = scheduledReadingEventPublisher;
         this.sensorReadingAlertAdditionService = sensorReadingAlertAdditionService;
-        this.scheduledSensorReadingService = scheduledSensorReadingService;
+        this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
 
     }
 
@@ -74,7 +74,7 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
             sensorReadingAlert.setScheduledSensorReadingId(scheduledSensorReadingEntity.getId());
         }
         this.sensorReadingAlertAdditionService.updateList(scheduledSensorReading.getSensorReadingAlerts());
-        return this.scheduledSensorReadingService.getScheduledSensorReading(scheduledSensorReadingId);
+        return this.scheduledSensorReadingQueryService.getScheduledSensorReading(scheduledSensorReadingId);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package urbanjungletech.hardwareservice.model;
 
-import urbanjungletech.hardwareservice.action.model.Action;
-
 import java.util.ArrayList;
 import java.util.List;
 

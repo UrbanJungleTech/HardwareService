@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.exception.NotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 
 import java.util.List;
 

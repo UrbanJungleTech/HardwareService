@@ -8,7 +8,7 @@ import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.repository.HardwareCronJobRepository;
 import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

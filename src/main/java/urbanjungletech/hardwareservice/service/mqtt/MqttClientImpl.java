@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.service.mqtt;
 
 import urbanjungletech.hardwareservice.config.ControllerConfiguration;
 import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.service.HardwareControllerService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -14,19 +14,19 @@ import java.util.Map;
 @Service
 public class MqttClientImpl implements MqttClient {
     private Map<String, IMqttClient> clients;
-    private HardwareControllerService hardwareControllerService;
+    private HardwareControllerQueryService hardwareControllerQueryService;
     private ControllerConfiguration controllerConfiguration;
     public MqttClientImpl(@Qualifier("MqttClients") Map<String, IMqttClient> clients,
-                          HardwareControllerService hardwareControllerService,
+                          HardwareControllerQueryService hardwareControllerQueryService,
                           ControllerConfiguration controllerConfiguration) {
         this.clients = clients;
-        this.hardwareControllerService = hardwareControllerService;
+        this.hardwareControllerQueryService = hardwareControllerQueryService;
         this.controllerConfiguration = controllerConfiguration;
     }
 
     @Override
     public void publish(long hardwareControllerId, MqttMessage message) throws MqttException {
-        HardwareController hardwareController = this.hardwareControllerService.getHardwareController(hardwareControllerId);
+        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
         String clientName = this.controllerConfiguration.getTypes().get(hardwareController.getType()).getClient();
         this.clients.get(clientName).publish(hardwareController.getSerialNumber() + "ToMicrocontroller", message);
     }

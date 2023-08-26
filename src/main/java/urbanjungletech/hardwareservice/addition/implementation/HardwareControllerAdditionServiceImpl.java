@@ -6,7 +6,7 @@ import urbanjungletech.hardwareservice.addition.SensorAdditionService;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.exception.DuplicateSerialNumberException;
+import urbanjungletech.hardwareservice.exception.exception.DuplicateSerialNumberException;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;

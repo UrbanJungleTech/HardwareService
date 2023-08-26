@@ -56,4 +56,9 @@ public class LoggingMqttMessageInterceptor implements InterceptHandler {
     public void onMessageAcknowledged(InterceptAcknowledgedMessage interceptAcknowledgedMessage) {
         LOGGER.info("Message arrived. Topic: {}. Payload: {}", interceptAcknowledgedMessage.getTopic(), interceptAcknowledgedMessage.getMsg());
     }
+
+    @Override
+    public void onSessionLoopError(Throwable throwable) {
+
+    }
 }

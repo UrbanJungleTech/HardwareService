@@ -9,9 +9,7 @@ public class HardwareController {
     private String type;
     private List<Hardware> hardware;
     private List<Sensor> sensors;
-    private List<Regulator> regulators;
     private String serialNumber;
-    private String service;
 
     public HardwareController(){
         this.sensors = new ArrayList<>();
@@ -62,21 +60,6 @@ public class HardwareController {
         this.sensors = sensors;
     }
 
-    public List<Regulator> getRegulators() {
-        return regulators;
-    }
-
-    public void setRegulators(List<Regulator> regulators) {
-        this.regulators = regulators;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
 
     public String getType() {
         return type;

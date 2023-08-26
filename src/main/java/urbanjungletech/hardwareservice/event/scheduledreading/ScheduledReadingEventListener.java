@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.event.scheduledreading;
 
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
-import urbanjungletech.hardwareservice.service.ScheduledSensorReadingService;
+import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -13,19 +13,19 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class ScheduledReadingEventListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledReadingEventListener.class);
     private SensorScheduleService sensorScheduleService;
-    private ScheduledSensorReadingService scheduledSensorReadingService;
+    private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
 
     public ScheduledReadingEventListener(SensorScheduleService sensorScheduleService,
-                                         ScheduledSensorReadingService scheduledSensorReadingService){
+                                         ScheduledSensorReadingQueryService scheduledSensorReadingQueryService){
         this.sensorScheduleService = sensorScheduleService;
-        this.scheduledSensorReadingService = scheduledSensorReadingService;
+        this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
     }
 
     @Async
     @TransactionalEventListener
     public void handleScheduledReadingCreateEvent(ScheduledReadingCreateEvent scheduledReadingCreateEvent){
         LOGGER.debug("Scheduling scheduled sensor readings");
-        ScheduledSensorReading reading = this.scheduledSensorReadingService.getScheduledSensorReading(scheduledReadingCreateEvent.getScheduledReadingId());
+        ScheduledSensorReading reading = this.scheduledSensorReadingQueryService.getScheduledSensorReading(scheduledReadingCreateEvent.getScheduledReadingId());
         this.sensorScheduleService.start(reading);
     }
 }

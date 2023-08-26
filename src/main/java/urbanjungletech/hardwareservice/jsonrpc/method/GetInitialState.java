@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.service.HardwareControllerService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +10,12 @@ import java.util.Map;
 @Service
 public class GetInitialState implements RpcMethod{
 
-    private HardwareControllerService hardwareControllerService;
+    private HardwareControllerQueryService hardwareControllerQueryService;
     private ControllerCommunicationService controllerCommunicationService;
 
-    public GetInitialState(HardwareControllerService hardwareControllerService,
+    public GetInitialState(HardwareControllerQueryService hardwareControllerQueryService,
                            ControllerCommunicationService controllerCommunicationService){
-        this.hardwareControllerService = hardwareControllerService;
+        this.hardwareControllerQueryService = hardwareControllerQueryService;
         this.controllerCommunicationService = controllerCommunicationService;
     }
 
@@ -23,7 +23,7 @@ public class GetInitialState implements RpcMethod{
     public void process(Map<String, Object> params) {
         String serialNumber = (String)params.get("serialNumber");
 
-        HardwareController hardwareController = this.hardwareControllerService.getHardwareControllerBySerialNumber(serialNumber);
+        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareControllerBySerialNumber(serialNumber);
         if(hardwareController != null){
             this.controllerCommunicationService.sendInitialState(hardwareController.getId());
         }

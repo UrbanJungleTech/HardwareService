@@ -25,8 +25,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  profiles:
-    active: test
 server:
   http2:
     enabled: true

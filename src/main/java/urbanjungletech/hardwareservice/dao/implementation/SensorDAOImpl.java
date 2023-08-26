@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.schedule.hardware;
 
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.model.ScheduledHardware;
-import urbanjungletech.hardwareservice.service.HardwareService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.simpl.SimpleJobFactory;
@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 public class ScheduledHardwareJobFactory extends SimpleJobFactory {
 
     private HardwareStateAdditionService hardwareStateAdditionService;
-    private HardwareService hardwareService;
+    private HardwareQueryService hardwareQueryService;
 
     public ScheduledHardwareJobFactory(HardwareStateAdditionService hardwareStateAdditionService,
-                                       HardwareService hardwareService){
+                                       HardwareQueryService hardwareQueryService){
         this.hardwareStateAdditionService = hardwareStateAdditionService;
-        this.hardwareService = hardwareService;
+        this.hardwareQueryService = hardwareQueryService;
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
         ScheduledHardware scheduledHardware = (ScheduledHardware) bundle.getJobDetail().getJobDataMap().get("scheduledHardware");
-        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, hardwareStateAdditionService, hardwareService);
+        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardware, hardwareStateAdditionService, hardwareQueryService);
         return result;
     }
 }

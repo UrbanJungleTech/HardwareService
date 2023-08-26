@@ -5,7 +5,7 @@ import urbanjungletech.hardwareservice.dao.HardwareControllerGroupDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 @Service

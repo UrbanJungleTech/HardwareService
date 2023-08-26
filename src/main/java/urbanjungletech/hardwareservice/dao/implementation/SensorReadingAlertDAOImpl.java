@@ -7,8 +7,8 @@ import urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity;
 import urbanjungletech.hardwareservice.model.SensorReadingAlert;
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingAlertRepository;
-import urbanjungletech.hardwareservice.service.ScheduledSensorReadingService;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class SensorReadingAlertDAOImpl implements SensorReadingAlertDAO {
         this.sensorReadingAlertConverter.fillEntity(sensorReadingAlertEntity, sensorReadingAlert);
         SensorReadingAlertEntity result = this.sensorReadingAlertRepository.save(sensorReadingAlertEntity);
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingRepository.findById(sensorReadingAlert.getScheduledSensorReadingId())
-                .orElseThrow(() -> this.exceptionService.createNotFoundException(ScheduledSensorReadingService.class, sensorReadingAlert.getScheduledSensorReadingId()));
+                .orElseThrow(() -> this.exceptionService.createNotFoundException(ScheduledSensorReadingQueryService.class, sensorReadingAlert.getScheduledSensorReadingId()));
         result.setScheduledSensorReading(scheduledSensorReadingEntity);
         scheduledSensorReadingEntity.getSensorReadingAlerts().add(result);
         this.scheduledSensorReadingRepository.save(scheduledSensorReadingEntity);

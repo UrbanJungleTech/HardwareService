@@ -2,8 +2,8 @@ package urbanjungletech.hardwareservice.config.mqtt;
 
 import urbanjungletech.hardwareservice.config.ControllerConfiguration;
 import urbanjungletech.hardwareservice.config.ListenerConfiguration;
-import urbanjungletech.hardwareservice.exception.MqttConnectionException;
-import urbanjungletech.hardwareservice.service.HardwareControllerService;
+import urbanjungletech.hardwareservice.exception.exception.MqttConnectionException;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class MqttReconnectionJob {
     private Map<String, IMqttClient> clients;
     private Map<String, IMqttMessageListener> listeners;
     private ControllerConfiguration controllerConfiguration;
-    private HardwareControllerService hardwareControllerService;
+    private HardwareControllerQueryService hardwareControllerQueryService;
 
     public MqttReconnectionJob(@Qualifier("MqttClients") Map<String, IMqttClient> clients,
                                Map<String, IMqttMessageListener> listeners,

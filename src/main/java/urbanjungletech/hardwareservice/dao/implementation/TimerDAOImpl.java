@@ -9,9 +9,9 @@ import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.repository.HardwareCronJobRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.Timer;
-import urbanjungletech.hardwareservice.service.ScheduledHardwareService;
+import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class TimerDAOImpl implements TimerDAO {
     private ExceptionService exceptionService;
     private TimerConverter timerConverter;
     private HardwareStateConverter hardwareStateConverter;
-    private ScheduledHardwareService scheduledHardwareService;
+    private ScheduledHardwareQueryService scheduledHardwareQueryService;
     private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
 
     public TimerDAOImpl(TimerRepository timerRepository,
@@ -34,14 +34,14 @@ public class TimerDAOImpl implements TimerDAO {
                         ExceptionService exceptionService,
                         TimerConverter timerConverter,
                         HardwareStateConverter hardwareStateConverter,
-                        ScheduledHardwareService scheduledHardwareService){
+                        ScheduledHardwareQueryService scheduledHardwareQueryService){
         this.timerRepository = timerRepository;
         this.cronJobrepository = cronJobrepository;
         this.hardwareRepository = hardwareRepository;
         this.exceptionService = exceptionService;
         this.timerConverter = timerConverter;
         this.hardwareStateConverter = hardwareStateConverter;
-        this.scheduledHardwareService = scheduledHardwareService;
+        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
     }
 
     @Override

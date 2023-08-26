@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
-import urbanjungletech.hardwareservice.action.converter.ActionConverter;
-import urbanjungletech.hardwareservice.action.model.Action;
+import urbanjungletech.hardwareservice.converter.ActionConverter;
+import urbanjungletech.hardwareservice.model.Action;
 import urbanjungletech.hardwareservice.converter.SensorReadingAlertConverter;
 import urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity;
 import urbanjungletech.hardwareservice.model.SensorReadingAlert;

@@ -1,8 +1,9 @@
 package urbanjungletech.hardwareservice.service;
 
-import urbanjungletech.hardwareservice.exception.NameNotFoundException;
-import urbanjungletech.hardwareservice.exception.NotFoundException;
-import urbanjungletech.hardwareservice.service.implementation.ExceptionServiceImpl;
+import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
+import urbanjungletech.hardwareservice.exception.service.EntityNameService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

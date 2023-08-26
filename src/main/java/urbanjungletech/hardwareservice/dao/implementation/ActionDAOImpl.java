@@ -1,13 +1,13 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
-import urbanjungletech.hardwareservice.action.converter.ActionConverter;
-import urbanjungletech.hardwareservice.action.entity.ActionEntity;
-import urbanjungletech.hardwareservice.action.model.Action;
-import urbanjungletech.hardwareservice.action.repository.ActionRepository;
+import urbanjungletech.hardwareservice.converter.ActionConverter;
+import urbanjungletech.hardwareservice.entity.ActionEntity;
+import urbanjungletech.hardwareservice.model.Action;
+import urbanjungletech.hardwareservice.repository.ActionRepository;
 import urbanjungletech.hardwareservice.dao.ActionDAO;
 import urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity;
 import urbanjungletech.hardwareservice.repository.SensorReadingAlertRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

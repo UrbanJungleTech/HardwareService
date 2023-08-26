@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.exception;
 
 import org.junit.jupiter.api.Test;
+import urbanjungletech.hardwareservice.exception.exception.MqttMockServerStartupException;
 
 import java.io.IOException;
 

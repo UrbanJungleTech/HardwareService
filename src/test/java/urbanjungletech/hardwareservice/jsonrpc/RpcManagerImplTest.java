@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
-import urbanjungletech.hardwareservice.exception.RpcMethodNotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.RpcMethodNotFoundException;
 import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.junit.jupiter.api.Test;

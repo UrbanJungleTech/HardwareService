@@ -8,7 +8,7 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.repository.HardwareStateRepository;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 @Service

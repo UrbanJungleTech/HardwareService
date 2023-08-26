@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.jsonrpc.model.*;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.HardwareControllerService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
 
 @Service("mqtt")
@@ -12,12 +12,12 @@ public class MqttControllerCommunicationService extends ControllerCommunicationS
 
     private final MqttService mqttService;
 
-    private final HardwareControllerService hardwareControllerService;
+    private final HardwareControllerQueryService hardwareControllerQueryService;
 
     public MqttControllerCommunicationService(MqttService mqttService,
-                                              HardwareControllerService hardwareControllerService) {
+                                              HardwareControllerQueryService hardwareControllerQueryService) {
         this.mqttService = mqttService;
-        this.hardwareControllerService = hardwareControllerService;
+        this.hardwareControllerQueryService = hardwareControllerQueryService;
     }
 
 
@@ -66,7 +66,7 @@ public class MqttControllerCommunicationService extends ControllerCommunicationS
     @Override
     public double getSensorReading(Sensor sensor) {
         SensorPortReadingMessage message = new SensorPortReadingMessage(sensor.getPort());
-        String serialNumber = this.hardwareControllerService.getSerialNumber(sensor.getHardwareControllerId());
+        String serialNumber = this.hardwareControllerQueryService.getSerialNumber(sensor.getHardwareControllerId());
         JsonRpcMessage result = this.mqttService
                 .publishWithResponse(sensor.getHardwareControllerId(), message, 10000).blockingFirst();
         return (Double) result.getResult().get("reading");

@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingReposito
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.service.exception.ExceptionService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

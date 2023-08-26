@@ -20,8 +20,6 @@ class HardwareControllerAdditionServiceImplTest {
     private HardwareAdditionService hardwareAdditionService;
     @Mock
     private SensorAdditionService sensorAdditionService;
-    @Mock
-    private HardwareControllerSubscriptionService hardwareControllerSubscriptionService;
 //
 //    @BeforeEach
 //    public void setup(){

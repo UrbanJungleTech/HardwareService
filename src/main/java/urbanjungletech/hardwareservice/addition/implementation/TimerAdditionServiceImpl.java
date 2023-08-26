@@ -9,7 +9,7 @@ import urbanjungletech.hardwareservice.dao.TimerDAO;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.event.timer.TimerEventPublisher;
 import urbanjungletech.hardwareservice.model.Timer;
-import urbanjungletech.hardwareservice.service.ScheduledHardwareService;
+import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,18 +21,18 @@ public class TimerAdditionServiceImpl implements TimerAdditionService {
     private TimerDAO timerDAO;
     private TimerConverter timerConverter;
     private TimerEventPublisher timerEventPublisher;
-    private ScheduledHardwareService scheduledHardwareService;
+    private ScheduledHardwareQueryService scheduledHardwareQueryService;
     private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
 
     public TimerAdditionServiceImpl(TimerDAO timerDAO,
                                     TimerConverter timerConverter,
                                     TimerEventPublisher timerEventPublisher,
-                                    ScheduledHardwareService scheduledHardwareService,
+                                    ScheduledHardwareQueryService scheduledHardwareQueryService,
                                     ScheduledHardwareJobConverter scheduledHardwareJobConverter) {
         this.timerDAO = timerDAO;
         this.timerConverter = timerConverter;
         this.timerEventPublisher = timerEventPublisher;
-        this.scheduledHardwareService = scheduledHardwareService;
+        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
         this.scheduledHardwareJobConverter = scheduledHardwareJobConverter;
     }
 
@@ -42,10 +42,10 @@ public class TimerAdditionServiceImpl implements TimerAdditionService {
         TimerEntity timerEntity = this.timerDAO.addTimer(timer);
         timer.setId(timerEntity.getId());
         ScheduledHardware onCronJob = this.scheduledHardwareJobConverter.toScheduledHardware(timer, ONOFF.ON);
-        this.scheduledHardwareService.createScheduledHardware(onCronJob);
+        this.scheduledHardwareQueryService.createScheduledHardware(onCronJob);
 
         ScheduledHardware offCronJob = this.scheduledHardwareJobConverter.toScheduledHardware(timer, ONOFF.OFF);
-        this.scheduledHardwareService.createScheduledHardware(offCronJob);
+        this.scheduledHardwareQueryService.createScheduledHardware(offCronJob);
         this.timerEventPublisher.publishCreateTimerEvent(timerEntity.getId());
         return this.timerConverter.toModel(timerEntity);
     }

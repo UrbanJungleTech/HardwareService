@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.jsonrpc;
 
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.jsonrpc.method.DeregisterHardware;
-import urbanjungletech.hardwareservice.service.HardwareService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ public class DeregisterHardwareTest {
     @Mock
     private HardwareAdditionService hardwareAdditionService;
     @Mock
-    private HardwareService hardwareService;
+    private HardwareQueryService hardwareQueryService;
     @InjectMocks
     private DeregisterHardware deregisterHardware;
     @Test
@@ -36,7 +36,7 @@ public class DeregisterHardwareTest {
         params.put("serialNumber", expectedSerialNumber);
         params.put("port", expectedPort);
 
-        when(hardwareService.getHardware(anyString(), anyLong())).thenReturn(hardware);
+        when(hardwareQueryService.getHardware(anyString(), anyLong())).thenReturn(hardware);
 
         deregisterHardware.process(params);
         verify(hardwareAdditionService).delete(hardwareId);

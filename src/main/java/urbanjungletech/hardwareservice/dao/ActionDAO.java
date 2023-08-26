@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.dao;
 
-import urbanjungletech.hardwareservice.action.entity.ActionEntity;
-import urbanjungletech.hardwareservice.action.model.Action;
+import urbanjungletech.hardwareservice.entity.ActionEntity;
+import urbanjungletech.hardwareservice.model.Action;
 
 import java.util.List;
 

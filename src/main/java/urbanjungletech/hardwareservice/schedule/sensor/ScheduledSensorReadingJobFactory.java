@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.schedule.sensor;
 
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
-import urbanjungletech.hardwareservice.service.ScheduledSensorReadingService;
-import urbanjungletech.hardwareservice.service.SensorService;
+import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
+import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.simpl.SimpleJobFactory;
@@ -12,22 +12,22 @@ import org.springframework.stereotype.Service;
 @Service("SensorCronJobFactory")
 public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {
 
-    private SensorService sensorService;
+    private SensorQueryService sensorQueryService;
     private SensorReadingDAO sensorReadingDAO;
-    private ScheduledSensorReadingService scheduledSensorReadingService;
+    private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
 
-    public ScheduledSensorReadingJobFactory(SensorService sensorService,
+    public ScheduledSensorReadingJobFactory(SensorQueryService sensorQueryService,
                                             SensorReadingDAO sensorReadingDAO,
-                                            ScheduledSensorReadingService scheduledSensorReadingService){
-        this.sensorService = sensorService;
+                                            ScheduledSensorReadingQueryService scheduledSensorReadingQueryService){
+        this.sensorQueryService = sensorQueryService;
         this.sensorReadingDAO = sensorReadingDAO;
-        this.scheduledSensorReadingService = scheduledSensorReadingService;
+        this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
         long sensorId = bundle.getJobDetail().getJobDataMap().getLong("scheduledSensorReadingId");
-        ScheduledSensorReadingJob result = new ScheduledSensorReadingJob(sensorId, this.sensorService, this.sensorReadingDAO, this.scheduledSensorReadingService);
+        ScheduledSensorReadingJob result = new ScheduledSensorReadingJob(sensorId, this.sensorQueryService, this.sensorReadingDAO, this.scheduledSensorReadingQueryService);
         return result;
     }
 }

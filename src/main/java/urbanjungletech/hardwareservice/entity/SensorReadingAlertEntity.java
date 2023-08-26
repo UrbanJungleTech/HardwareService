@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.entity;
 
-import urbanjungletech.hardwareservice.action.entity.ActionEntity;
 import urbanjungletech.hardwareservice.model.AlertType;
 import jakarta.persistence.*;
 

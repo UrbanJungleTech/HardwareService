@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
-import urbanjungletech.hardwareservice.action.converter.ActionConverter;
-import urbanjungletech.hardwareservice.action.entity.ActionEntity;
-import urbanjungletech.hardwareservice.action.model.Action;
+import urbanjungletech.hardwareservice.converter.ActionConverter;
+import urbanjungletech.hardwareservice.entity.ActionEntity;
+import urbanjungletech.hardwareservice.model.Action;
 import urbanjungletech.hardwareservice.addition.ActionAdditionService;
 import urbanjungletech.hardwareservice.dao.ActionDAO;
 import org.springframework.stereotype.Service;

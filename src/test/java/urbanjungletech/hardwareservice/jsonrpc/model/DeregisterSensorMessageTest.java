@@ -12,7 +12,7 @@ class DeregisterSensorMessageTest {
         String port = "1";
         sensor.setPort(port);
         DeregisterSensorMessage deregisterHardwareMessage = new DeregisterSensorMessage(sensor);
-        long setPort = (long)deregisterHardwareMessage.getParams().get("port");
+        String setPort = (String)deregisterHardwareMessage.getParams().get("port");
         assertEquals(port, setPort);
     }
 
