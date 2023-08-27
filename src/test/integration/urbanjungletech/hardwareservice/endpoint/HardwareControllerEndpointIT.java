@@ -21,7 +21,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -173,6 +175,10 @@ public class HardwareControllerEndpointIT {
         hardwareController.setSerialNumber("123456789");
         hardwareController.setName("Test Hardware Controller");
         hardwareController.setType("mqtt");
+        Map<String, String> config = new HashMap<>();
+        config.put("server", "tcp://localhost:1883");
+        config.put("clientId", "test");
+        hardwareController.setConfiguration(config);
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)

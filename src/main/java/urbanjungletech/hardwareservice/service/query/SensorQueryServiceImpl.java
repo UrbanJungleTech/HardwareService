@@ -12,8 +12,7 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
-import urbanjungletech.hardwareservice.service.query.SensorQueryService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

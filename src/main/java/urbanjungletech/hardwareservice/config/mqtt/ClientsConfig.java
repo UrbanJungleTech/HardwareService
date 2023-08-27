@@ -16,13 +16,8 @@ import java.util.Map;
 @Configuration
 public class ClientsConfig {
     @Bean("MqttClients")
-    public Map<String, IMqttClient> clients(ControllerConfiguration controllerConfiguration) throws MqttException {
-        Map<String, IMqttClient> result = new HashMap<>();
-        for(String clientName : controllerConfiguration.getClients().getMqtt().keySet()) {
-            MqttClientConfiguration clientConfiguration = controllerConfiguration.getClients().getMqtt().get(clientName);
-            IMqttClient client = new MqttClient(clientConfiguration.getServer(), clientConfiguration.getClientId());
-            result.put(clientName, client);
-        }
+    public Map<Long, IMqttClient> clients() {
+        Map<Long, IMqttClient> result = new HashMap<>();
         return result;
     }
 }

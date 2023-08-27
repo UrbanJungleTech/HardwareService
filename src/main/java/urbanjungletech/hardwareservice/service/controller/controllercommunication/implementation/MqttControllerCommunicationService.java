@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.service.controllercommunication.implementation;
+package urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.jsonrpc.model.*;
@@ -7,7 +7,8 @@ import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
 
-@Service("mqtt")
+@Service()
+@HardwareControllerCommunicationService(type="mqtt", custom=false)
 public class MqttControllerCommunicationService extends ControllerCommunicationServiceImplementation {
 
     private final MqttService mqttService;

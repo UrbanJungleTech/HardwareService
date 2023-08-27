@@ -13,10 +13,10 @@ import java.util.Map;
 
 @Service
 public class MqttClientImpl implements MqttClient {
-    private Map<String, IMqttClient> clients;
+    private Map<Long, IMqttClient> clients;
     private HardwareControllerQueryService hardwareControllerQueryService;
     private ControllerConfiguration controllerConfiguration;
-    public MqttClientImpl(@Qualifier("MqttClients") Map<String, IMqttClient> clients,
+    public MqttClientImpl(@Qualifier("MqttClients") Map<Long, IMqttClient> clients,
                           HardwareControllerQueryService hardwareControllerQueryService,
                           ControllerConfiguration controllerConfiguration) {
         this.clients = clients;
@@ -27,8 +27,7 @@ public class MqttClientImpl implements MqttClient {
     @Override
     public void publish(long hardwareControllerId, MqttMessage message) throws MqttException {
         HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
-        String clientName = this.controllerConfiguration.getTypes().get(hardwareController.getType()).getClient();
-        this.clients.get(clientName).publish(hardwareController.getSerialNumber() + "ToMicrocontroller", message);
+        this.clients.get(hardwareControllerId).publish(hardwareController.getSerialNumber() + "ToMicrocontroller", message);
     }
 
     @Override

@@ -3,6 +3,7 @@ package urbanjungletech.hardwareservice.jsonrpc.method;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import urbanjungletech.hardwareservice.HardwareTestService;
 import urbanjungletech.hardwareservice.MqttTestService;
+import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
@@ -89,8 +90,8 @@ public class DeregisterHardwareIT {
             MvcResult hardwareResponse = mockMvc.perform(get("/hardwarecontroller/" + hardwareController.getId() + "/hardware"))
                     .andReturn();
             if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
-                List<Sensor> sensorList = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), List.class);
-                isHardwareDeleted = sensorList.isEmpty();
+                List<Hardware> hardwareList = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), List.class);
+                isHardwareDeleted = hardwareList.isEmpty();
             }
         }
         assertTrue(isHardwareDeleted);

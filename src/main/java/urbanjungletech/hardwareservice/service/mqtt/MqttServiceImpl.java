@@ -41,8 +41,9 @@ public class MqttServiceImpl implements MqttService {
     @Override
     public void publish(long hardwareControllerId, JsonRpcMessage rpcMessage) {
         MqttMessage message = null;
+        String payload = null;
         try {
-            String payload = this.objectMapper.writeValueAsString(rpcMessage);
+            payload = this.objectMapper.writeValueAsString(rpcMessage);
             message = new MqttMessage(payload.getBytes());
             message.setQos(2);
             message.setRetained(true);
@@ -50,7 +51,7 @@ public class MqttServiceImpl implements MqttService {
             logger.debug("Sent RPC message -> {} ", message);
         }
         catch(Exception ex){
-                logger.error("Failed to send message: {} for controller {}", hardwareControllerId);
+                logger.error("Failed to send message: {} for controller {}", payload, hardwareControllerId);
                 if(!failedMessages.containsKey(hardwareControllerId)){
                     List<JsonRpcMessage> messages = new ArrayList<>();
                     failedMessages.put(hardwareControllerId, messages);
@@ -75,10 +76,10 @@ public class MqttServiceImpl implements MqttService {
         Set<Long> serialNumbers = this.failedMessages.keySet();
         serialNumbers.forEach(serialNumber -> {
             List<JsonRpcMessage> messages = this.failedMessages.get(serialNumber);
+            this.failedMessages.remove(serialNumber);
             messages.forEach(message -> {
                 try {
                     logger.debug("Retrying message: {}", message);
-                    this.failedMessages.remove(message);
                     this.publish(serialNumber, message);
                 }
                 catch(Exception ex){
