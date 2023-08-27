@@ -13,6 +13,7 @@ import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +26,22 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     private SensorAdditionService sensorAdditionService;
     private HardwareControllerConverter hardwareControllerConverter;
     private ObjectLoggerService objectLoggerService;
+    private ControllerConfigurationService controllerConfigurationService;
+
+
 
     public HardwareControllerAdditionServiceImpl(HardwareControllerDAO hardwareControllerDAO,
                                                  HardwareAdditionService hardwareAdditionService,
                                                  SensorAdditionService sensorAdditionService,
                                                  HardwareControllerConverter hardwareControllerConverter,
-                                                 ObjectLoggerService objectLoggerService){
+                                                 ObjectLoggerService objectLoggerService,
+                                                 ControllerConfigurationService controllerConfigurationService){
         this.hardwareControllerDAO = hardwareControllerDAO;
         this.hardwareAdditionService = hardwareAdditionService;
         this.sensorAdditionService = sensorAdditionService;
         this.hardwareControllerConverter = hardwareControllerConverter;
         this.objectLoggerService = objectLoggerService;
+        this.controllerConfigurationService = controllerConfigurationService;
     }
 
     @Transactional
@@ -56,7 +62,9 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
         });
         this.sensorAdditionService.updateList(hardwareController.getSensors());
         result = hardwareControllerDAO.getHardwareController(hardwareControllerId);
-        return this.hardwareControllerConverter.toModel(result);
+        hardwareController = this.hardwareControllerConverter.toModel(result);
+        this.controllerConfigurationService.configureController(hardwareController);
+        return hardwareController;
     }
 
     @Override

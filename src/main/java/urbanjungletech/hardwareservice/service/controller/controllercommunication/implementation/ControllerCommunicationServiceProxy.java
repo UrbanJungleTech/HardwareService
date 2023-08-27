@@ -1,9 +1,9 @@
-package urbanjungletech.hardwareservice.service.controllercommunication.implementation;
+package urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation;
 
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

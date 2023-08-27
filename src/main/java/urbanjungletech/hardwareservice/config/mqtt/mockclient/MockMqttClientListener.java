@@ -24,17 +24,18 @@ public class MockMqttClientListener implements IMqttMessageListener {
     private Map<String, List<MockMqttClientCallback>> callbacks;
 
     Logger logger = LoggerFactory.getLogger(MockMqttClientListener.class);
+
     public List<JsonRpcMessage> getCache() {
         return cache;
     }
 
-    public List<JsonRpcMessage> getCache(String method, Map<String, Object> params){
+    public List<JsonRpcMessage> getCache(String method, Map<String, Object> params) {
         List<JsonRpcMessage> cache = this.getCache(method);
         return cache.stream().filter(message -> {
-            for(String key : params.keySet()){
+            for (String key : params.keySet()) {
                 System.out.println("checking if " + key + " is in " + message.getParams() + " and equals " + params.get(key));
 
-                if(!message.getParams().containsKey(key) || !message.getParams().get(key).equals(params.get(key))){
+                if (!message.getParams().containsKey(key) || !message.getParams().get(key).equals(params.get(key))) {
                     return false;
                 }
             }
@@ -44,32 +45,28 @@ public class MockMqttClientListener implements IMqttMessageListener {
 
     public MockMqttClientListener(ObjectMapper objectMapper,
                                   MqttMockClientConfig mqttMockClientConfig,
-                                  List<MockMqttClientCallback> mockMqttClientCallbacks){
+                                  List<MockMqttClientCallback> mockMqttClientCallbacks) {
         this.objectMapper = objectMapper;
         this.callbacks = new HashMap<>();
         this.cache = new CopyOnWriteArrayList<>();
-        for(MockMqttClientCallback callback : mockMqttClientCallbacks){
-            if(mqttMockClientConfig.getCallbacks().containsKey(callback.getClass().getCanonicalName())){
-                String method = mqttMockClientConfig.getCallbacks().get(callback.getClass().getCanonicalName());
-                if(!this.callbacks.containsKey(method)){
-                    this.callbacks.put(method, new ArrayList<>());
-                }
-                this.callbacks.get(method).add(callback);
-                logger.debug("Added callback for method " + method + " " + callback.getClass().getCanonicalName());
+        for (MockMqttClientCallback callback : mockMqttClientCallbacks) {
+            String method = mqttMockClientConfig.getCallbacks().get(callback.getClass().getCanonicalName());
+            if (!this.callbacks.containsKey(method)) {
+                this.callbacks.put(method, new ArrayList<>());
             }
-            else{
-                logger.debug("No callback for " + callback.getClass().getCanonicalName());
-            }
+            this.callbacks.get(method).add(callback);
+            logger.debug("Added callback for method " + method + " " + callback.getClass().getCanonicalName());
         }
     }
+
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         logger.info("Got an RPC message -> {}", mqttMessage.getPayload().toString());
         JsonRpcMessage jsonRpcMessage = this.objectMapper.readValue(new String(mqttMessage.getPayload()), JsonRpcMessage.class);
         this.cache.add(jsonRpcMessage);
         List<MockMqttClientCallback> callback = this.callbacks.get(jsonRpcMessage.getMethod());
-        if(callback != null){
-            for(MockMqttClientCallback mockMqttClientCallback : callback){
+        if (callback != null) {
+            for (MockMqttClientCallback mockMqttClientCallback : callback) {
                 mockMqttClientCallback.callback(jsonRpcMessage);
             }
         }
@@ -79,11 +76,11 @@ public class MockMqttClientListener implements IMqttMessageListener {
         this.cache = cache;
     }
 
-    public void clear(){
-        this.cache = new CopyOnWriteArrayList <>();
+    public void clear() {
+        this.cache = new CopyOnWriteArrayList<>();
     }
 
-    public List<JsonRpcMessage> getCache(String method){
+    public List<JsonRpcMessage> getCache(String method) {
         return this.cache.stream().filter(jsonRpcMessage -> jsonRpcMessage.getMethod().equals(method)).toList();
     }
 }

@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.event.hardwarestate;
 
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

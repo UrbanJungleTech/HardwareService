@@ -9,7 +9,7 @@ import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

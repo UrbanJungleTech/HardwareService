@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

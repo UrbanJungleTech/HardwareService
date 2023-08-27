@@ -1,8 +1,8 @@
-package urbanjungletech.hardwareservice.service.controllercommunication.implementation;
+package urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation;
 
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 
 public class ControllerCommunicationServiceImplementation implements ControllerCommunicationService {
     @Override

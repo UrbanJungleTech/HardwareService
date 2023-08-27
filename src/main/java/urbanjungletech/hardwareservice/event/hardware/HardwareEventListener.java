@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.event.hardware;
 
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,37 +17,49 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MqttReconnectionJob {
-
-    private AtomicBoolean connecting;
     private Logger logger = LoggerFactory.getLogger(MqttReconnectionJob.class);
-    private Map<String, IMqttClient> clients;
+    private Map<Long, IMqttClient> clients;
     private Map<String, IMqttMessageListener> listeners;
-    private ControllerConfiguration controllerConfiguration;
-    private HardwareControllerQueryService hardwareControllerQueryService;
-
-    public MqttReconnectionJob(@Qualifier("MqttClients") Map<String, IMqttClient> clients,
+    private IMqttClient serverClient;
+    IMqttMessageListener microcontrollerMessageListener;
+    public MqttReconnectionJob(@Qualifier("MqttClients") Map<Long, IMqttClient> clients,
                                Map<String, IMqttMessageListener> listeners,
-                               ControllerConfiguration controllerConfiguration) {
+                               @Qualifier("serverClient") IMqttClient serverClient,
+                               @Qualifier("microcontrollerMessageListener") IMqttMessageListener microcontrollerMessageListener) {
         this.clients = clients;
         this.listeners = listeners;
-        this.controllerConfiguration = controllerConfiguration;
+        this.serverClient = serverClient;
+        this.microcontrollerMessageListener = microcontrollerMessageListener;
     }
 
     @Scheduled(fixedDelay = 100)
     public void reconnect() {
         try {
-            for (String mqttClient : this.controllerConfiguration.getClients().getMqtt().keySet()) {
+            for (Long mqttClient : this.clients.keySet()) {
                 IMqttClient client = this.clients.get(mqttClient);
                 if (client.isConnected() == false) {
                     client.connect();
-                    logger.info("Registering listeners {} ", controllerConfiguration.getClients().getMqtt().get(mqttClient).getListeners());
-                    for (ListenerConfiguration listenerConfiguration : controllerConfiguration.getClients().getMqtt().get(mqttClient).getListeners()) {
-                        IMqttMessageListener listener = this.listeners.get(listenerConfiguration.getName());
-                        client.subscribe(listenerConfiguration.getQueue(), listener);
-                        logger.debug("Successfully registered the mqtt rpc callback on topic {} with nane {}", listenerConfiguration.getQueue(), listenerConfiguration.getName());
+                    for (IMqttMessageListener listener : this.listeners.values()) {
+                        client.subscribe("1234ToMicrocontroller", listener);
+//                        client.subscribe("HardwareServer", listener);
+                        logger.debug("Successfully registered the mqtt rpc callback on topic {} with nane {}", "1234ToMicrocontroller", listener.getClass().getSimpleName());
                     }
                 }
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new MqttConnectionException();
+        }
+    }
+
+    @Scheduled(fixedDelay = 100)
+    public void reconnectServerClient() {
+        try {
+            if(this.serverClient.isConnected() == false){
+                this.serverClient.connect();
+                this.serverClient.subscribe("HardwareServer", microcontrollerMessageListener);
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new MqttConnectionException();

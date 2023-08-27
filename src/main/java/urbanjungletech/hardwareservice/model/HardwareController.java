@@ -1,7 +1,9 @@
 package urbanjungletech.hardwareservice.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HardwareController {
     private Long id;
@@ -11,10 +13,12 @@ public class HardwareController {
     private List<Sensor> sensors;
     private String serialNumber;
     private Long hardwareControllerGroupId;
+    private Map<String, String> configuration;
 
     public HardwareController(){
         this.sensors = new ArrayList<>();
         this.hardware = new ArrayList<>();
+        this.configuration = new HashMap<>();
     }
 
     public List<Hardware> getHardware() {
@@ -76,5 +80,13 @@ public class HardwareController {
 
     public void setHardwareControllerGroupId(Long hardwareControllerGroupId) {
         this.hardwareControllerGroupId = hardwareControllerGroupId;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
     }
 }

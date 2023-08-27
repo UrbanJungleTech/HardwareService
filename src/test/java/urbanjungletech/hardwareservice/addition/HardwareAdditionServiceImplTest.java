@@ -4,7 +4,7 @@ import urbanjungletech.hardwareservice.addition.implementation.HardwareAdditionS
 import urbanjungletech.hardwareservice.builder.HardwareStateBuilder;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
-import urbanjungletech.hardwareservice.service.controllercommunication.ControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.extension.ExtendWith;

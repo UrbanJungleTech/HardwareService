@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import urbanjungletech.hardwareservice.jsonrpc.model.StateChangeRpcMessage;
-import urbanjungletech.hardwareservice.service.controllercommunication.implementation.MqttControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.MqttControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

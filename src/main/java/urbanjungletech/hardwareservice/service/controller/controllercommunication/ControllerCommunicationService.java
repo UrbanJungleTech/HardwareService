@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.service.controllercommunication;
+package urbanjungletech.hardwareservice.service.controller.controllercommunication;
 
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
