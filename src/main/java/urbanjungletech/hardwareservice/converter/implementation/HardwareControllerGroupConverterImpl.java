@@ -8,6 +8,7 @@ import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HardwareControllerGroupConverterImpl implements HardwareControllerGroupConverter {
@@ -17,13 +18,17 @@ public class HardwareControllerGroupConverterImpl implements HardwareControllerG
     public HardwareControllerGroupConverterImpl(HardwareControllerConverter hardwareControllerConverter) {
         this.hardwareControllerConverter = hardwareControllerConverter;
     }
+
     @Override
     public HardwareControllerGroup toModel(HardwareControllerGroupEntity hardwareControllerGroupEntity) {
         HardwareControllerGroup result = new HardwareControllerGroup();
         result.setId(hardwareControllerGroupEntity.getId());
         result.setName(hardwareControllerGroupEntity.getName());
-        List<HardwareController> hardwareControllers = hardwareControllerConverter.toModels(hardwareControllerGroupEntity.getHardwareControllers());
-        result.setHardwareControllers(hardwareControllers);
+        Optional.ofNullable(hardwareControllerGroupEntity.getHardwareControllers()).ifPresent((hardwareControllers) -> {
+            List<Long> hardwareControllersIds = hardwareControllers.stream()
+                    .map((hardwareControllerEntity -> hardwareControllerEntity.getId())).toList();
+            result.setHardwareControllers(hardwareControllersIds);
+        });
         return result;
     }
 

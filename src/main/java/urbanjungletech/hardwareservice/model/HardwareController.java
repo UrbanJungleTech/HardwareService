@@ -10,6 +10,7 @@ public class HardwareController {
     private List<Hardware> hardware;
     private List<Sensor> sensors;
     private String serialNumber;
+    private Long hardwareControllerGroupId;
 
     public HardwareController(){
         this.sensors = new ArrayList<>();
@@ -67,5 +68,13 @@ public class HardwareController {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getHardwareControllerGroupId() {
+        return hardwareControllerGroupId;
+    }
+
+    public void setHardwareControllerGroupId(Long hardwareControllerGroupId) {
+        this.hardwareControllerGroupId = hardwareControllerGroupId;
     }
 }

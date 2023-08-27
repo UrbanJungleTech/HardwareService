@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,6 +13,10 @@ public class HardwareControllerGroupEntity {
     @OneToMany(mappedBy = "controllerGroup")
     private List<HardwareControllerEntity> hardwareControllers;
     private String name;
+
+    public HardwareControllerGroupEntity() {
+        this.hardwareControllers = new ArrayList<>();
+    }
 
     public String getName() {
         return name;

@@ -2,11 +2,14 @@ package urbanjungletech.hardwareservice.dao.implementation;
 
 import urbanjungletech.hardwareservice.converter.HardwareControllerGroupConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerGroupDAO;
+import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class HardwareControllerGroupDAOImpl implements HardwareControllerGroupDAO {
@@ -43,6 +46,11 @@ public class HardwareControllerGroupDAOImpl implements HardwareControllerGroupDA
         HardwareControllerGroupEntity result = this.hardwareControllerGroupRepository.findById(hardwareControllerGroupId)
                 .orElseThrow(() -> this.exceptionService.createNotFoundException(HardwareControllerGroupEntity.class, hardwareControllerGroupId));
         return result;
+    }
+
+    @Override
+    public List<HardwareControllerGroupEntity> getAllHardwareControllers() {
+        return this.hardwareControllerGroupRepository.findAll();
     }
 
     @Override

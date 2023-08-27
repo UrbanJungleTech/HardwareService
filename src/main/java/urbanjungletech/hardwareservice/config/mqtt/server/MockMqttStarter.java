@@ -23,21 +23,23 @@ public class MockMqttStarter implements ApplicationListener<ContextRefreshedEven
                            Properties mqttProperties) throws IOException {
         this.mqttServer = mqttServer;
         this.mqttProperties = mqttProperties;
+        this.mqttProperties.setProperty("persistence_enabled", "false");
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         boolean ready = false;
-        while (ready == false) {
             try {
+                this.mqttServer.stopServer();
                 this.mqttServer.startServer(mqttProperties);
-                MqttClient client = new MqttClient("tcp://localhost:1883", "test");
-                client.connect();
-                logger.info("Mock MQTT server started");
-                ready = true;
+                while (ready == false) {
+                    MqttClient client = new MqttClient("tcp://localhost:1883", "test");
+                    client.connect();
+                    logger.info("Mock MQTT server started");
+                    ready = true;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
     }
 }

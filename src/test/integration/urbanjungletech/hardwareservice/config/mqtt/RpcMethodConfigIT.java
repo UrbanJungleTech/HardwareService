@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.config.mqtt;
 
+import org.springframework.test.annotation.DirtiesContext;
 import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RpcMethodConfigIT {
     @Autowired
     ApplicationContext applicationContext;

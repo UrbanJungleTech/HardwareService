@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 
@@ -17,13 +19,16 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
     private HardwareControllerRepository hardwareControllerRepository;
     private HardwareControllerConverter hardwareControllerConverter;
     private ExceptionService exceptionService;
+    private HardwareControllerGroupRepository hardwareControllerGroupRepository;
 
     public HardwareControllerDAOImpl(HardwareControllerRepository hardwareControllerRepository,
                                      HardwareControllerConverter hardwareControllerConverter,
-                                     ExceptionService exceptionService){
+                                     ExceptionService exceptionService,
+                                     HardwareControllerGroupRepository hardwareControllerGroupRepository){
         this.hardwareControllerConverter = hardwareControllerConverter;
         this.hardwareControllerRepository = hardwareControllerRepository;
         this.exceptionService = exceptionService;
+        this.hardwareControllerGroupRepository = hardwareControllerGroupRepository;
     }
 
     @Override
@@ -70,6 +75,18 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
         });
         this.hardwareControllerConverter.fillEntity(hardwareControllerEntity, hardwareController);
         HardwareControllerEntity result = this.hardwareControllerRepository.save(hardwareControllerEntity);
+        if(hardwareController.getHardwareControllerGroupId() != null){
+            HardwareControllerGroupEntity hardwareControllerGroupEntity = this.hardwareControllerGroupRepository.findById(hardwareController.getHardwareControllerGroupId()).orElseThrow(() -> {
+                return this.exceptionService.createNotFoundException(HardwareControllerGroupEntity.class, hardwareController.getHardwareControllerGroupId());
+            });
+            hardwareControllerEntity.setControllerGroup(hardwareControllerGroupEntity);
+            if(hardwareControllerGroupEntity.getHardwareControllers().stream().noneMatch(hardwareControllerEntity1 -> hardwareControllerEntity1.getId() == hardwareController.getId())){
+                hardwareControllerGroupEntity.getHardwareControllers().add(hardwareControllerEntity);
+                this.hardwareControllerGroupRepository.save(hardwareControllerGroupEntity);
+            }
+            this.hardwareControllerRepository.save(hardwareControllerEntity);
+        }
+
         return result;
     }
 

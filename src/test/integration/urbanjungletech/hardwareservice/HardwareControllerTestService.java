@@ -39,6 +39,11 @@ public class HardwareControllerTestService {
         return hardwareControllerResponse;
     }
 
+    public HardwareController createBasicHardwareControllerHttp() throws Exception {
+        HardwareController hardwareController = createBasicHardwareController();
+        return createBasicHardwareControllerHttp(hardwareController);
+    }
+
     public HardwareController addBasicHardwareControllerWithSensors(List<Sensor> sensors) throws Exception{
         HardwareController hardwareController = createBasicHardwareController();
         hardwareController.setSensors(sensors);

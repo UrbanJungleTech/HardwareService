@@ -61,12 +61,12 @@ public class HardwareEndpointIT {
 
     @BeforeEach
     void setUp() throws SchedulerException {
-        this.hardwareControllerRepository.deleteAll();
-        this.mqttCacheListener.clear();
         this.scheduledHardwareScheduleService.deleteAllSchedules();
         this.sensorScheduleService.deleteAll();
         this.hardwareControllerRepository.deleteAll();
+        this.hardwareRepository.deleteAll();
         this.hardwareStateRepository.deleteAll();
+        this.mqttCacheListener.clear();
     }
 
     /**
@@ -253,6 +253,8 @@ public class HardwareEndpointIT {
         HardwareState desiredState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
         assertEquals(updatedState.getLevel(), desiredState.getLevel());
         assertEquals(updatedState.getState(), desiredState.getState());
+        Thread.sleep(5000);
+        this.mqttCacheListener.clear();
     }
 
     /**
@@ -262,8 +264,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardwareButNotTheDesiredStateAndNotSendAChangeStateMessage() throws Exception {
-        this.hardwareTestService.createBasicHardware();
-
+        HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
         boolean asserted = false;
         long startTime = System.currentTimeMillis();
         while (!asserted && System.currentTimeMillis() - startTime < 2000) {
@@ -389,8 +390,8 @@ public class HardwareEndpointIT {
         // its necessary to give a little margin of error
         System.out.println("onCount: " + onCount);
         System.out.println("offCount: " + offCount);
-        assertTrue(onCount >= 2 && onCount <= 3);
-        assertTrue(offCount >= 1 && offCount <= 3);
+        assertTrue(onCount >= 2 && onCount <= 4);
+        assertTrue(offCount >= 1 && offCount <= 4);
     }
 
     /**

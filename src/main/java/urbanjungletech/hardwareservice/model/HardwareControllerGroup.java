@@ -5,14 +5,14 @@ import java.util.List;
 public class HardwareControllerGroup {
     private Long id;
     private String name;
-    private List<HardwareController> hardwareControllers;
+    private List<Long> hardwareControllers;
 
-    public Long getId() {
-        return id;
+    public List<Long> getHardwareControllers() {
+        return hardwareControllers;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setHardwareControllers(List<Long> hardwareControllers) {
+        this.hardwareControllers = hardwareControllers;
     }
 
     public String getName() {
@@ -23,11 +23,11 @@ public class HardwareControllerGroup {
         this.name = name;
     }
 
-    public List<HardwareController> getHardwareControllers() {
-        return hardwareControllers;
+    public Long getId() {
+        return id;
     }
 
-    public void setHardwareControllers(List<HardwareController> hardwareControllers) {
-        this.hardwareControllers = hardwareControllers;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

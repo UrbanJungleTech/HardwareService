@@ -21,7 +21,7 @@ public class MqttServiceImpl implements MqttService {
     private final ObjectMapper objectMapper;
     private final AtomicLong sequenceGenerator;
     private final RpcResponseProcessor rpcResponseProcessor;
-    private final Map<Long, List<MqttMessage>> failedMessages;
+    private final Map<Long, List<JsonRpcMessage>> failedMessages;
     private HardwareControllerQueryService hardwareControllerQueryService;
     private MqttClient mqttClient;
 
@@ -50,15 +50,12 @@ public class MqttServiceImpl implements MqttService {
             logger.debug("Sent RPC message -> {} ", message);
         }
         catch(Exception ex){
-            Optional.of(message).ifPresent((msg) -> {
+                logger.error("Failed to send message: {} for controller {}", hardwareControllerId);
                 if(!failedMessages.containsKey(hardwareControllerId)){
-                    List<MqttMessage> messages = new ArrayList<>();
+                    List<JsonRpcMessage> messages = new ArrayList<>();
                     failedMessages.put(hardwareControllerId, messages);
                 }
-                else{
-                    failedMessages.get(hardwareControllerId).add(msg);
-                }
-            });
+                    failedMessages.get(hardwareControllerId).add(rpcMessage);
             ex.printStackTrace();
         }
     }
@@ -77,11 +74,12 @@ public class MqttServiceImpl implements MqttService {
     public void retryFailedMessages(){
         Set<Long> serialNumbers = this.failedMessages.keySet();
         serialNumbers.forEach(serialNumber -> {
-            List<MqttMessage> messages = this.failedMessages.get(serialNumber);
+            List<JsonRpcMessage> messages = this.failedMessages.get(serialNumber);
             messages.forEach(message -> {
                 try {
+                    logger.debug("Retrying message: {}", message);
                     this.failedMessages.remove(message);
-                    this.mqttClient.publish(serialNumber, message);
+                    this.publish(serialNumber, message);
                 }
                 catch(Exception ex){
                     ex.printStackTrace();

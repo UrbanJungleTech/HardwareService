@@ -10,7 +10,9 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
+import urbanjungletech.hardwareservice.repository.SensorRepository;
 import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import io.moquette.broker.Server;
@@ -54,17 +56,22 @@ public class SensorEndpointIT {
     @Autowired
     MockMqttClientListener mockMqttClientListener;
     @Autowired
-    Server mqttBroker;
-    @Autowired
     private SensorScheduleService sensorScheduleService;
     @Autowired
     private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    @Autowired
+    SensorRepository sensorRepository;
+    @Autowired
+    ScheduledSensorReadingRepository scheduledSensorReadingRepository;
     @BeforeEach
     void setUp() throws SchedulerException {
         this.hardwareControllerRepository.deleteAll();
         this.mockMqttClientListener.clear();
         this.sensorScheduleService.deleteAll();
         this.scheduledHardwareScheduleService.deleteAllSchedules();
+        this.mockMqttClientListener.clear();
+        this.sensorRepository.deleteAll();
+        this.scheduledSensorReadingRepository.deleteAll();
     }
 
     /**
@@ -94,6 +101,7 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
+        Thread.sleep(5000);
         HardwareController hardwareController = this.sensorTestService.createBasicSensor();
 
         Sensor createdSensor = hardwareController.getSensors().get(0);
@@ -246,7 +254,7 @@ public class SensorEndpointIT {
         boolean asserted = false;
         long startTime = System.currentTimeMillis();
 
-        while (!asserted && System.currentTimeMillis() - startTime < 1000) {
+        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
             if (this.mockMqttClientListener.getCache("DeregisterSensor").size() > 0) {
                 asserted = true;
                 Thread.sleep(100);

@@ -63,6 +63,7 @@ entity:
     urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
     urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
+    urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
 
 rpc:
   methods:
