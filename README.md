@@ -687,10 +687,10 @@ The names of the entities are set in the configuration as shown below:
 ```yaml
 entity:
   names:
-    frentz.daniel.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
-    frentz.daniel.hardwareservice.entity.SensorEntity: Sensor
-    frentz.daniel.hardwareservice.entity.HardwareEntity: Hardware
-    frentz.daniel.hardwareservice.entity.TimerEntity: Timer
+    entity.urbanjungletech.hardwareservice.HardwareControllerEntity: Hardware Controller
+    entity.urbanjungletech.hardwareservice.SensorEntity: Sensor
+    entity.urbanjungletech.hardwareservice.HardwareEntity: Hardware
+    entity.urbanjungletech.hardwareservice.TimerEntity: Timer
 ```
 
 ## Exception Generation
