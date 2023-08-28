@@ -5,6 +5,7 @@ import urbanjungletech.hardwareservice.service.controller.controllercommunicatio
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.HardwareControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationServiceImplementation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,26 @@ public class ControllerCommunicationServiceBeans {
                 String type = hardwareControllerCommunicationService.type();
                 if(hardwareControllerCommunicationService.custom() == true || result.get(type) == null) {
                     result.put(type, controllerConfigurationService);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Look through all of the SensorValidationServiceImplementation beans and check them for an annotation of type
+     * HardwareControllerCommunicationService. If the annotation is present, add the bean to the map such that the key
+     * is the value of the type attribute of the annotation and the value is the bean itself.
+     */
+    @Bean("SensorValidationServices")
+    public Map<String, SensorValidationServiceImplementation> sensorValidationServices(List<SensorValidationServiceImplementation> controllerCommunicationServices){
+        Map<String, SensorValidationServiceImplementation> result = new HashMap<>();
+        for(SensorValidationServiceImplementation controllerCommunicationService : controllerCommunicationServices){
+            HardwareControllerCommunicationService hardwareControllerCommunicationService = controllerCommunicationService.getClass().getAnnotation(HardwareControllerCommunicationService.class);
+            if(hardwareControllerCommunicationService != null){
+                String type = hardwareControllerCommunicationService.type();
+                if(hardwareControllerCommunicationService.custom() == true || result.get(type) == null) {
+                    result.put(type, controllerCommunicationService);
                 }
             }
         }

@@ -8,7 +8,7 @@ import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryServ
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
 
 @Service()
-@HardwareControllerCommunicationService(type="mqtt", custom=false)
+@HardwareControllerCommunicationService(type="mqtt")
 public class MqttControllerCommunicationService extends ControllerCommunicationServiceImplementation {
 
     private final MqttService mqttService;

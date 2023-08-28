@@ -6,10 +6,13 @@ import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.event.sensor.SensorEventPublisher;
+import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationError;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +25,18 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     private SensorConverter sensorConverter;
     private ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
     private SensorEventPublisher sensorEventPublisher;
+    private SensorValidationService sensorValidationService;
 
     public SensorAdditionServiceImpl(SensorDAO sensorDAO,
                                      SensorConverter sensorConverter,
                                      ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
-                                     SensorEventPublisher sensorEventPublisher){
+                                     SensorEventPublisher sensorEventPublisher,
+                                     SensorValidationService sensorValidationService){
         this.sensorDAO = sensorDAO;
         this.sensorConverter = sensorConverter;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorEventPublisher = sensorEventPublisher;
+        this.sensorValidationService = sensorValidationService;
     }
 
     @Transactional
@@ -43,6 +49,10 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
                                 -> scheduledSensorReading.setSensorId(result.getId())));
         this.scheduledSensorReadingAdditionService.updateList(sensor.getScheduledSensorReadings());
         this.sensorEventPublisher.publishSensorCreateEvent(result.getId());
+        SensorValidationError validationError = this.sensorValidationService.validateSensorType(sensor);
+        if(validationError.getMessages().size() > 0){
+            throw new InvalidSensorConfigurationException(validationError);
+        }
         return this.sensorConverter.toModel(result);
     }
 
