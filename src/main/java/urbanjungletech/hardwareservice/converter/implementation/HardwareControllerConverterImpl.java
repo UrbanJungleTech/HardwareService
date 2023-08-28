@@ -27,7 +27,6 @@ public class HardwareControllerConverterImpl implements HardwareControllerConver
         HardwareController result = new HardwareController();
         result.setId(hardwareControllerEntity.getId());
         result.setName(hardwareControllerEntity.getName());
-        result.setSerialNumber(hardwareControllerEntity.getSerialNumber());
         result.setHardware(this.hardwareConverter.toModels(hardwareControllerEntity.getHardware()));
         result.setSensors(this.sensorConverter.toModels(hardwareControllerEntity.getSensors()));
         result.setType(hardwareControllerEntity.getType());
@@ -47,7 +46,6 @@ public class HardwareControllerConverterImpl implements HardwareControllerConver
     @Override
     public void fillEntity(HardwareControllerEntity hardwareControllerEntity, HardwareController hardwareController) {
         hardwareControllerEntity.setName(hardwareController.getName());
-        hardwareControllerEntity.setSerialNumber(hardwareController.getSerialNumber());
         hardwareControllerEntity.setType(hardwareController.getType());
         hardwareControllerEntity.setConfiguration(hardwareController.getConfiguration());
     }

@@ -66,7 +66,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareController_whenGivenAValidHardwareController_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
@@ -82,7 +82,7 @@ public class HardwareControllerEndpointIT {
         assertNotEquals(0, hardwareControllerEntity.getId());
 
         //check the values in the response
-        assertEquals(hardwareController.getSerialNumber(), createdHardwareController.getSerialNumber());
+        assertEquals(hardwareController.getConfiguration().get("serialNumber"), createdHardwareController.getConfiguration().get("serialNumber"));
         assertEquals(hardwareController.getName(), createdHardwareController.getName());
         assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
     }
@@ -96,8 +96,8 @@ public class HardwareControllerEndpointIT {
     @Test
     void deleteHardwareController_whenGivenAValidHardwareController_shouldDeleteTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
         hardwareController.setName("Test Hardware Controller");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)
@@ -130,7 +130,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void updateHardwareController_whenGivenAValidHardwareController_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
@@ -143,7 +143,6 @@ public class HardwareControllerEndpointIT {
 
         //update the hardware controller
         hardwareController.setName("Updated Name");
-        hardwareController.setSerialNumber("987654321");
         hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         result = mockMvc.perform(put("/hardwarecontroller/" + createdHardwareController.getId())
                         .content(hardwareControllerJson)
@@ -158,7 +157,6 @@ public class HardwareControllerEndpointIT {
         assertNotEquals(0, hardwareControllerEntity.getId());
 
         //check the values in the response
-        assertEquals(hardwareController.getSerialNumber(), updatedHardwareController.getSerialNumber());
         assertEquals(hardwareController.getName(), updatedHardwareController.getName());
         assertEquals(hardwareControllerEntity.getId(), updatedHardwareController.getId());
     }
@@ -172,7 +170,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void getHardwareController_whenGivenAValidHardwareControllerId_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         hardwareController.setType("mqtt");
         Map<String, String> config = new HashMap<>();
@@ -197,7 +195,7 @@ public class HardwareControllerEndpointIT {
         HardwareController retrievedHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
 
         //check the values in the response
-        assertEquals(hardwareController.getSerialNumber(), retrievedHardwareController.getSerialNumber());
+        assertEquals(hardwareController.getConfiguration().get("serialNumber"), retrievedHardwareController.getConfiguration().get("serialNumber"));
         assertEquals(hardwareController.getName(), retrievedHardwareController.getName());
         assertEquals(createdHardwareController.getId(), retrievedHardwareController.getId());
         assertEquals(hardwareController.getType(), retrievedHardwareController.getType());
@@ -231,7 +229,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void getAllHardwareControllers_whenHardwareControllersExist_shouldReturnAListOfHardwareControllers() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
@@ -253,7 +251,7 @@ public class HardwareControllerEndpointIT {
 
         //check the values in the response
         assertEquals(1, retrievedHardwareControllers.size());
-        assertEquals(hardwareController.getSerialNumber(), retrievedHardwareControllers.get(0).getSerialNumber());
+        assertEquals(hardwareController.getConfiguration().get("serialNumber"), retrievedHardwareControllers.get(0).getConfiguration().get("serialNumber"));
         assertEquals(hardwareController.getName(), retrievedHardwareControllers.get(0).getName());
         assertEquals(createdHardwareController.getId(), retrievedHardwareControllers.get(0).getId());
     }
@@ -270,7 +268,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareController_whenGivenAValidHardwareControllerWithAHardware_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
         hardware.setType("light");
@@ -306,7 +304,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareController_whenGivenAValidHardwareControllerWithASensor_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");
@@ -335,7 +333,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void getHardwareController_whenGivenAHardwareControllerWith2Hardware_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
         hardware.setType("light");
@@ -378,7 +376,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void getHardwareControllerHardware_whenGivenAHardwareControllerWith2Hardware_shouldReturnTheHardware() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
         hardware.setType("light");
@@ -424,7 +422,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareControllerHardware_whenGivenAValidHardware_shouldReturnTheHardware() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
@@ -475,7 +473,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareControllerSensor_whenGivenAValidSensor_shouldReturnTheSensor() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
@@ -508,7 +506,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void getHardwareControllerSensors_whenGivenAValidHardwareControllerId_shouldReturnTheSensors() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("123456789");
+        hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");

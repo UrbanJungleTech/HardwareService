@@ -11,7 +11,6 @@ public class HardwareController {
     private String type;
     private List<Hardware> hardware;
     private List<Sensor> sensors;
-    private String serialNumber;
     private Long hardwareControllerGroupId;
     private Map<String, String> configuration;
 
@@ -49,13 +48,6 @@ public class HardwareController {
         this.hardware.add(hardware);
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
 
     public List<Sensor> getSensors() {
         return sensors;

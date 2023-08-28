@@ -50,29 +50,4 @@ public class ActionMappingsConfig {
         }
         return result;
     }
-
-//    @Bean
-//    public Map<Class, SpecificActionConverter> actionConverterMappings(List<SpecificActionConverter> actionConverters){
-//        Map<Class, SpecificActionConverter> result = new HashMap<>();
-//        for(SpecificActionConverter currentActionConverter : actionConverters){
-//            if(currentActionConverter.getClass() == LoggingActionConverterImpl.class){
-//                result.put(LoggingAction.class, currentActionConverter);
-//                result.put(LoggingActionEntity.class, currentActionConverter);
-//            }
-//            if(currentActionConverter.getClass() == HardwareStateChangeActionConverterImpl.class){
-//                result.put(HardwareStateChangeAction.class, currentActionConverter);
-//                result.put(HardwareStateChangeActionEntity.class, currentActionConverter);
-//            }
-//
-//        }
-//        for(SpecificActionConverter currentActionConverter : actionConverters){
-//            for(Type type :  currentActionConverter.getClass().getGenericInterfaces()){
-//                if(type instanceof ParameterizedType p && p.getRawType() == SpecificActionConverter.class){
-//                    result.put((Class)p.getActualTypeArguments()[0], currentActionConverter);
-//                    break;
-//                }
-//            }
-//        }
-//        return result;
-//    }
 }

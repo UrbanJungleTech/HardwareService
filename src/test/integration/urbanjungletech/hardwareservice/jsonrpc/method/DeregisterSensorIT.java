@@ -65,7 +65,7 @@ public class DeregisterSensorIT {
         HardwareController hardwareController = this.sensorTestService.createBasicSensor();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", hardwareController.getSerialNumber());
+        params.put("serialNumber", hardwareController.getConfiguration().get("serialNumber"));
         params.put("port", hardwareController.getSensors().get(0).getPort());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterSensor", params);
 

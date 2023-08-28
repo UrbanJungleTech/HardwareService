@@ -37,14 +37,14 @@ class HardwareControllerConverterImplTest {
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         hardwareControllerEntity.setName("test");
         hardwareControllerEntity.setId(1L);
-        hardwareControllerEntity.setSerialNumber("1234");
+        hardwareControllerEntity.getConfiguration().put("serialNumber", "1234");
         List<Sensor> sensors = new ArrayList<>();
         List<Hardware> hardwares = new ArrayList<>();
         when(sensorConverter.toModels(any())).thenReturn(sensors);
         when(hardwareConverter.toModels(any())).thenReturn(hardwares);
         HardwareController result = this.hardwareControllerConverter.toModel(hardwareControllerEntity);
         assertEquals("test", result.getName());
-        assertEquals("1234", result.getSerialNumber());
+        assertEquals("1234", result.getConfiguration().get("serialNumber"));
         assertEquals(1L, result.getId());
         assertSame(sensors, result.getSensors());
         assertSame(hardwares, result.getHardware());

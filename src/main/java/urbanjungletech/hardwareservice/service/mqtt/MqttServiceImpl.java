@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -33,7 +34,7 @@ public class MqttServiceImpl implements MqttService {
         this.objectMapper = objectMapper;
         this.sequenceGenerator = sequenceGenerator;
         this.rpcResponseProcessor = rpcResponseProcessor;
-        this.failedMessages = new HashMap<>();
+        this.failedMessages = new ConcurrentHashMap<>();
         this.hardwareControllerQueryService = hardwareControllerQueryService;
         this.mqttClient = mqttClient;
     }

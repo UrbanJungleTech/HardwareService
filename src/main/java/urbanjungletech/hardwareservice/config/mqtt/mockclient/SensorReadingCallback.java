@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.config.mqtt.mockclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.config.mqtt.SensorReadingException;
+import urbanjungletech.hardwareservice.exception.exception.SensorReadingException;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;

@@ -274,7 +274,7 @@ public class SensorEndpointIT {
     @Test
     void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
+        hardwareController.getConfiguration().put("serialNumber", "1234");
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");
         sensor.setName("Test Sensor");

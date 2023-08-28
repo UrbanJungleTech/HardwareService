@@ -48,9 +48,6 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     @Override
     public HardwareController create(HardwareController hardwareController) {
         this.objectLoggerService.logInfo("Adding new hardware controller", hardwareController);
-        if(this.hardwareControllerDAO.exists(hardwareController.getSerialNumber())){
-            throw new DuplicateSerialNumberException();
-        }
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);
         Long hardwareControllerId = result.getId();
         hardwareController.getHardware().forEach((Hardware hardware) -> {

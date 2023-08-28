@@ -60,8 +60,8 @@ public class HardwareControllerTestService {
 
     public HardwareController createBasicHardwareController() {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
         hardwareController.setType("mqtt");
+        hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.getConfiguration().put("server", "tcp://localhost:1883");
         hardwareController.getConfiguration().put("clientId", "happy");
         return hardwareController;

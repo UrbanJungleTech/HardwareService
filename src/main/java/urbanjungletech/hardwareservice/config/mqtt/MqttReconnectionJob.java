@@ -1,9 +1,5 @@
 package urbanjungletech.hardwareservice.config.mqtt;
 
-import urbanjungletech.hardwareservice.config.ControllerConfiguration;
-import urbanjungletech.hardwareservice.config.ListenerConfiguration;
-import urbanjungletech.hardwareservice.exception.exception.MqttConnectionException;
-import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.slf4j.Logger;
@@ -11,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.exception.exception.MqttConnectionException;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MqttReconnectionJob {

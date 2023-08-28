@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.config;
+package urbanjungletech.hardwareservice.config.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.AntPathMatcher;
