@@ -27,7 +27,7 @@ public class MqttClientImpl implements MqttClient {
     @Override
     public void publish(long hardwareControllerId, MqttMessage message) throws MqttException {
         HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
-        this.clients.get(hardwareControllerId).publish(hardwareController.getSerialNumber() + "ToMicrocontroller", message);
+        this.clients.get(hardwareControllerId).publish(hardwareController.getConfiguration().get("serialNumber") + "ToMicrocontroller", message);
     }
 
     @Override

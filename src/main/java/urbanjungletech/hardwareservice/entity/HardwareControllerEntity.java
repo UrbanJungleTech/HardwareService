@@ -16,8 +16,6 @@ public class HardwareControllerEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @Column(unique = true)
-    private String serialNumber;
     private String type;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.REMOVE)
@@ -37,7 +35,7 @@ public class HardwareControllerEntity {
         this.configuration = new HashMap<>();
     }
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "configuration",
             joinColumns = {@JoinColumn(name = "hardwarecontroller_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "configuration_data")
@@ -67,14 +65,6 @@ public class HardwareControllerEntity {
 
     public void setHardware(List<HardwareEntity> hardware) {
         this.hardware = hardware;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
     }
 
     public List<SensorEntity> getSensors() {

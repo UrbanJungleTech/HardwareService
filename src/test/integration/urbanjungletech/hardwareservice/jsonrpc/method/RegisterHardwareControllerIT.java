@@ -42,11 +42,13 @@ public class RegisterHardwareControllerIT {
     @Test
     public void testRegisterHardwareController() throws Exception {
         HardwareController hardwareController = new HardwareController();
-        hardwareController.setSerialNumber("1234");
-        hardwareController.setType("mqtt1");
-        String payload = this.objectMapper.writeValueAsString(hardwareController);
+        hardwareController.setType("mqtt");
+        hardwareController.getConfiguration().put("serialNumber", "1234");
+        hardwareController.getConfiguration().put("server", "tcp://localhost:1883");
+        hardwareController.getConfiguration().put("clientId", "hardwareController");
         Map<String, Object> params = new HashMap<>();
         params.put("hardwareController", hardwareController);
+        params.put("serialNumber", "1234");
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("RegisterHardwareController", params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
         this.mqttTestService.sendMessage(mqttPayload);

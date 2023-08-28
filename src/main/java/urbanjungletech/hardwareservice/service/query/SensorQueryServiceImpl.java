@@ -58,8 +58,6 @@ public class SensorQueryServiceImpl implements SensorQueryService {
 
     @Override
     public double readAverageSensor(long hardwareControllerId, String sensorType) {
-        HardwareControllerEntity hardwareController = this.hardwareControllerDAO.getHardwareController(hardwareControllerId);
-        String hardwareControllerSerialNumber = hardwareController.getSerialNumber();
         List<SensorEntity> sensors = this.sensorDAO.findByHardwareControllerIdAndSensorType(hardwareControllerId, sensorType);
         String[] sensorPorts = sensors.stream().map((sensor) -> {
             return sensor.getPort();

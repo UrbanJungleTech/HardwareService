@@ -72,7 +72,7 @@ public class DeregisterHardwareIT {
         HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", hardwareController.getSerialNumber());
+        params.put("serialNumber", hardwareController.getConfiguration().get("serialNumber"));
         params.put("port", hardwareController.getHardware().get(0).getPort());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterHardware", params);
 
