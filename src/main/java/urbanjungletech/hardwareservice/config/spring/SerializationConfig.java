@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.config;
+package urbanjungletech.hardwareservice.config.spring;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

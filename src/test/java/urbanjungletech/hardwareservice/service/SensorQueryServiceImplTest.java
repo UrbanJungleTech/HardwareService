@@ -64,9 +64,7 @@ class SensorQueryServiceImplTest {
     void readAverageSensor() {
         String[] sensorPorts = new String[]{"1","2"};
         List<SensorEntity> sensors = this.getTestSensorListWithPorts(sensorPorts);
-        HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         when(sensorDAO.findByHardwareControllerIdAndSensorType(anyLong(), any())).thenReturn(sensors);
-        when(hardwareControllerDAO.getHardwareController(anyLong())).thenReturn(hardwareControllerEntity);
         when(controllerCommunicationService.getAverageSensorReading(eq(sensorPorts))).thenReturn(2.0);
         double result = this.sensorService.readAverageSensor(1, "temperature");
         assertEquals(2.0, result);

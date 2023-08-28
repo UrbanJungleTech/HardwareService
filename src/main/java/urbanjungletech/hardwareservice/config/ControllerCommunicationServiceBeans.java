@@ -22,8 +22,7 @@ public class ControllerCommunicationServiceBeans {
      * @return
      */
     @Bean("ControllerCommunicationServices")
-    public Map<String, ControllerCommunicationServiceImplementation> controllerCommunicationServices(ControllerConfiguration controllerConfiguration,
-                                                                                       List<ControllerCommunicationServiceImplementation> controllerCommunicationServices){
+    public Map<String, ControllerCommunicationServiceImplementation> controllerCommunicationServices(List<ControllerCommunicationServiceImplementation> controllerCommunicationServices){
         Map<String, ControllerCommunicationServiceImplementation> result = new HashMap<>();
         for(ControllerCommunicationServiceImplementation controllerCommunicationService : controllerCommunicationServices){
             HardwareControllerCommunicationService hardwareControllerCommunicationService = controllerCommunicationService.getClass().getAnnotation(HardwareControllerCommunicationService.class);
