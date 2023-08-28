@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -186,18 +187,29 @@ public class SensorEndpointIT {
         HardwareController hardwareController = this.sensorTestService.createBasicSensor();
         Sensor createdSensor = hardwareController.getSensors().get(0);
         Sensor updatedSensor = new Sensor();
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("test", "test value");
+        updatedSensor.setMetadata(metadata);
+        Map<String, String> configuration = new HashMap<>();
+        configuration.put("test", "test config value");
+        updatedSensor.setConfiguration(configuration);
         updatedSensor.setName("Updated Sensor");
         updatedSensor.setSensorType("humidity");
         updatedSensor.setPort("2");
+
         String updatedSensorJson = objectMapper.writeValueAsString(updatedSensor);
-        mockMvc.perform(put("/sensor/" + createdSensor.getId())
+        String responseString = mockMvc.perform(put("/sensor/" + createdSensor.getId())
                         .content(updatedSensorJson)
                         .contentType("application/json")
                         .content(updatedSensorJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(updatedSensor.getName()))
-                .andExpect(jsonPath("$.sensorType").value(updatedSensor.getSensorType()))
-                .andExpect(jsonPath("$.port").value(updatedSensor.getPort()));
+                .andReturn().getResponse().getContentAsString();
+        Sensor responseSensor = objectMapper.readValue(responseString, Sensor.class);
+        assertEquals(updatedSensor.getName(), responseSensor.getName());
+        assertEquals(updatedSensor.getSensorType(), responseSensor.getSensorType());
+        assertEquals(updatedSensor.getPort(), responseSensor.getPort());
+        assertEquals(updatedSensor.getMetadata(), responseSensor.getMetadata());
+        assertEquals(updatedSensor.getConfiguration(), responseSensor.getConfiguration());
     }
 
     /**
