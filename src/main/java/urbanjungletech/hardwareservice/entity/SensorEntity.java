@@ -24,6 +24,14 @@ public class SensorEntity {
     @MapKeyColumn(name = "metadata_data")
     @Column(name = "metadata_value")
     private Map<String, String> metadata;
+
+    @ElementCollection
+    @CollectionTable(name = "sensor_configuration",
+            joinColumns = {@JoinColumn(name = "sensor_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "configuration_data")
+    @Column(name = "configuration_value")
+    private Map<String, String> configuration;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorReadingEntity> readings;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -95,5 +103,13 @@ public class SensorEntity {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
     }
 }

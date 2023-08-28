@@ -30,6 +30,7 @@ public class SensorConverterImpl implements SensorConverter {
         result.setMetadata(sensorEntity.getMetadata());
         List<ScheduledSensorReading> scheduledSensorReadings = this.scheduledSensorReadingConverter.toModels(sensorEntity.getScheduledSensorReadings());
         result.setScheduledSensorReadings(scheduledSensorReadings);
+        result.setConfiguration(sensorEntity.getConfiguration());
         return result;
     }
 
@@ -47,5 +48,6 @@ public class SensorConverterImpl implements SensorConverter {
         sensorEntity.setPort(sensor.getPort());
         sensorEntity.setName(sensor.getName());
         sensorEntity.setMetadata(sensor.getMetadata());
+        sensorEntity.setConfiguration(sensor.getConfiguration());
     }
 }

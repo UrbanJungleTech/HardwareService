@@ -12,6 +12,7 @@ public class Sensor {
     private Long hardwareControllerId;
     private List<ScheduledSensorReading> scheduledSensorReadings;
     private Map<String, String> metadata;
+    private Map<String, String> configuration;
 
     public Sensor(){
         this.scheduledSensorReadings = new ArrayList<>();
@@ -73,5 +74,13 @@ public class Sensor {
 
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
     }
 }
