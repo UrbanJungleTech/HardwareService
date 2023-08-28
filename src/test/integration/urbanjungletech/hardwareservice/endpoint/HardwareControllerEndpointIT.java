@@ -289,7 +289,6 @@ public class HardwareControllerEndpointIT {
                 .andExpect(jsonPath("$.hardware[0].currentState.id").isNumber())
                 .andExpect(jsonPath("$.hardware[0].currentState.state").value("OFF"))
                 .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
     }
 
     /**
@@ -487,6 +486,16 @@ public class HardwareControllerEndpointIT {
         //create the sensor
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");
+        sensor.setPort("1");
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("name", "temperature");
+        sensor.setMetadata(metadata);
+        sensor.setName("Test Sensor");
+
+        Map<String, String> sensorConfiguration = new HashMap<>();
+        sensorConfiguration.put("readingTarget", "temperature");
+        sensor.setConfiguration(sensorConfiguration);
+
         String sensorJson = objectMapper.writeValueAsString(sensor);
         result = mockMvc.perform(post("/hardwarecontroller/" + createdHardwareController.getId() + "/sensor")
                         .content(sensorJson)
@@ -494,6 +503,13 @@ public class HardwareControllerEndpointIT {
                         .content(sensorJson))
                 .andExpect(status().isCreated())
                 .andReturn();
+        Sensor responseSensor = objectMapper.readValue(result.getResponse().getContentAsString(), Sensor.class);
+        assertEquals(sensor.getSensorType(), responseSensor.getSensorType());
+        assertNotNull(responseSensor.getId());
+        assertEquals(sensor.getConfiguration(), responseSensor.getConfiguration());
+        assertEquals(sensor.getMetadata(), responseSensor.getMetadata());
+        assertEquals(sensor.getName(), responseSensor.getName());
+        assertEquals(sensor.getPort(), responseSensor.getPort());
     }
 
     /**
