@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.exception.exception.StandardErrorException;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
 
@@ -31,6 +32,14 @@ public class ErrorHandler {
         logger.debug("unknown error is {}: ", ex.getMessage());
         ex.printStackTrace();
         return ResponseEntity.status(500).body(error);
+    }
+
+    @ExceptionHandler(value= InvalidSensorConfigurationException.class)
+    public ResponseEntity<WebRequestException> handleInvalidSensorConfigurationException(InvalidSensorConfigurationException exception){
+        WebRequestException error = new WebRequestException();
+        error.setMessage(exception.getMessage());
+        error.setHttpStatus(400);
+        return ResponseEntity.status(400).body(error);
     }
 
 }
