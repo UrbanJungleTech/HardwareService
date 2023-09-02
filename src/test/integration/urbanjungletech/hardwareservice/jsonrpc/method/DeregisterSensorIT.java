@@ -1,11 +1,13 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.annotation.DirtiesContext;
 import urbanjungletech.hardwareservice.MqttTestService;
 import urbanjungletech.hardwareservice.SensorTestService;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.repository.SensorRepository;
 import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DeregisterSensorIT {
 
     @Autowired
@@ -40,10 +43,13 @@ public class DeregisterSensorIT {
     private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
     @Autowired
     private SensorScheduleService sensorScheduleService;
+    @Autowired
+    private SensorRepository sensorRepository;
     @BeforeEach
     public void setup() throws Exception {
         scheduledHardwareScheduleService.deleteAllSchedules();
         sensorScheduleService.deleteAll();
+        this.sensorRepository.deleteAll();
     }
 
     /**

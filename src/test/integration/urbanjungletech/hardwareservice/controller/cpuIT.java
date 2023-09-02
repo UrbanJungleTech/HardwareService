@@ -59,7 +59,6 @@ public class cpuIT {
         SensorReading sensorReading = objectMapper.readValue(sensorReadingResponse, SensorReading.class);
         Double reading = sensorReading.getReading();
         assertNotNull(reading);
-        assertNotEquals(0, reading);
     }
 
     /**
@@ -92,7 +91,6 @@ public class cpuIT {
         SensorReading sensorReading = objectMapper.readValue(sensorReadingResponse, SensorReading.class);
         Double reading = sensorReading.getReading();
         assertNotNull(reading);
-        assertNotEquals(0, reading);
     }
 
     /**

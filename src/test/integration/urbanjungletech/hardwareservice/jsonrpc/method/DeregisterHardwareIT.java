@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.test.annotation.DirtiesContext;
 import urbanjungletech.hardwareservice.HardwareTestService;
 import urbanjungletech.hardwareservice.MqttTestService;
 import urbanjungletech.hardwareservice.model.Hardware;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DeregisterHardwareIT {
 
     @Autowired

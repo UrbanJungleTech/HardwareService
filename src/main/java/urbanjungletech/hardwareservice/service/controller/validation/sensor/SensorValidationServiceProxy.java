@@ -23,6 +23,11 @@ public class SensorValidationServiceProxy implements SensorValidationService {
     @Override
     public SensorValidationError validateSensorType(Sensor sensor) {
         String controllerType = this.hardwareControllerQueryService.getHardwareController(sensor.getHardwareControllerId()).getType();
-        return this.sensorValidationServiceMap.get(controllerType).validateSensorType(sensor);
+        if(this.sensorValidationServiceMap.get(controllerType) == null) {
+            return new SensorValidationError();
+        }
+        else {
+            return this.sensorValidationServiceMap.get(controllerType).validateSensorType(sensor);
+        }
     }
 }

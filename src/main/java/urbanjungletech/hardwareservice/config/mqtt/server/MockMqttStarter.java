@@ -24,6 +24,7 @@ public class MockMqttStarter implements ApplicationListener<ContextRefreshedEven
         this.mqttServer = mqttServer;
         this.mqttProperties = mqttProperties;
         this.mqttProperties.setProperty("persistence_enabled", "false");
+        this.mqttProperties.setProperty("telemetry_enabled", "false");
     }
 
     @Override
