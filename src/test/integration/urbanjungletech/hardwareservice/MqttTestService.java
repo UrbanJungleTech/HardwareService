@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Profile("test")
 public class MqttTestService {
     public void sendMessage(String payload) throws MqttException, InterruptedException {
-        MqttClient client = new MqttClient("tcp://localhost:1883", "test");
+        MqttClient client = new MqttClient("tcp://localhost:1883", "test", null);
         client.connect();
         while(client.isConnected() == false){
             System.out.println("Waiting for connection");
