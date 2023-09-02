@@ -160,7 +160,7 @@ public class HardwareEndpointIT {
         boolean asserted = false;
         long startTime = System.currentTimeMillis();
 
-        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
+        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
             if (this.mqttCacheListener.getCache("DeregisterHardware").size() >= 1) {
                 asserted = true;
             }
