@@ -164,6 +164,7 @@ public class HardwareEndpointIT {
             if (this.mqttCacheListener.getCache("DeregisterHardware").size() >= 1) {
                 asserted = true;
             }
+            Thread.sleep(100);
         }
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("DeregisterHardware");
         assertEquals(1, results.size());
