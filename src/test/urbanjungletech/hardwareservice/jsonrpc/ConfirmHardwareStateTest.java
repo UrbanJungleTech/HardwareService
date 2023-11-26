@@ -1,17 +1,15 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
-import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
-import urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState;
-import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.ArgumentMatchers.any;
+import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
+import urbanjungletech.hardwareservice.converter.HardwareConverter;
+import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
+import urbanjungletech.hardwareservice.dao.HardwareDAO;
+import urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState;
 
 @ExtendWith(MockitoExtension.class)
 public class ConfirmHardwareStateTest {

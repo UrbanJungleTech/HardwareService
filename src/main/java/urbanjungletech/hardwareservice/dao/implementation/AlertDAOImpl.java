@@ -6,8 +6,8 @@ import urbanjungletech.hardwareservice.dao.AlertDAO;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.alert.Alert;
-import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.AlertRepository;
+import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 
 import java.util.List;
 

@@ -1,18 +1,18 @@
 package urbanjungletech.hardwareservice.service;
 
-import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
-import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
-import urbanjungletech.hardwareservice.exception.service.EntityNameService;
-import urbanjungletech.hardwareservice.exception.service.ExceptionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
+import urbanjungletech.hardwareservice.exception.service.EntityNameService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 

@@ -2,8 +2,8 @@ package urbanjungletech.hardwareservice.addition.implementation;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import urbanjungletech.hardwareservice.addition.AlertAdditionService;
+import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;

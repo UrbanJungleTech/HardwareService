@@ -1,8 +1,6 @@
 package urbanjungletech.hardwareservice.model.alert.action;
 
-import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.ONOFF;
-import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 
 public class HardwareStateChangeAlertAction extends AlertAction {
     private long hardwareId;

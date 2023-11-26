@@ -1,16 +1,16 @@
 package urbanjungletech.hardwareservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.jsonrpc.model.StateChangeRpcMessage;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.MqttControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class MqttControllerCommunicationServiceTest {

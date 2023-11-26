@@ -1,13 +1,13 @@
 package urbanjungletech.hardwareservice.services.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.util.List;
 

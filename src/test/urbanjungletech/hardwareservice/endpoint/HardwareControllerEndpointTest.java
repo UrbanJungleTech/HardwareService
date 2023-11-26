@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;

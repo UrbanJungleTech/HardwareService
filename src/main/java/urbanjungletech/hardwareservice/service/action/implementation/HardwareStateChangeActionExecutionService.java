@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.service.action.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;

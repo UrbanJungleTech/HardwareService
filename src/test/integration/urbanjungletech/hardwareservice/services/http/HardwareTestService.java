@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.services.http;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Timer;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

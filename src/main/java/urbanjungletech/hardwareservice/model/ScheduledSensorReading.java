@@ -1,7 +1,5 @@
 package urbanjungletech.hardwareservice.model;
 
-import java.util.List;
-
 public class ScheduledSensorReading {
     private Long id;
     private Long sensorId;

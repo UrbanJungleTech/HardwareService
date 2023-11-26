@@ -1,14 +1,6 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.Timer;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.TimerRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
@@ -18,10 +10,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.repository.TimerRepository;
+import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
+import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

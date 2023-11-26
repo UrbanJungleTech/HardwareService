@@ -8,8 +8,8 @@ import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.dao.AlertDAO;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
-import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.Alert;
+import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,16 @@
 package urbanjungletech.hardwareservice.converter;
 
-import urbanjungletech.hardwareservice.converter.implementation.SensorReadingConverterImpl;
-import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
-import urbanjungletech.hardwareservice.model.SensorReading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import urbanjungletech.hardwareservice.converter.implementation.SensorReadingConverterImpl;
+import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
+import urbanjungletech.hardwareservice.model.SensorReading;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class SensorEntityReadingConverterImplTest {

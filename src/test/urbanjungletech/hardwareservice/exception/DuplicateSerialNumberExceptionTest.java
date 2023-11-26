@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import urbanjungletech.hardwareservice.exception.exception.DuplicateSerialNumberException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DuplicateSerialNumberExceptionTest {
 

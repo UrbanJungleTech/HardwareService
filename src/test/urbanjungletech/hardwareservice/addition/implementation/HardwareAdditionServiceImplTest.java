@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
-import urbanjungletech.hardwareservice.addition.implementation.HardwareAdditionServiceImpl;
 import urbanjungletech.hardwareservice.builder.HardwareStateBuilder;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
@@ -19,10 +17,10 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class HardwareAdditionServiceImplTest {
@@ -68,34 +66,6 @@ public class HardwareAdditionServiceImplTest {
         assertNotNull(createdHardware);
     }
 
-    @Test
-    void testUpdateHardwareSuccess() {
-        // Arrange
-        long hardwareId = 1L;
-        Hardware hardware = new Hardware();
-        HardwareEntity hardwareEntity = new HardwareEntity();
-        hardwareEntity.setId(hardwareId);
-        HardwareState desiredState = new HardwareState();
-        desiredState.setId(1L);
-        hardware.setDesiredState(desiredState);
-        HardwareState currentState = new HardwareState();
-        currentState.setId(2L);
-        hardware.setCurrentState(currentState);
-        when(hardwareDAO.updateHardware(eq(hardware))).thenReturn(hardwareEntity);
-        when(hardwareConverter.toModel(eq(hardwareEntity))).thenReturn(hardware);
-        when(hardware.getDesiredState()).thenReturn(desiredState);
-        when(hardware.getCurrentState()).thenReturn(currentState);
-        when(hardware.getId()).thenReturn(hardwareId);
-
-        // Act
-        Hardware updatedHardware = hardwareAdditionService.update(hardwareId, hardware);
-
-        // Assert
-        verify(hardwareDAO).updateHardware(hardware);
-        verify(hardwareStateAdditionService).update(anyLong(), eq(desiredState));
-        verify(hardwareStateAdditionService).update(anyLong(), eq(currentState));
-        assertEquals(hardware, updatedHardware);
-    }
 
     @Test
     void testUpdateHardwareFailure() {

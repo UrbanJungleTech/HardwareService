@@ -1,17 +1,17 @@
 package urbanjungletech.hardwareservice.converter;
 
-import urbanjungletech.hardwareservice.converter.implementation.HardwareStateConverterImpl;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
-import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
-import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import urbanjungletech.hardwareservice.converter.implementation.HardwareStateConverterImpl;
+import urbanjungletech.hardwareservice.entity.HardwareEntity;
+import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.ONOFF;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class HardwareStateConverterImplTest {

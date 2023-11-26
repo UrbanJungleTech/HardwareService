@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.jsonrpc.model;
 
-import urbanjungletech.hardwareservice.model.Hardware;
 import org.junit.jupiter.api.Test;
+import urbanjungletech.hardwareservice.model.Hardware;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeregisterHardwareMessageTest {
 
@@ -13,7 +13,7 @@ class DeregisterHardwareMessageTest {
         String port = "1";
         hardwareEntity.setPort(port);
         DeregisterHardwareMessage deregisterHardwareMessage = new DeregisterHardwareMessage(hardwareEntity);
-        long setPort = (long)deregisterHardwareMessage.getParams().get("port");
+        String setPort = (String)deregisterHardwareMessage.getParams().get("port");
         assertEquals(port, setPort);
     }
 

@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.converter.alert.condition.implementation
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.condition.AlertConditionEntity;

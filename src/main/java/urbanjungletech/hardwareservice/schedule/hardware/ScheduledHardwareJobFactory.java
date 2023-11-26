@@ -7,7 +7,6 @@ import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.dao.ScheduledHardwareDAO;
-import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
 

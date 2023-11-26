@@ -2,8 +2,6 @@ package urbanjungletech.hardwareservice.model.alert.condition;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
-import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

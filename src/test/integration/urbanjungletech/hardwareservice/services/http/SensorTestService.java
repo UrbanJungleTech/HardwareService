@@ -1,15 +1,13 @@
 package urbanjungletech.hardwareservice.services.http;
 
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @Service
 @Profile("test")

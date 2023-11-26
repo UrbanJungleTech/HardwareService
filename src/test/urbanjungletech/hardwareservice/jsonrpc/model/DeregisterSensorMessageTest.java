@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.jsonrpc.model;
 
-import urbanjungletech.hardwareservice.model.Sensor;
 import org.junit.jupiter.api.Test;
+import urbanjungletech.hardwareservice.model.Sensor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeregisterSensorMessageTest {
     @Test

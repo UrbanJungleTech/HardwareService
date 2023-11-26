@@ -1,17 +1,17 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
-import urbanjungletech.hardwareservice.exception.exception.RpcMethodNotFoundException;
-import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import urbanjungletech.hardwareservice.exception.exception.RpcMethodNotFoundException;
+import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
