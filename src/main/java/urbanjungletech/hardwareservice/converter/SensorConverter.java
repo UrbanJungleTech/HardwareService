@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.converter;
 
-import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.exception.service;
 
-import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 
 @Service
 public class ExceptionServiceImpl implements ExceptionService {

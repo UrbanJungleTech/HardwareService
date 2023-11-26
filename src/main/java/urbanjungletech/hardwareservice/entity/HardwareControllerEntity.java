@@ -1,8 +1,9 @@
 package urbanjungletech.hardwareservice.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class HardwareControllerEntity {
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.ALL)
     private List<SensorEntity> Sensors;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private HardwareControllerGroupEntity controllerGroup;
 
     private String service;
@@ -36,10 +37,12 @@ public class HardwareControllerEntity {
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     @CollectionTable(name = "configuration",
             joinColumns = {@JoinColumn(name = "hardwarecontroller_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "configuration_data")
     @Column(name = "configuration_value")
+    @BatchSize(size = 20)
     private Map<String, String> configuration;
 
     public String getName() {

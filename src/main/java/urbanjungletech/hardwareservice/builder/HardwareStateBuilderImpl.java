@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.builder;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.ONOFF;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HardwareStateBuilderImpl implements HardwareStateBuilder{

@@ -6,20 +6,20 @@ import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 
 import java.util.List;
 
 @Service
 public class HardwareControllerDAOImpl implements HardwareControllerDAO {
 
-    private HardwareControllerRepository hardwareControllerRepository;
-    private HardwareControllerConverter hardwareControllerConverter;
-    private ExceptionService exceptionService;
-    private HardwareControllerGroupRepository hardwareControllerGroupRepository;
+    private final HardwareControllerRepository hardwareControllerRepository;
+    private final HardwareControllerConverter hardwareControllerConverter;
+    private final ExceptionService exceptionService;
+    private final HardwareControllerGroupRepository hardwareControllerGroupRepository;
 
     public HardwareControllerDAOImpl(HardwareControllerRepository hardwareControllerRepository,
                                      HardwareControllerConverter hardwareControllerConverter,

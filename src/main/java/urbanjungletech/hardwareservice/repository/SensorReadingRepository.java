@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.repository;
 
-import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 import org.springframework.data.repository.CrudRepository;
+import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,5 +1,7 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.dao.HardwareStateDAO;
@@ -7,14 +9,12 @@ import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
 import urbanjungletech.hardwareservice.event.hardwarestate.HardwareStateEventPublisher;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class HardwareStateAdditionServiceImpl implements HardwareStateAdditionService {
-    private HardwareStateDAO hardwareStateDAO;
-    private HardwareStateConverter hardwareStateConverter;
-    private HardwareStateEventPublisher hardwareStateEventPublisher;
+    private final HardwareStateDAO hardwareStateDAO;
+    private final HardwareStateConverter hardwareStateConverter;
+    private final HardwareStateEventPublisher hardwareStateEventPublisher;
 
     public HardwareStateAdditionServiceImpl(HardwareStateDAO hardwareStateDAO,
                                             HardwareStateConverter hardwareStateConverter,

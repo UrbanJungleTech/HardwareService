@@ -2,8 +2,8 @@ package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.annotation.DirtiesContext;
-import urbanjungletech.hardwareservice.MqttTestService;
-import urbanjungletech.hardwareservice.SensorTestService;
+import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;

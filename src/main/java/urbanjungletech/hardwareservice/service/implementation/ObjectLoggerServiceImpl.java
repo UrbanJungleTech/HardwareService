@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.service.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 
 @Service
 public class ObjectLoggerServiceImpl implements ObjectLoggerService {

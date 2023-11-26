@@ -52,9 +52,9 @@ development:
       enabled: true
       serialNumber: "1234"
       callbacks:
-        urbanjungletech.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
-        urbanjungletech.hardwareservice.config.mqtt.mockclient.StateChangeCallback : StateChange
-        urbanjungletech.hardwareservice.config.mqtt.mockclient.RegisterHardwareCallback: RegisterHardware
+        SensorReadingCallback : ReadSensor
+        StateChangeCallback : StateChange
+        RegisterHardwareCallback: RegisterHardware
 entity:
   names:
     urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
@@ -64,21 +64,22 @@ entity:
     urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity: Scheduled Sensor Reading
     urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
-    urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
+    urbanjungletech.hardwareservice.entity.alert.AlertEntity: Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
 
-rpc:
-  methods:
-    "urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState": "ConfirmHardwareState"
-    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterHardware": "DeregisterHardware"
-    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterSensor": "DeregisterSensor"
-    "urbanjungletech.hardwareservice.jsonrpc.method.GetInitialState": "GetInitialState"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardware": "RegisterHardware"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardwareController": "RegisterHardwareController"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterSensor": "RegisterSensor"
+mqtt-rpc:
+  uri: tcp://localhost:1883
+  queue: HardwareServer
 
 management:
   endpoints:
     web:
       exposure:
         include: metrics
+
+mock:
+  mqtt:
+    enabled: true
+    port: 1883
+    host: localhost
+    logAll: true

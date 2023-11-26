@@ -1,11 +1,11 @@
 package urbanjungletech.hardwareservice.schedule.sensor;
 
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
-import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
+import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
+import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 
 @Service
 public class SensorScheduleReadingServiceImpl implements SensorScheduleService{

@@ -1,11 +1,11 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;

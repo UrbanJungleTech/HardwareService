@@ -3,18 +3,25 @@ package urbanjungletech.hardwareservice.config.mqtt;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
-@ConfigurationProperties(prefix = "rpc")
+@ConfigurationProperties(prefix = "mqtt-rpc")
 public class RpcProperties {
-    private Map<String, String> methods;
+    private String uri;
+    private String queue;
 
-    public Map<String, String> getMethods() {
-        return methods;
+    public String getUri() {
+        return uri;
     }
 
-    public void setMethods(Map<String, String> methods) {
-        this.methods = methods;
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getQueue() {
+        return queue;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
     }
 }

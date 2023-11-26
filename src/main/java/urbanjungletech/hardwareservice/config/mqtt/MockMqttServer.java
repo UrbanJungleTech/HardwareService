@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Properties;
 
 @Configuration
-@ConditionalOnProperty(name = "local.mqtt.enabled", havingValue = "true")
 public class MockMqttServer {
 
     @Bean

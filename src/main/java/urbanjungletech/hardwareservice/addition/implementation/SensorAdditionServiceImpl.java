@@ -1,5 +1,7 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
 import urbanjungletech.hardwareservice.converter.SensorConverter;
@@ -9,8 +11,6 @@ import urbanjungletech.hardwareservice.event.sensor.SensorEventPublisher;
 import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationError;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
 
@@ -21,11 +21,11 @@ import java.util.Optional;
 @Service
 public class SensorAdditionServiceImpl implements SensorAdditionService {
 
-    private SensorDAO sensorDAO;
-    private SensorConverter sensorConverter;
-    private ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
-    private SensorEventPublisher sensorEventPublisher;
-    private SensorValidationService sensorValidationService;
+    private final SensorDAO sensorDAO;
+    private final SensorConverter sensorConverter;
+    private final ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
+    private final SensorEventPublisher sensorEventPublisher;
+    private final SensorValidationService sensorValidationService;
 
     public SensorAdditionServiceImpl(SensorDAO sensorDAO,
                                      SensorConverter sensorConverter,

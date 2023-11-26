@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.endpoint;
-
+import java.time.temporal.ChronoUnit;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.SensorTestService;
-import urbanjungletech.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
@@ -15,7 +15,6 @@ import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
 import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
-import io.moquette.broker.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
@@ -26,6 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -107,14 +108,10 @@ public class SensorEndpointIT {
 
         Sensor createdSensor = hardwareController.getSensors().get(0);
 
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
-            if (this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1) {
-                asserted = true;
-                Thread.sleep(10);
-            }
-        }
+        await()
+                .atMost(Duration.of(10, ChronoUnit.SECONDS))
+                .until(() -> this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1);
+
         List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort()));
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
@@ -263,15 +260,11 @@ public class SensorEndpointIT {
         Sensor createdSensor = hardwareController.getSensors().get(0);
         mockMvc.perform(delete("/sensor/" + createdSensor.getId()))
                 .andExpect(status().isNoContent());
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
 
-        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
-            if (this.mockMqttClientListener.getCache("DeregisterSensor").size() > 0) {
-                asserted = true;
-                Thread.sleep(100);
-            }
-        }
+        await()
+                .atMost(Duration.of(10, java.time.temporal.ChronoUnit.SECONDS))
+                .with()
+                .until(() -> this.mockMqttClientListener.getCache("DeregisterSensor").size() >= 1);
         JsonRpcMessage rpcMessage = this.mockMqttClientListener.getCache("DeregisterSensor").get(0);
         assertEquals(createdSensor.getPort(), rpcMessage.getParams().get("port"));
     }

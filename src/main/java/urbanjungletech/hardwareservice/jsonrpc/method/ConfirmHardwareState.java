@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
@@ -8,7 +9,6 @@ import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class ConfirmHardwareState implements RpcMethod {
         HashMap<String, Object> hardwareStateJson = (HashMap<String, Object>) params.get("hardwareState");
         HardwareState hardwareState = objectMapper.convertValue(hardwareStateJson, HardwareState.class);
         String serialNumber = (String)params.get("serialNumber");
-        Long port = Long.valueOf((Integer)params.get("port"));
+        String port = (String)params.get("port");
         Hardware hardware = this.hardwareQueryService.getHardware(serialNumber, port);
         hardware.setCurrentState(hardwareState);
         this.hardwareAdditionService.update(hardware.getId(), hardware);

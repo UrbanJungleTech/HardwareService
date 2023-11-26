@@ -1,13 +1,6 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.HardwareTestService;
-import urbanjungletech.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +8,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.ONOFF;
+import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -105,18 +109,13 @@ public class HardwareStateEndpointIT {
                 .andExpect(jsonPath("$.state").value(desiredState.getState().toString()))
                 .andExpect(jsonPath("$.level").value(desiredState.getLevel()));
 
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-
-        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
-            if (this.mockMqttClientListener.getCache("StateChange").size() >= 1) {
-                asserted = true;
-            }
-        }
+        await()
+                .atMost(Duration.of(10, ChronoUnit.SECONDS))
+                .with()
+                .untilAsserted(() -> assertEquals(1, this.mockMqttClientListener.getCache("StateChange").size()));
         List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("StateChange");
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
-        System.out.println(message.getParams().toString());
         HardwareState hardwareState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
         assertEquals(desiredState.getLevel(), hardwareState.getLevel());
         assertEquals(desiredState.getState(), hardwareState.getState());

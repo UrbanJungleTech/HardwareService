@@ -1,11 +1,11 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.TimerConverter;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.model.Timer;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.service.mqtt;
 
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import io.reactivex.Observable;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 
 public interface MqttService {
     void publish(long hardwareControllerId, JsonRpcMessage payload);

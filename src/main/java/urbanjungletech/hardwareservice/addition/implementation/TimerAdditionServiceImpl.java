@@ -1,28 +1,28 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
 import urbanjungletech.hardwareservice.converter.ScheduledHardwareJobConverter;
-import urbanjungletech.hardwareservice.model.ONOFF;
-import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.converter.TimerConverter;
 import urbanjungletech.hardwareservice.dao.TimerDAO;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.event.timer.TimerEventPublisher;
+import urbanjungletech.hardwareservice.model.ONOFF;
+import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TimerAdditionServiceImpl implements TimerAdditionService {
-    private TimerDAO timerDAO;
-    private TimerConverter timerConverter;
-    private TimerEventPublisher timerEventPublisher;
-    private ScheduledHardwareQueryService scheduledHardwareQueryService;
-    private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
+    private final TimerDAO timerDAO;
+    private final TimerConverter timerConverter;
+    private final TimerEventPublisher timerEventPublisher;
+    private final ScheduledHardwareQueryService scheduledHardwareQueryService;
+    private final ScheduledHardwareJobConverter scheduledHardwareJobConverter;
 
     public TimerAdditionServiceImpl(TimerDAO timerDAO,
                                     TimerConverter timerConverter,

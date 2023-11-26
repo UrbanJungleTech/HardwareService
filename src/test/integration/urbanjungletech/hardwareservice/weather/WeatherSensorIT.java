@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.weather;
 
-import urbanjungletech.hardwareservice.SensorTestService;
+import urbanjungletech.hardwareservice.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.model.Sensor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

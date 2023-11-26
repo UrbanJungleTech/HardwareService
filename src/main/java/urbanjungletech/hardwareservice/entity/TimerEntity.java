@@ -8,13 +8,15 @@ public class TimerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private ScheduledHardwareEntity onCronJob;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private ScheduledHardwareEntity offCronJob;
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "hardware_id")
     private HardwareEntity hardware;
+
+    private Boolean skipNext;
 
     public Long getId() {
         return id;
@@ -46,5 +48,13 @@ public class TimerEntity {
 
     public void setOffCronJob(ScheduledHardwareEntity offCronJob) {
         this.offCronJob = offCronJob;
+    }
+
+    public Boolean getSkipNext() {
+        return skipNext;
+    }
+
+    public void setSkipNext(Boolean skipNext) {
+        this.skipNext = skipNext;
     }
 }

@@ -16,13 +16,6 @@ public class ScheduledSensorReadingEntity {
     @JoinColumn(name = "sensor_id")
     private SensorEntity sensorEntity;
 
-    @OneToMany(mappedBy = "scheduledSensorReading", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<SensorReadingAlertEntity> sensorReadingAlerts;
-
-    public ScheduledSensorReadingEntity() {
-        this.sensorReadingAlerts = new ArrayList<>();
-    }
-
     public String getCronString() {
         return cronString;
     }
@@ -47,11 +40,4 @@ public class ScheduledSensorReadingEntity {
         this.sensorEntity = sensorEntity;
     }
 
-    public List<SensorReadingAlertEntity> getSensorReadingAlerts() {
-        return sensorReadingAlerts;
-    }
-
-    public void setSensorReadingAlerts(List<SensorReadingAlertEntity> sensorReadingAlerts) {
-        this.sensorReadingAlerts = sensorReadingAlerts;
-    }
 }

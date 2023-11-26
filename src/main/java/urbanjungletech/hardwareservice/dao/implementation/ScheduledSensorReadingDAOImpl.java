@@ -1,25 +1,23 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
-import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
-import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
+import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
+import urbanjungletech.hardwareservice.repository.SensorRepository;
 
 import java.util.List;
 
 @Service
 public class ScheduledSensorReadingDAOImpl implements ScheduledSensorReadingDAO {
-
-
-    private ScheduledSensorReadingRepository scheduledSensorReadingRepository;
-    private ScheduledSensorReadingConverter scheduledSensorReadingConverter;
-    private SensorRepository sensorRepository;
-    private ExceptionService exceptionService;
+    private final ScheduledSensorReadingRepository scheduledSensorReadingRepository;
+    private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
+    private final SensorRepository sensorRepository;
+    private final ExceptionService exceptionService;
 
     public ScheduledSensorReadingDAOImpl(ScheduledSensorReadingRepository scheduledSensorReadingRepository,
                                          ScheduledSensorReadingConverter scheduledSensorReadingConverter,

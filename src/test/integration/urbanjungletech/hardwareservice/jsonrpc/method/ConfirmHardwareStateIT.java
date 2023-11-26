@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import urbanjungletech.hardwareservice.HardwareTestService;
-import urbanjungletech.hardwareservice.MqttTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
@@ -19,9 +19,13 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.with;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -78,7 +82,7 @@ public class ConfirmHardwareStateIT {
         jsonRpcMessage.setMethod("ConfirmHardwareState");
         Map<String, Object> params = new HashMap<>();
         params.put("serialNumber", "1234");
-        params.put("port", 1);
+        params.put("port", "1");
         HardwareState hardwareState = new HardwareState();
         hardwareState.setLevel(2);
         hardwareState.setState(ONOFF.OFF);
@@ -89,21 +93,18 @@ public class ConfirmHardwareStateIT {
         //send message to mqtt broker
         this.mqttTestService.sendMessage(mqttPayload);
         //wait for the current state to be updated
-        boolean isConfirmed = false;
-        long timeoutMillis = 3000;
-        long sleepMillis = 500;
-        long timeWaitedMillis = 0;
-        while (!isConfirmed && timeWaitedMillis < timeoutMillis) {
-            Thread.sleep(sleepMillis);
-            timeWaitedMillis += sleepMillis;
-            MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + hardware.getId()))
-                    .andReturn();
-            if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
-                Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
-                HardwareState state = updatedHardware.getCurrentState();
-                isConfirmed = state.getState() == ONOFF.OFF && state.getLevel() == 2;
-            }
-        }
-        assertTrue(isConfirmed);
+        await()
+                .atMost(Duration.of(10, java.time.temporal.ChronoUnit.SECONDS))
+                .with()
+                .until(() -> {
+                    MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + hardware.getId()))
+                            .andReturn();
+                    if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
+                        Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
+                        HardwareState state = updatedHardware.getCurrentState();
+                        return state.getState() == ONOFF.OFF && state.getLevel() == 2;
+                    }
+                    return false;
+                });
     }
 }

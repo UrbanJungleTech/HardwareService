@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.HardwareTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Timer;

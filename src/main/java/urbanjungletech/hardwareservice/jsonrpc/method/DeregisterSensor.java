@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 

@@ -1,24 +1,24 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class HardwareDAOImpl implements HardwareDAO {
 
-    private HardwareRepository hardwareRepository;
-    private HardwareConverter hardwareConverter;
-    private ExceptionService exceptionService;
-    private HardwareControllerRepository hardwareControllerRepository;
+    private final HardwareRepository hardwareRepository;
+    private final HardwareConverter hardwareConverter;
+    private final ExceptionService exceptionService;
+    private final HardwareControllerRepository hardwareControllerRepository;
 
     public HardwareDAOImpl(HardwareRepository hardwareRepository,
                            HardwareConverter hardwareConverter,
@@ -40,10 +40,6 @@ public class HardwareDAOImpl implements HardwareDAO {
         return hardwareEntity;
     }
 
-    @Override
-    public HardwareEntity updateHardware(HardwareEntity hardware) {
-        return this.hardwareRepository.save(hardware);
-    }
 
     @Override
     public HardwareEntity createHardware(Hardware hardware) {
@@ -68,7 +64,7 @@ public class HardwareDAOImpl implements HardwareDAO {
     }
 
     @Override
-    public HardwareEntity getHardware(String serialNumber, long port) {
+    public HardwareEntity getHardware(String serialNumber, String port) {
         HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findBySerialNumber(serialNumber);
         HardwareEntity hardwareEntity = this.hardwareRepository.findHardwareBySerialNumberAndPort(serialNumber, port).orElseThrow(() -> {
             throw this.exceptionService.createNotFoundException(HardwareEntity.class, port);

@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.endpoint;
 
-import urbanjungletech.hardwareservice.addition.HardwareControllerGroupAdditionService;
-import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import urbanjungletech.hardwareservice.addition.HardwareControllerGroupAdditionService;
+import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerGroupQueryService;
 
 import java.util.List;

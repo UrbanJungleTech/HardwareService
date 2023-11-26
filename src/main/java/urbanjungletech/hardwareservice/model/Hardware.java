@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Hardware {
     private Long id;
-    private Long port;
+    private String port;
     private String name;
     private String type;
     private HardwareState desiredState;
@@ -15,6 +15,7 @@ public class Hardware {
     private Long hardwareControllerId;
     private List<Timer> timers;
     private Map<String, String> metadata;
+    private Map<String, String> configuration;
 
     public Hardware(){
         this.metadata = new HashMap<>();
@@ -29,15 +30,6 @@ public class Hardware {
     }
 
 
-
-    public Long getPort() {
-        return port;
-    }
-
-    public void setPort(Long port) {
-        this.port = port;
-    }
-
     public Long getHardwareControllerId() {
         return hardwareControllerId;
     }
@@ -47,7 +39,7 @@ public class Hardware {
     }
 
     public HardwareState getDesiredState() {
-        return desiredState;
+        return this.desiredState;
     }
 
     public void setDesiredState(HardwareState desiredState) {
@@ -92,5 +84,21 @@ public class Hardware {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 }

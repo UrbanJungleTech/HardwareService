@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,15 @@ public class SensorEntity {
             joinColumns = {@JoinColumn(name = "sensor_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "metadata_data")
     @Column(name = "metadata_value")
+    @Fetch(FetchMode.SUBSELECT)
     private Map<String, String> metadata;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "sensor_configuration",
             joinColumns = {@JoinColumn(name = "sensor_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "configuration_data")
     @Column(name = "configuration_value")
+    @Fetch(FetchMode.SUBSELECT)
     private Map<String, String> configuration;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
