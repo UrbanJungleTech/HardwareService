@@ -1,13 +1,13 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
-import urbanjungletech.hardwareservice.model.ScheduledHardware;
-import urbanjungletech.hardwareservice.model.Timer;
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.converter.ScheduledHardwareJobConverter;
 import urbanjungletech.hardwareservice.entity.ScheduledHardwareEntity;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.ONOFF;
-import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.model.ScheduledHardware;
+import urbanjungletech.hardwareservice.model.Timer;
 
 @Service
 public class ScheduledHardwareJobConverterImpl implements ScheduledHardwareJobConverter {

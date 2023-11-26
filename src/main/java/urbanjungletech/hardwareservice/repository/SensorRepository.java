@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.repository;
 
-import urbanjungletech.hardwareservice.entity.SensorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import urbanjungletech.hardwareservice.entity.SensorEntity;
 
 import java.util.List;
 

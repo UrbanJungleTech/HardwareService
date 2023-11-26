@@ -1,23 +1,23 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.dao.HardwareStateDAO;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.repository.HardwareStateRepository;
-import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HardwareStateDAOImpl implements HardwareStateDAO {
 
-    private HardwareRepository hardwareRepository;
-    private HardwareStateRepository hardwareStateRepository;
-    private HardwareStateConverter hardwareStateConverter;
-    private ExceptionService exceptionService;
+    private final HardwareRepository hardwareRepository;
+    private final HardwareStateRepository hardwareStateRepository;
+    private final HardwareStateConverter hardwareStateConverter;
+    private final ExceptionService exceptionService;
 
     public HardwareStateDAOImpl(HardwareRepository hardwareRepository,
                                 HardwareStateRepository hardwareStateRepository,

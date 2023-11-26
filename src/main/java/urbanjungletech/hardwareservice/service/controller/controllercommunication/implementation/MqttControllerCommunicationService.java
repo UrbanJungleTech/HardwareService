@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.jsonrpc.model.*;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 @Service()
 @HardwareControllerCommunicationService(type="mqtt")
@@ -52,16 +52,6 @@ public class MqttControllerCommunicationService extends ControllerCommunicationS
         this.mqttService.publish(hardware.getHardwareControllerId(), jsonRpcMessage);
     }
 
-    @Override
-    public void sendInitialState(long hardwareControllerId) {
-//        List<HardwareStateRpcMessage> hardwareStateRpcMessages = new ArrayList<>();
-//        for (Hardware hardware : hardwares) {
-//            HardwareStateRpcMessage hardwareStateRpcMessage = new HardwareStateRpcMessage(hardware.getPort(), hardware.getDesiredState());
-//            hardwareStateRpcMessages.add(hardwareStateRpcMessage);
-//        }
-//        InitialStateRpcMessage initialStateRpcMessage = new InitialStateRpcMessage(hardwareStateRpcMessages);
-//        this.mqttService.publish(hardwares.get(0).getHardwareControllerId(), initialStateRpcMessage);
-    }
 
 
     @Override
@@ -73,13 +63,5 @@ public class MqttControllerCommunicationService extends ControllerCommunicationS
         return (Double) result.getResult().get("reading");
     }
 
-    @Override
-    public double getAverageSensorReading(String[] sensorPorts) {
-//        AverageSensorReadingMessage message = new AverageSensorReadingMessage(sensorPorts);
-//        JsonRpcMessage reading = this.mqttService
-//                .publishWithResponse(hardwareControllerId, message, 10000).blockingFirst();
-//        return (Double) reading.getResult().get("reading");
-        return 1l;
-    }
 
 }

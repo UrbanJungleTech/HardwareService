@@ -9,9 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.HardwareTestService;
-import urbanjungletech.hardwareservice.config.mqtt.mockclient.MockMqttClientListener;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
@@ -21,9 +18,11 @@ import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.repository.HardwareStateRepository;
 import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -103,7 +102,7 @@ public class HardwareEndpointIT {
             }
         }
         JsonRpcMessage registerHardwareMessage = this.mqttCacheListener.getCache("RegisterHardware").get(0);
-        assertEquals(createdHardware.getPort(), Long.valueOf((int)registerHardwareMessage.getParams().get("port")));
+        assertEquals(createdHardware.getPort(), registerHardwareMessage.getParams().get("port"));
     }
 
     /**
@@ -169,7 +168,7 @@ public class HardwareEndpointIT {
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("DeregisterHardware");
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
-        assertEquals(createdHardware.getPort(), Long.valueOf((int)message.getParams().get("port")));
+        assertEquals(createdHardware.getPort(), message.getParams().get("port"));
     }
 
     /**
@@ -192,7 +191,7 @@ public class HardwareEndpointIT {
         Hardware updatedHardware = new Hardware();
         updatedHardware.setType("heater");
         updatedHardware.setName("Updated Name");
-        updatedHardware.setPort(2L);
+        updatedHardware.setPort("2");
         String updatedHardwareJson = objectMapper.writeValueAsString(updatedHardware);
 
         mockMvc.perform(put("/hardware/" + createdHardware.getId())
@@ -287,7 +286,7 @@ public class HardwareEndpointIT {
         Hardware hardware = new Hardware();
         hardware.setType("light");
         hardware.setName("Test Hardware");
-        hardware.setPort(1L);
+        hardware.setPort("1");
         hardware.setId(123456789L);
         String hardwareJson = objectMapper.writeValueAsString(hardware);
 
@@ -362,7 +361,7 @@ public class HardwareEndpointIT {
     @Test
     public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
         Hardware hardware = new Hardware();
-        hardware.setPort(1L);
+        hardware.setPort("1");
         Timer timer = new Timer();
         timer.setOnLevel(100);
         timer.setOnCronString("0/3 * * * * ?");
@@ -373,7 +372,7 @@ public class HardwareEndpointIT {
 
         Thread.sleep(10000);
 
-        List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange", Map.of("port", (hardware.getPort().intValue())));
+        List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange");
 
         //count the on and off states saved
         int onCount = 0;
@@ -389,8 +388,6 @@ public class HardwareEndpointIT {
 
         //check how often the on and off states were sent, given that we're dealing with seconds
         // its necessary to give a little margin of error
-        System.out.println("onCount: " + onCount);
-        System.out.println("offCount: " + offCount);
         assertTrue(onCount >= 2 && onCount <= 4);
         assertTrue(offCount >= 1 && offCount <= 4);
     }

@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

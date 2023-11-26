@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.entity;
 
-import urbanjungletech.hardwareservice.model.ONOFF;
 import jakarta.persistence.*;
+import urbanjungletech.hardwareservice.model.ONOFF;
 
 @Entity
 @Table(name="ScheduledHardwareJob")

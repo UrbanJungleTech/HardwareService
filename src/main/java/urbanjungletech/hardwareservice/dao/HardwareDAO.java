@@ -9,8 +9,7 @@ public interface HardwareDAO {
     HardwareEntity createHardware(Hardware hardware);
     HardwareEntity getHardware(long hardwareId);
     HardwareEntity updateHardware(Hardware hardware);
-    HardwareEntity updateHardware(HardwareEntity hardware);
-    HardwareEntity getHardware(String serialNumber, long port);
+    HardwareEntity getHardware(String serialNumber, String port);
     List<HardwareEntity> getAllHardware();
     void delete(long hardwareId);
 

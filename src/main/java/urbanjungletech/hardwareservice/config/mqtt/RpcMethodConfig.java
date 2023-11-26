@@ -1,8 +1,9 @@
 package urbanjungletech.hardwareservice.config.mqtt;
 
-import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import urbanjungletech.hardwareservice.jsonrpc.method.RpcMethod;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,14 +13,11 @@ import java.util.Map;
 public class RpcMethodConfig {
 
     @Bean("rpcMethods")
-    public Map<String, RpcMethod> getRpcMethods(RpcProperties rpcProperties, List<RpcMethod> rpcMethods){
+    public Map<String, RpcMethod> getRpcMethods(List<RpcMethod> rpcMethods){
         Map<String, RpcMethod> result = new HashMap<>();
-        for(RpcMethod rpcMethod : rpcMethods){
-            if(rpcProperties.getMethods().containsKey(rpcMethod.getClass().getCanonicalName())){
-                String methodName = rpcProperties.getMethods().get(rpcMethod.getClass().getCanonicalName());
-                result.put(methodName, rpcMethod);
-            }
-        }
+        rpcMethods.stream().forEach((RpcMethod rpcMethod) -> {
+            result.put(StringUtils.capitalise(rpcMethod.getClass().getSimpleName()), rpcMethod);
+        });
         return result;
     }
 

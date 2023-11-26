@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.schedule.sensor;
 
 
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import org.quartz.SchedulerException;
+import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 
 public interface SensorScheduleService {
     void start(ScheduledSensorReading scheduledSensorReading);

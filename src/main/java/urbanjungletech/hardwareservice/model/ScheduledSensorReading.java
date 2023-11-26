@@ -1,12 +1,9 @@
 package urbanjungletech.hardwareservice.model;
 
-import java.util.List;
-
 public class ScheduledSensorReading {
     private Long id;
     private Long sensorId;
     private String cronString;
-    private List<SensorReadingAlert> sensorReadingAlerts;
 
     public String getCronString() {
         return cronString;
@@ -30,13 +27,5 @@ public class ScheduledSensorReading {
 
     public void setSensorId(Long sensorId) {
         this.sensorId = sensorId;
-    }
-
-    public List<SensorReadingAlert> getSensorReadingAlerts() {
-        return sensorReadingAlerts;
-    }
-
-    public void setSensorReadingAlerts(List<SensorReadingAlert> sensorReadingAlerts) {
-        this.sensorReadingAlerts = sensorReadingAlerts;
     }
 }

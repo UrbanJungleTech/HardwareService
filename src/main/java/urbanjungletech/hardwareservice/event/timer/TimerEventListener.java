@@ -1,12 +1,12 @@
 package urbanjungletech.hardwareservice.event.timer;
 
-import urbanjungletech.hardwareservice.dao.TimerDAO;
-import urbanjungletech.hardwareservice.entity.TimerEntity;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
+import urbanjungletech.hardwareservice.dao.TimerDAO;
+import urbanjungletech.hardwareservice.entity.TimerEntity;
+import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 
 @Service
 public class TimerEventListener {
@@ -20,7 +20,7 @@ public class TimerEventListener {
     }
     @Async
     @TransactionalEventListener
-    public void onTimerCreateEvent(TimerCreateEvent timerCreateEvent) {
+    public void onTimerCreateEvent(TimerCreateEvent timerCreateEvent) throws InterruptedException {
         TimerEntity timerEntity = this.timerDAO.getTimer(timerCreateEvent.getTimerId());
         this.scheduledHardwareScheduleService.start(timerEntity.getOnCronJob().getId());
         this.scheduledHardwareScheduleService.start(timerEntity.getOffCronJob().getId());

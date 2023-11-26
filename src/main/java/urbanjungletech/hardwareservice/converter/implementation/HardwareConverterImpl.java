@@ -1,12 +1,12 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.converter.TimerConverter;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,7 @@ public class HardwareConverterImpl implements HardwareConverter {
         result.setHardwareControllerId(hardwareEntity.getHardwareController().getId());
         result.setTimers(this.timerConverter.toModels(hardwareEntity.getTimers()));
         result.setMetadata(hardwareEntity.getMetadata());
+        result.setConfiguration(hardwareEntity.getConfiguration());
         return result;
     }
 
@@ -53,6 +54,7 @@ public class HardwareConverterImpl implements HardwareConverter {
     public void fillEntity(HardwareEntity hardwareEntity, Hardware hardware) {
         hardwareEntity.setHardwareCategory(hardware.getType());
         hardwareEntity.setMetadata(hardware.getMetadata());
+        hardwareEntity.setConfiguration(hardware.getConfiguration());
         hardwareEntity.setPort(hardware.getPort());
         hardwareEntity.setHardwareCategory(hardware.getType());
         hardwareEntity.setId(hardware.getId());

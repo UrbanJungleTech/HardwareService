@@ -1,21 +1,20 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerGroupConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerGroupDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
-import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class HardwareControllerGroupDAOImpl implements HardwareControllerGroupDAO {
-    private HardwareControllerGroupRepository hardwareControllerGroupRepository;
-    private HardwareControllerGroupConverter hardwareControllerGroupConverter;
-    private ExceptionService exceptionService;
+    private final HardwareControllerGroupRepository hardwareControllerGroupRepository;
+    private final HardwareControllerGroupConverter hardwareControllerGroupConverter;
+    private final ExceptionService exceptionService;
 
     public HardwareControllerGroupDAOImpl(HardwareControllerGroupRepository hardwareControllerGroupRepository,
                                           HardwareControllerGroupConverter hardwareControllerGroupConverter,

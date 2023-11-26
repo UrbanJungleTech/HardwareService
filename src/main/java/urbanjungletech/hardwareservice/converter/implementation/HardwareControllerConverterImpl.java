@@ -1,11 +1,11 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.model.HardwareController;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

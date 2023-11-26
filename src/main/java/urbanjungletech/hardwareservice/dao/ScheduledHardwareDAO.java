@@ -8,6 +8,6 @@ import java.util.List;
 public interface ScheduledHardwareDAO {
     ScheduledHardwareEntity addScheduledHardwareJob(ScheduledHardware cronJob);
     List<ScheduledHardwareEntity> getAll();
-
     ScheduledHardwareEntity getById(long scheduledHardwareId);
+    ScheduledHardwareEntity updateScheduledHardwareJob(ScheduledHardware scheduledHardware);
 }

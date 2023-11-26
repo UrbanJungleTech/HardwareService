@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
+import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
+import urbanjungletech.hardwareservice.model.Hardware;
 
 import java.util.Map;
 

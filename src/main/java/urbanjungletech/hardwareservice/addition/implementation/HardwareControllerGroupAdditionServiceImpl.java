@@ -1,14 +1,13 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareControllerGroupAdditionService;
 import urbanjungletech.hardwareservice.converter.HardwareControllerGroupConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerGroupDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
-import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 import java.util.List;
@@ -17,10 +16,10 @@ import java.util.Optional;
 @Service
 public class HardwareControllerGroupAdditionServiceImpl implements HardwareControllerGroupAdditionService {
 
-    private HardwareControllerGroupDAO hardwareControllerGroupDAO;
-    private HardwareControllerGroupConverter hardwareControllerGroupConverter;
-    private HardwareControllerQueryService hardwareControllerQueryService;
-    private HardwareControllerAdditionService hardwareControllerAdditionService;
+    private final HardwareControllerGroupDAO hardwareControllerGroupDAO;
+    private final HardwareControllerGroupConverter hardwareControllerGroupConverter;
+    private final HardwareControllerQueryService hardwareControllerQueryService;
+    private final HardwareControllerAdditionService hardwareControllerAdditionService;
 
     public HardwareControllerGroupAdditionServiceImpl(HardwareControllerGroupDAO hardwareControllerGroupDAO,
                                                       HardwareControllerGroupConverter hardwareControllerGroupConverter,

@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.endpoint;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.service.query.HardwareStateQueryService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController()
 @RequestMapping(value = "/hardwarestate")

@@ -1,22 +1,22 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.test.annotation.DirtiesContext;
-import urbanjungletech.hardwareservice.HardwareTestService;
-import urbanjungletech.hardwareservice.MqttTestService;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.repository.HardwareRepository;
+import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class RegisterHardwareIT {
         HardwareController hardwareControllerResponse = this.hardwareTestService.createBasicHardware();
 
         Hardware hardware = new Hardware();
-        hardware.setPort(1L);
+        hardware.setPort("1");
         hardware.setType("light");
 
         String hardwareJson = objectMapper.writeValueAsString(hardware);

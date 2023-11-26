@@ -1,13 +1,12 @@
 package urbanjungletech.hardwareservice.service.action.implementation;
 
-import urbanjungletech.hardwareservice.model.LoggingAction;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
+import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
+import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
 
 @Service
-public class LoggingActionServiceExecutionService implements ActionExecutionService<LoggingAction> {
+public class LoggingActionServiceExecutionService implements SpecificActionExecutionService<LoggingAlertAction> {
     @Override
-    public void execute(LoggingAction action) {
-
+    public void execute(LoggingAlertAction action) {
     }
 }

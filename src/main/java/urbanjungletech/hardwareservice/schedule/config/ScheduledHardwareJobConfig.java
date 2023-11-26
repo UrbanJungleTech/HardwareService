@@ -1,17 +1,17 @@
 package urbanjungletech.hardwareservice.schedule.config;
 
-import urbanjungletech.hardwareservice.entity.ScheduledHardwareEntity;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.dao.ScheduledHardwareDAO;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import urbanjungletech.hardwareservice.dao.ScheduledHardwareDAO;
+import urbanjungletech.hardwareservice.entity.ScheduledHardwareEntity;
+import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 
 @Configuration
 public class ScheduledHardwareJobConfig implements ApplicationListener<ContextRefreshedEvent> {
 
-    private ScheduledHardwareDAO scheduledHardwareDAO;
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
+    private final ScheduledHardwareDAO scheduledHardwareDAO;
+    private final ScheduledHardwareScheduleService scheduledHardwareScheduleService;
     public ScheduledHardwareJobConfig(ScheduledHardwareDAO scheduledHardwareDAO,
                                       ScheduledHardwareScheduleService scheduledHardwareScheduleService){
         this.scheduledHardwareDAO = scheduledHardwareDAO;

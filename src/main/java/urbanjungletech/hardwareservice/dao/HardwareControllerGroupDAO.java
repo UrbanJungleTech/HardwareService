@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.dao;
 
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 

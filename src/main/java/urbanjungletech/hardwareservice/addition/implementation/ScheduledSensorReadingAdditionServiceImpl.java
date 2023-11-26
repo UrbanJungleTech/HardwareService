@@ -1,17 +1,16 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import urbanjungletech.hardwareservice.addition.AlertAdditionService;
 import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
-import urbanjungletech.hardwareservice.addition.SensorReadingAlertAdditionService;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.event.scheduledreading.ScheduledReadingEventPublisher;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.SensorReadingAlert;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +19,24 @@ import java.util.Optional;
 @Service
 public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSensorReadingAdditionService {
 
-    private ScheduledSensorReadingDAO scheduledSensorReadingDAO;
-    private SensorScheduleService sensorScheduleService;
-    private ScheduledSensorReadingConverter scheduledSensorReadingConverter;
-    private ScheduledReadingEventPublisher scheduledReadingEventPublisher;
-    private SensorReadingAlertAdditionService sensorReadingAlertAdditionService;
-    private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
+    private final ScheduledSensorReadingDAO scheduledSensorReadingDAO;
+    private final SensorScheduleService sensorScheduleService;
+    private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
+    private final ScheduledReadingEventPublisher scheduledReadingEventPublisher;
+    private final AlertAdditionService alertAdditionService;
+    private final ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
 
     public ScheduledSensorReadingAdditionServiceImpl(ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                                                      SensorScheduleService sensorScheduleService,
                                                      ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                                                      ScheduledReadingEventPublisher scheduledReadingEventPublisher,
-                                                     SensorReadingAlertAdditionService sensorReadingAlertAdditionService,
+                                                     AlertAdditionService alertAdditionService,
                                                      ScheduledSensorReadingQueryService scheduledSensorReadingQueryService){
         this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorScheduleService = sensorScheduleService;
         this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
         this.scheduledReadingEventPublisher = scheduledReadingEventPublisher;
-        this.sensorReadingAlertAdditionService = sensorReadingAlertAdditionService;
+        this.alertAdditionService = alertAdditionService;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
 
     }
@@ -46,13 +45,6 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     @Transactional
     public ScheduledSensorReading create(ScheduledSensorReading scheduledSensorReading) {
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.create(scheduledSensorReading);
-        Optional.ofNullable(scheduledSensorReading.getSensorReadingAlerts()).ifPresent((sensorReadingAlerts) -> {
-                    for (SensorReadingAlert sensorReadingAlert : sensorReadingAlerts){
-                        sensorReadingAlert.setScheduledSensorReadingId(scheduledSensorReadingEntity.getId());
-                        this.sensorReadingAlertAdditionService.create(sensorReadingAlert);
-                    }
-                }
-        );
 
         this.scheduledReadingEventPublisher.publishScheduledReadingCreateEvent(scheduledSensorReadingEntity.getId());
         return this.scheduledSensorReadingConverter.toModel(scheduledSensorReadingEntity);
@@ -69,11 +61,6 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     public ScheduledSensorReading update(long scheduledSensorReadingId,
                                          ScheduledSensorReading scheduledSensorReading) {
         scheduledSensorReading.setId(scheduledSensorReadingId);
-        ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.update(scheduledSensorReading);
-        for(SensorReadingAlert sensorReadingAlert : scheduledSensorReading.getSensorReadingAlerts()){
-            sensorReadingAlert.setScheduledSensorReadingId(scheduledSensorReadingEntity.getId());
-        }
-        this.sensorReadingAlertAdditionService.updateList(scheduledSensorReading.getSensorReadingAlerts());
         return this.scheduledSensorReadingQueryService.getScheduledSensorReading(scheduledSensorReadingId);
     }
 
@@ -89,13 +76,6 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
                 result.add(this.update(scheduledSensorReading.getSensorId(), scheduledSensorReading));
             }
         }));
-        return result;
-    }
-
-    @Transactional
-    public SensorReadingAlert addSensorReadingAlert(long scheduledSensorReadingId, SensorReadingAlert sensorReadingAlert){
-        sensorReadingAlert.setScheduledSensorReadingId(scheduledSensorReadingId);
-        SensorReadingAlert result = this.sensorReadingAlertAdditionService.create(sensorReadingAlert);
         return result;
     }
 }

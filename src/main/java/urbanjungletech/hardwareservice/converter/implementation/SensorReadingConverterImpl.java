@@ -1,9 +1,9 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.SensorReadingConverter;
 import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;

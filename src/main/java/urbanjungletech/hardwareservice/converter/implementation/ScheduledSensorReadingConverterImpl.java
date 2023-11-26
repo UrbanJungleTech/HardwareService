@@ -1,21 +1,20 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
-import urbanjungletech.hardwareservice.converter.SensorReadingAlertConverter;
+import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.SensorReadingAlert;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ScheduledSensorReadingConverterImpl implements ScheduledSensorReadingConverter {
-    private SensorReadingAlertConverter sensorReadingAlertConverter;
+    private final AlertConverter alertConverter;
 
-    public ScheduledSensorReadingConverterImpl(SensorReadingAlertConverter sensorReadingAlertConverter){
-        this.sensorReadingAlertConverter = sensorReadingAlertConverter;
+    public ScheduledSensorReadingConverterImpl(AlertConverter alertConverter){
+        this.alertConverter = alertConverter;
     }
 
     @Override
@@ -24,10 +23,6 @@ public class ScheduledSensorReadingConverterImpl implements ScheduledSensorReadi
         result.setCronString(scheduledSensorReadingEntity.getCronString());
         result.setSensorId(scheduledSensorReadingEntity.getSensor().getId());
         result.setId(scheduledSensorReadingEntity.getId());
-        List<SensorReadingAlert> sensorReadingAlerts = scheduledSensorReadingEntity.getSensorReadingAlerts().stream().map((sensorReadingAlertEntity) -> {
-            return this.sensorReadingAlertConverter.toModel(sensorReadingAlertEntity);
-        }).collect(Collectors.toList());
-        result.setSensorReadingAlerts(sensorReadingAlerts);
         return result;
     }
 

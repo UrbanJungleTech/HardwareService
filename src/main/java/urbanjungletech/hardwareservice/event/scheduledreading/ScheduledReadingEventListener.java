@@ -1,13 +1,13 @@
 package urbanjungletech.hardwareservice.event.scheduledreading;
 
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
-import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
+import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
+import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
+import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 
 @Service
 public class ScheduledReadingEventListener {

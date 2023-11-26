@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.exception.service;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.EntityNameConfiguration;
 import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
-import org.springframework.stereotype.Service;
 
 
 

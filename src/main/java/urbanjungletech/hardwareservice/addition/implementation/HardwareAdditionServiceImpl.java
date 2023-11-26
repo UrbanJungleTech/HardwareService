@@ -1,5 +1,9 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
@@ -14,10 +18,6 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,9 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     private final HardwareConverter hardwareConverter;
     private final Logger logger = LoggerFactory.getLogger(HardwareAdditionServiceImpl.class);
     private final ObjectLoggerService objectLoggerService;
-    private HardwareStateConverter hardwareStateConverter;
-    private HardwareEventPublisher hardwareEventPublisher;
-    private HardwareStateAdditionService hardwareStateAdditionService;
+    private final HardwareStateConverter hardwareStateConverter;
+    private final HardwareEventPublisher hardwareEventPublisher;
+    private final HardwareStateAdditionService hardwareStateAdditionService;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,

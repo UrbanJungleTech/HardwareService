@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.service.query;
 
-import urbanjungletech.hardwareservice.model.Action;
+import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 
 import java.util.List;
 
 public interface ActionQueryService {
-    Action getAction(long actionId);
-    List<Action> getAllActions();
+    AlertAction getAction(long actionId);
+    List<AlertAction> getAllActions();
 }

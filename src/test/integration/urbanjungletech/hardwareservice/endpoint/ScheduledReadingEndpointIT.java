@@ -8,14 +8,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.ScheduledSensorReadingTestService;
-import urbanjungletech.hardwareservice.SensorTestService;
-import urbanjungletech.hardwareservice.model.AlertType;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.SensorReadingAlert;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.ScheduledSensorReadingTestService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,8 +24,6 @@ public class ScheduledReadingEndpointIT {
 
     @Autowired
     private MockMvc mockmvc;
-    @Autowired
-    private SensorTestService sensorTestService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -97,78 +93,4 @@ public class ScheduledReadingEndpointIT {
         this.mockmvc.perform(delete("/scheduledreading/1"))
                 .andExpect(status().isNotFound());
     }
-
-    /**
-     * Given a ScheduledReading has been created.
-     * And Given a SensorReadingAlert object
-     * When a POST request is sent to /scheduledreading/{scheduledReadingId}/sensorreadingalerts with the SensorReadingAlert object
-     * Then the response is 201
-     * And the SensorReadingAlert is returned
-     */
-    @Test
-    void addSensorReadingAlert() throws Exception {
-        ScheduledSensorReading scheduledReading = this.scheduledSensorReadingTestService.createBasicScheduledReading();
-        SensorReadingAlert sensorReadingAlert = new SensorReadingAlert();
-        sensorReadingAlert.setAlertType(AlertType.MAX);
-        sensorReadingAlert.setThreshold(100.0);
-        this.mockmvc.perform(post("/scheduledreading/" + scheduledReading.getId() + "/sensorreadingalerts")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(sensorReadingAlert)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.alertType").value(sensorReadingAlert.getAlertType().toString()))
-                .andExpect(jsonPath("$.threshold").value(sensorReadingAlert.getThreshold()))
-                .andExpect(jsonPath("$.scheduledSensorReadingId").value(scheduledReading.getId()))
-                .andExpect(jsonPath("$.id").isNotEmpty());
-    }
-
-    /**
-     * Given a ScheduledSensorReading has been created with a single SensorReadingAlert.
-     * When a GET request is sent to /scheduledreading/{scheduledReadingId}/sensorreadingalerts
-     * Then the response is 200
-     * And the SensorReadingAlert is returned in the list of sensorReadingAlerts
-     */
-    @Test
-    void getSensorReadingAlerts() throws Exception {
-        SensorReadingAlert sensorReadingAlert = new SensorReadingAlert();
-        sensorReadingAlert.setAlertType(AlertType.MAX);
-        sensorReadingAlert.setThreshold(100.0);
-        ScheduledSensorReading scheduledReading = this.scheduledSensorReadingTestService.createBasicScheduledReading(sensorReadingAlert);
-
-        this.mockmvc.perform(get("/scheduledreading/" + scheduledReading.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].alertType").value(sensorReadingAlert.getAlertType().toString()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].threshold").value(sensorReadingAlert.getThreshold()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].scheduledSensorReadingId").value(scheduledReading.getId()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].id").isNotEmpty());
-    }
-
-    /**
-     * Given a ScheduledSensorReading has been created with two SensorReadingAlert entities.
-     * When a GET request is sent to /scheduledreading/{scheduledReadingId}/sensorreadingalerts
-     * Then the response is 200
-     * And the SensorReadingAlert entities are returned in the list of sensorReadingAlerts
-     */
-    @Test
-    void getSensorReadingAlertsMultiple() throws Exception {
-        SensorReadingAlert sensorReadingAlert1 = new SensorReadingAlert();
-        sensorReadingAlert1.setAlertType(AlertType.MAX);
-        sensorReadingAlert1.setThreshold(100.0);
-        SensorReadingAlert sensorReadingAlert2 = new SensorReadingAlert();
-        sensorReadingAlert2.setAlertType(AlertType.MIN);
-        sensorReadingAlert2.setThreshold(0.0);
-        ScheduledSensorReading scheduledReading = this.scheduledSensorReadingTestService.createBasicScheduledReading(sensorReadingAlert1, sensorReadingAlert2);
-
-        this.mockmvc.perform(get("/scheduledreading/" + scheduledReading.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].alertType").value(sensorReadingAlert1.getAlertType().toString()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].threshold").value(sensorReadingAlert1.getThreshold()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].scheduledSensorReadingId").value(scheduledReading.getId()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[0].id").isNotEmpty())
-                .andExpect(jsonPath("$.sensorReadingAlerts[1].alertType").value(sensorReadingAlert2.getAlertType().toString()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[1].threshold").value(sensorReadingAlert2.getThreshold()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[1].scheduledSensorReadingId").value(scheduledReading.getId()))
-                .andExpect(jsonPath("$.sensorReadingAlerts[1].id").isNotEmpty());
-    }
-
-
 }

@@ -13,7 +13,7 @@ spring:
     hibernate:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
-      ddl-auto: create-drop
+      ddl-auto: create
     show-sql: true
   h2:
     console:
@@ -25,6 +25,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  profiles:
+    active: test
 server:
   http2:
     enabled: true
@@ -38,7 +40,7 @@ logging:
     level: INFO
 local:
   mqtt:
-    enabled: true
+    enabled: false
     port: 1883
     host: localhost
     logAll: true
@@ -47,7 +49,7 @@ scheduling:
 development:
   mqtt:
     client:
-      enabled: true
+      enabled: false
       serialNumber: "1234"
       callbacks:
         urbanjungletech.hardwareservice.config.mqtt.mockclient.SensorReadingCallback : ReadSensor
@@ -65,37 +67,9 @@ entity:
     urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
 
-rpc:
-  methods:
-    "urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState": "ConfirmHardwareState"
-    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterHardware": "DeregisterHardware"
-    "urbanjungletech.hardwareservice.jsonrpc.method.DeregisterSensor": "DeregisterSensor"
-    "urbanjungletech.hardwareservice.jsonrpc.method.GetInitialState": "GetInitialState"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardware": "RegisterHardware"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardwareController": "RegisterHardwareController"
-    "urbanjungletech.hardwareservice.jsonrpc.method.RegisterSensor": "RegisterSensor"
-
-
-controller:
-  types:
-    mqtt1:
-      protocol: mqtt
-      client: mqtt1Client
-    rgb1:
-      protocol: rgb
-      client: localRgbClient
-
-  clients:
-    mqtt:
-      mqtt1Client:
-        server: tcp://localhost:1883
-        queue: HardwareServer
-        clientId: happy
-        listeners:
-          - name: mockMqttClientListener
-            queue: 1234ToMicrocontroller
-          - name: microcontrollerMessageListener
-            queue: HardwareServer
+mqtt-rpc:
+  uri: tcp://mqtt:1883
+  queue: HardwareServer
 
 management:
   endpoints:

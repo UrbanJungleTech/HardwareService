@@ -1,18 +1,17 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.exception.exception.DuplicateSerialNumberException;
-import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 
 import java.util.ArrayList;
@@ -21,12 +20,12 @@ import java.util.List;
 @Service
 public class HardwareControllerAdditionServiceImpl implements HardwareControllerAdditionService {
 
-    private HardwareControllerDAO hardwareControllerDAO;
-    private HardwareAdditionService hardwareAdditionService;
-    private SensorAdditionService sensorAdditionService;
-    private HardwareControllerConverter hardwareControllerConverter;
-    private ObjectLoggerService objectLoggerService;
-    private ControllerConfigurationService controllerConfigurationService;
+    private final HardwareControllerDAO hardwareControllerDAO;
+    private final HardwareAdditionService hardwareAdditionService;
+    private final SensorAdditionService sensorAdditionService;
+    private final HardwareControllerConverter hardwareControllerConverter;
+    private final ObjectLoggerService objectLoggerService;
+    private final ControllerConfigurationService controllerConfigurationService;
 
 
 

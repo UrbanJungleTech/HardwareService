@@ -1,24 +1,24 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
-import urbanjungletech.hardwareservice.model.Sensor;
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
+import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SensorDAOImpl implements SensorDAO {
-    private SensorRepository sensorRepository;
-    private HardwareControllerRepository hardwareControllerRepository;
-    private ExceptionService exceptionService;
-    private SensorConverter sensorConverter;
+    private final SensorRepository sensorRepository;
+    private final HardwareControllerRepository hardwareControllerRepository;
+    private final ExceptionService exceptionService;
+    private final SensorConverter sensorConverter;
 
 
     public SensorDAOImpl(SensorRepository sensorRepository,

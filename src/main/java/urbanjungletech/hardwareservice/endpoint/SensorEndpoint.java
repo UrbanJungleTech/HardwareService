@@ -1,15 +1,15 @@
 package urbanjungletech.hardwareservice.endpoint;
 
-import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
-import urbanjungletech.hardwareservice.addition.SensorAdditionService;
-import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
-import urbanjungletech.hardwareservice.service.query.SensorQueryService;
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.model.SensorReading;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
+import urbanjungletech.hardwareservice.addition.SensorAdditionService;
+import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
+import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
+import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,11 +1,10 @@
 package urbanjungletech.hardwareservice.converter.implementation;
 
+import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.converter.HardwareControllerGroupConverter;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
-import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,7 @@ import java.util.Optional;
 @Service
 public class HardwareControllerGroupConverterImpl implements HardwareControllerGroupConverter {
 
-    private HardwareControllerConverter hardwareControllerConverter;
+    private final HardwareControllerConverter hardwareControllerConverter;
 
     public HardwareControllerGroupConverterImpl(HardwareControllerConverter hardwareControllerConverter) {
         this.hardwareControllerConverter = hardwareControllerConverter;

@@ -2,6 +2,9 @@ package urbanjungletech.hardwareservice.entity;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +16,11 @@ public class HardwareEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long port;
+    private String port;
     private String name;
     private String hardwareCategory;
     @ManyToOne
+//    @Transient
     private HardwareEntity backup;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "desired_hardwarestate_id")
@@ -24,29 +28,32 @@ public class HardwareEntity {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "current_hardwarestate_id")
     private HardwareStateEntity currentState;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "hardware_id")
     private HardwareControllerEntity hardwareController;
     @OneToMany(mappedBy = "hardware", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<TimerEntity> timers;
-    @ElementCollection
+    @ElementCollection()
     @CollectionTable(name = "metadata",
             joinColumns = {@JoinColumn(name = "hardware_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "metadata_data")
     @Column(name = "metadata_value")
+    @Fetch(FetchMode.SUBSELECT)
     private Map<String, String> metadata;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    @CollectionTable(name = "hardware_configuration",
+            joinColumns = {@JoinColumn(name = "hardware_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "hardware_configuration_data")
+    @Column(name = "configuration_value")
+    @BatchSize(size = 20)
+    private Map<String, String> configuration;
 
     public HardwareEntity(){
         this.timers = new ArrayList<TimerEntity>();
     }
 
-    public Long getPort() {
-        return port;
-    }
-
-    public void setPort(Long port) {
-        this.port = port;
-    }
 
     public String getName() {
         return name;
@@ -121,5 +128,21 @@ public class HardwareEntity {
 
     public void setBackup(HardwareEntity backup) {
         this.backup = backup;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Map<String, String> configuration) {
+        this.configuration = configuration;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 }

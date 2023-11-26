@@ -1,9 +1,10 @@
 package urbanjungletech.hardwareservice.config;
 
-import urbanjungletech.hardwareservice.converter.SpecificActionConverter;
-import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
+import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
+import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -38,13 +39,32 @@ public class ActionMappingsConfig {
      * @return
      */
     @Bean
-    public Map<Class, SpecificActionConverter> actionConverterMappings(List<SpecificActionConverter> actionConverters){
-        Map<Class, SpecificActionConverter> result = new HashMap<>();
-        for(SpecificActionConverter currentActionConverter : actionConverters){
+    public Map<Class, SpecificAlertActionConverter> alertActionConverterMappings(List<SpecificAlertActionConverter> actionConverters){
+        Map<Class, SpecificAlertActionConverter> result = new HashMap<>();
+        for(SpecificAlertActionConverter currentActionConverter : actionConverters){
             for(Type type :  currentActionConverter.getClass().getGenericInterfaces()){
-                if(type instanceof ParameterizedType p && p.getRawType() == SpecificActionConverter.class){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificAlertActionConverter.class){
                     result.put((Class)p.getActualTypeArguments()[0], currentActionConverter);
                     result.put((Class)p.getActualTypeArguments()[1], currentActionConverter);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param specificAlertConditionConverters
+     * @return
+     */
+    @Bean
+    public Map<Class, SpecificAlertConditionConverter> alertConditionConverterMappings(List<SpecificAlertConditionConverter> specificAlertConditionConverters){
+        Map<Class, SpecificAlertConditionConverter> result = new HashMap<>();
+        for(SpecificAlertConditionConverter specificAlertConditionConverter : specificAlertConditionConverters){
+            for(Type type :  specificAlertConditionConverter.getClass().getGenericInterfaces()){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificAlertConditionConverter.class){
+                    result.put((Class)p.getActualTypeArguments()[0], specificAlertConditionConverter);
+                    result.put((Class)p.getActualTypeArguments()[1], specificAlertConditionConverter);
                 }
             }
         }

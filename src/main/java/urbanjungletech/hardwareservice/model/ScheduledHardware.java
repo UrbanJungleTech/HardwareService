@@ -1,20 +1,14 @@
 package urbanjungletech.hardwareservice.model;
 
 public class ScheduledHardware {
-    private long id;
+    private Long id;
     private String cronString;
     private ONOFF onoff;
     private long level;
     private long hardwareId;
     private Long timerId;
+    private Boolean skipNext;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getCronString() {
         return cronString;
@@ -54,5 +48,21 @@ public class ScheduledHardware {
 
     public void setLevel(long level) {
         this.level = level;
+    }
+
+    public Boolean getSkipNext() {
+        return skipNext;
+    }
+
+    public void setSkipNext(Boolean skipNext) {
+        this.skipNext = skipNext;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

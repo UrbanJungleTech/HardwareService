@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.endpoint;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.query.TimerQueryService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

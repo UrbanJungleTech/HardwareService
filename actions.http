@@ -1,0 +1,12 @@
+### Create a logging alertAction
+# Should create an alert with no conditions or alertActions
+POST http://localhost:8081/alert
+accept: application/json
+content-type: appliation/json
+
+{
+   "name": "test",
+    "description": "test description",
+}
+
+
