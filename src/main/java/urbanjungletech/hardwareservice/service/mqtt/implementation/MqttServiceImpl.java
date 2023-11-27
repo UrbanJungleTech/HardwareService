@@ -51,7 +51,7 @@ public class MqttServiceImpl implements MqttService {
         try {
             payload = this.objectMapper.writeValueAsString(rpcMessage);
             message = new MqttMessage(payload.getBytes());
-            message.setQos(2);
+            message.setQos(0);
             message.setRetained(true);
             this.mqttClient.publish(hardwareControllerId, message);
             logger.debug("Sent RPC message -> {} ", message);

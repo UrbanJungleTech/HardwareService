@@ -10,18 +10,8 @@ Content-Length: 328
 
 {
   "type":"mqtt",
-  "hardware": [
-    {
-      "name":"lights 3",
-      "port":1,
-      "type":"lights",
-      "configuration": {
-        "hello": "world"
-      }
-    }
-  ],
   "configuration":{
-    "serialNumber":"1234",
+    "serialNumber":"5454364324",
     "server":"tcp://mqtt:1883",
     "responseQueue":"HardwareServer",
     "requestQueue":"1235ToMicro"
@@ -33,17 +23,112 @@ Content-Length: 328
     client.global.set("controllerId", response.body.id);
 %}
 
-### Get the hardware controller
+### Create a temperature sensor on port 2 of type 18B20
 
-GET http://localhost:8081/hardwarecontroller/{{controllerId}}
+POST http://localhost:8081/hardwarecontroller/{{controllerId}}/sensor
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+{
+  "name":"temperature sensor 1",
+  "port": "2",
+  "configuration": {
+    "sensor_type": "18B20"
+  }
+}
 
 > {%
-       client.global.set("hardwareId", response.body.hardware[0].id);
- %}
+    client.global.set("temperatureSensorId", response.body.id);
+%}
 
-### Create a hardware timer which will turn the hardware on every 3 seconds
+### Read the temperature sensor
 
-POST http://localhost:8081/hardware/{{hardwareId}}/timer
+GET http://localhost:8081/sensor/{{temperatureSensorId}}/reading
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+
+### Create the green light on port 15
+
+POST http://localhost:8081/hardwarecontroller/{{controllerId}}/hardware
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+{
+  "name":"green light",
+  "type":"light",
+  "port": "15",
+  "desiredState": {
+    "state": "ON",
+    "level": 100
+  }
+}
+
+> {%
+    client.global.set("greenLightId", response.body.id);
+%}
+
+### Create the blue light on port 18
+
+POST http://localhost:8081/hardwarecontroller/{{controllerId}}/hardware
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+{
+  "name":"blue light",
+  "type":"light",
+  "port": "18",
+  "desiredState": {
+    "state": "ON",
+    "level": 100
+  }
+}
+
+> {%
+    client.global.set("blueLightId", response.body.id);
+%}
+
+### create the orange light on port 19
+
+POST http://localhost:8081/hardwarecontroller/{{controllerId}}/hardware
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+{
+  "name":"orange light",
+  "type":"light",
+  "port": "19",
+  "desiredState": {
+    "state": "ON",
+    "level": 100
+  }
+}
+
+### create the red light on port 21
+
+POST http://localhost:8081/hardwarecontroller/{{controllerId}}/hardware
+Content-Type: application/json
+Connection: Keep-Alive
+accept: application/json
+
+{
+  "name":"red light",
+  "type":"light",
+  "port": "21",
+  "desiredState": {
+    "state": "ON",
+    "level": 100
+  }
+}
+
+### Create a hardware timer which will turn the green light on and off every 3 seconds
+
+POST http://localhost:8081/hardware/{{greenLightId}}/timer
 Content-Type: application/json
 Connection: Keep-Alive
 
@@ -55,9 +140,9 @@ Connection: Keep-Alive
 }
 
 > {%
-    client.global.set("timerId", response.body.id);
+    client.global.set("greenLightTimerId", response.body.id);
 %}
 
 ### delete the hardware timer
 
-DELETE http://localhost:8081/timer/{{timerId}}
+#DELETE http://localhost:8081/timer/{{greenLightTimerId}}
