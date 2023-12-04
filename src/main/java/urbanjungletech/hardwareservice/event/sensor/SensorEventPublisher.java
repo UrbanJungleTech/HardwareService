@@ -20,4 +20,9 @@ public class SensorEventPublisher {
         SensorCreateEvent event = new SensorCreateEvent(sensorId);
         applicationEventPublisher.publishEvent(event);
     }
+
+    public void publishSensorUpdateEvent(long sensorId) {
+        SensorUpdateEvent event = new SensorUpdateEvent(sensorId);
+        applicationEventPublisher.publishEvent(event);
+    }
 }

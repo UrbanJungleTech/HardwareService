@@ -41,3 +41,8 @@ mvnw.cmd
 *tcplocal*/
 
 data/*
+deploy.sh
+destroy.sh
+src/test/request.http
+src/test/http-client.env.json
+

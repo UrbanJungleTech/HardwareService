@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class Sensor {
     private Map<String, String> configuration;
 
     public Sensor(){
+        this.configuration = new HashMap<>();
         this.scheduledSensorReadings = new ArrayList<>();
     }
 

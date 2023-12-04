@@ -2,32 +2,28 @@ package urbanjungletech.hardwareservice.schedule.sensor;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.exception.exception.ScheduledSensorReadingJobException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
+import urbanjungletech.hardwareservice.service.scheduledsensorreading.SensorReadingRouterService;
 
 public class ScheduledSensorReadingJob implements Job {
 
     private long scheduledSensorReadingId;
     private SensorQueryService sensorQueryService;
-    private SensorReadingDAO sensorReadingDAO;
     private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
-    private ActionExecutionService actionExecutionService;
+    private SensorReadingRouterService sensorReadingRouterService;
 
     public ScheduledSensorReadingJob(long scheduledSensorReadingId,
                                      SensorQueryService sensorQueryService,
-                                     SensorReadingDAO sensorReadingDAO,
                                      ScheduledSensorReadingQueryService scheduledSensorReadingQueryService,
-                                     ActionExecutionService actionExecutionService){
+                                     SensorReadingRouterService sensorReadingRouterService){
         this.scheduledSensorReadingId = scheduledSensorReadingId;
         this.sensorQueryService = sensorQueryService;
-        this.sensorReadingDAO = sensorReadingDAO;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
-        this.actionExecutionService = actionExecutionService;
+        this.sensorReadingRouterService = sensorReadingRouterService;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class ScheduledSensorReadingJob implements Job {
         try {
             ScheduledSensorReading scheduledSensorReading = this.scheduledSensorReadingQueryService.getScheduledSensorReading(this.scheduledSensorReadingId);
             SensorReading result = this.sensorQueryService.readSensor(scheduledSensorReading.getSensorId());
-            this.sensorReadingDAO.createAndSave(result);
+            this.sensorReadingRouterService.route(scheduledSensorReading, result);
         }
         catch(Exception ex){
             ex.printStackTrace();

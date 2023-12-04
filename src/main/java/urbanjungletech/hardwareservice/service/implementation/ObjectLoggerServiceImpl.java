@@ -9,8 +9,8 @@ import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 @Service
 public class ObjectLoggerServiceImpl implements ObjectLoggerService {
 
-    private ObjectMapper objectMapper;
-    private Logger logger = LoggerFactory.getLogger(ObjectLoggerServiceImpl.class);
+    private final ObjectMapper objectMapper;
+    private final Logger logger = LoggerFactory.getLogger(ObjectLoggerServiceImpl.class);
 
 
     ObjectLoggerServiceImpl(ObjectMapper objectMapper){

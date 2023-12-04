@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
+import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,9 @@ public class HardwareControllerEntity {
     private Long id;
     private String name;
     private String type;
+
+    @ManyToOne
+    private CredentialsEntity credentials;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.REMOVE)
     private List<HardwareEntity> hardware;
@@ -108,5 +112,13 @@ public class HardwareControllerEntity {
 
     public void setConfiguration(Map<String, String> configuration) {
         this.configuration = configuration;
+    }
+
+    public CredentialsEntity getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(CredentialsEntity credentials) {
+        this.credentials = credentials;
     }
 }

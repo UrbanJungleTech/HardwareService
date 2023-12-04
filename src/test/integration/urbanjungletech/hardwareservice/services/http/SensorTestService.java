@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-@Profile("test")
 public class SensorTestService {
 
     private HardwareControllerTestService hardwareControllerTestService;

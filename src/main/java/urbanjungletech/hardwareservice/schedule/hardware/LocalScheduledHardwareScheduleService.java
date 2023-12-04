@@ -11,7 +11,6 @@ import urbanjungletech.hardwareservice.exception.exception.ScheduledHardwareStar
 import urbanjungletech.hardwareservice.model.ScheduledHardware;
 import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
 
-@ConditionalOnProperty(name = "scheduling.distribution-strategy", havingValue = "local")
 @Service
 public class LocalScheduledHardwareScheduleService implements ScheduledHardwareScheduleService {
 

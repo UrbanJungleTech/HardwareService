@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import urbanjungletech.hardwareservice.config.mqtt.listener.MicrocontrollerMessageListener;
+import urbanjungletech.hardwareservice.config.mqtt.listener.MqttSubscriptionListener;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.io.IOException;
@@ -14,21 +16,22 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Configuration
-//@ConditionalOnProperty(value = "mqtt.mock.enabled", havingValue = "true")
 public class MockMqttStarter implements ApplicationListener<ContextRefreshedEvent> {
     private Server mqttServer;
     private Properties mqttProperties;
     private Logger logger = LoggerFactory.getLogger(MockMqttStarter.class);
     private MockMqttClientListener mockMqttClientListener;
-
+    private MicrocontrollerMessageListener microcontrollerMessageListener;
     public MockMqttStarter(Server mqttServer,
                            Properties mqttProperties,
-                           MockMqttClientListener mockMqttClientListener) throws IOException {
+                           MockMqttClientListener mockMqttClientListener,
+                           MicrocontrollerMessageListener microcontrollerMessageListener) throws IOException {
         this.mqttServer = mqttServer;
         this.mqttProperties = mqttProperties;
         this.mqttProperties.setProperty("persistence_enabled", "false");
         this.mqttProperties.setProperty("telemetry_enabled", "false");
         this.mockMqttClientListener = mockMqttClientListener;
+        this.microcontrollerMessageListener = microcontrollerMessageListener;
     }
 
     @Override
@@ -45,6 +48,7 @@ public class MockMqttStarter implements ApplicationListener<ContextRefreshedEven
                     ready = true;
                 }
                 client.subscribe("1234ToMicro", mockMqttClientListener);
+                client.subscribe("HardwareServer", microcontrollerMessageListener);
             } catch (Exception e) {
                 e.printStackTrace();
             }

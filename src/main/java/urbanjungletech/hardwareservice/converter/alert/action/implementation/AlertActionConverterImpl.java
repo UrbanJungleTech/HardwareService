@@ -14,7 +14,7 @@ public class AlertActionConverterImpl implements AlertActionConverter {
 
     private final Map<Class, SpecificAlertActionConverter> actionConverterMap;
 
-    public AlertActionConverterImpl(@Qualifier("alertActionConverterMappings") Map<Class, SpecificAlertActionConverter> actionConverterMap) {
+    public AlertActionConverterImpl(Map<Class, SpecificAlertActionConverter> actionConverterMap) {
         this.actionConverterMap = actionConverterMap;
     }
 

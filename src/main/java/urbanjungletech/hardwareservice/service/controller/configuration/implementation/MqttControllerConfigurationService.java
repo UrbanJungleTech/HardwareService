@@ -19,9 +19,9 @@ import java.util.UUID;
 @HardwareControllerCommunicationService(type = "mqtt", custom = false)
 public class MqttControllerConfigurationService implements ControllerConfigurationServiceImplementation {
 
-    private Logger logger = LoggerFactory.getLogger(MqttControllerConfigurationService.class);
-    private Map<Long, IMqttClient> mqttClients;
-    private Map<SystemMqttClientProperties, IMqttClient> serverMqttClients;
+    private final Logger logger = LoggerFactory.getLogger(MqttControllerConfigurationService.class);
+    private final Map<Long, IMqttClient> mqttClients;
+    private final Map<SystemMqttClientProperties, IMqttClient> serverMqttClients;
 
     public MqttControllerConfigurationService(@Qualifier("MqttClients") Map<Long, IMqttClient> mqttClients,
                                               @Qualifier("serverMqttClients") Map<SystemMqttClientProperties, IMqttClient> serverMqttClients) {

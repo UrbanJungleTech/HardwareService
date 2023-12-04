@@ -53,7 +53,7 @@ public class SensorEndpoint {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{sensorId}/scheduledReading/")
+    @PostMapping("/{sensorId}/scheduledreading")
     public ResponseEntity<ScheduledSensorReading> addScheduledSensorReading(@PathVariable("sensorId") long sensorId,
                                                                             @RequestBody ScheduledSensorReading scheduledSensorReading){
         ScheduledSensorReading result = this.sensorAdditionService.addScheduledReading(sensorId, scheduledSensorReading);

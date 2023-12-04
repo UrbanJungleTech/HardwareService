@@ -89,12 +89,10 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
         hardware.getCurrentState().setHardwareId(result.getId());
         this.hardwareStateAdditionService.create(hardware.getCurrentState(), HardwareStateType.CURRENT);
 
-        if (hardware.getTimers() != null) {
-            hardware.getTimers().forEach((timer) -> {
+        Optional.ofNullable(hardware.getTimers()).ifPresent(timers -> timers.forEach((Timer timer) -> {
                 timer.setHardwareId(result.getId());
                 this.timerAdditionService.create(timer);
-            });
-        }
+        }));
         hardwareEventPublisher.publishCreateHardwareEvent(result.getId());
         return this.hardwareConverter.toModel(result);
     }
@@ -134,12 +132,14 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     }
 
     @Override
+    @Transactional
     public HardwareState updateCurrentState(long hardwareId, HardwareState hardwareState) {
         HardwareEntity hardware = this.hardwareDAO.getHardware(hardwareId);
         return this.hardwareStateAdditionService.update(hardware.getCurrentState().getId(), hardwareState);
     }
 
     @Override
+    @Transactional
     public HardwareState updateDesiredState(long hardwareId, HardwareState hardwareState) {
         HardwareEntity hardware = this.hardwareDAO.getHardware(hardwareId);
         return this.hardwareStateAdditionService.update(hardware.getDesiredState().getId(), hardwareState);

@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Service
-@Profile("test")
 public class HardwareControllerTestService {
 
     private final ObjectMapper objectMapper;

@@ -1,4 +1,7 @@
 package urbanjungletech.hardwareservice.service.action;
 
-public interface SpecificActionExecutionService<T> extends ActionExecutionService<T> {
+import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
+
+public interface SpecificActionExecutionService<T extends AlertAction> {
+    void execute(T action);
 }
