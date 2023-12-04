@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.AlertAdditionService;
 import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
+import urbanjungletech.hardwareservice.addition.SensorReadingRouterAdditionService;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
@@ -23,21 +24,21 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     private final SensorScheduleService sensorScheduleService;
     private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
     private final ScheduledReadingEventPublisher scheduledReadingEventPublisher;
-    private final AlertAdditionService alertAdditionService;
     private final ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
+    private final SensorReadingRouterAdditionService sensorReadingRouterAdditionService;
 
     public ScheduledSensorReadingAdditionServiceImpl(ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                                                      SensorScheduleService sensorScheduleService,
                                                      ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                                                      ScheduledReadingEventPublisher scheduledReadingEventPublisher,
-                                                     AlertAdditionService alertAdditionService,
-                                                     ScheduledSensorReadingQueryService scheduledSensorReadingQueryService){
+                                                     ScheduledSensorReadingQueryService scheduledSensorReadingQueryService,
+                                                     SensorReadingRouterAdditionService sensorReadingRouterAdditionService){
         this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorScheduleService = sensorScheduleService;
         this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
         this.scheduledReadingEventPublisher = scheduledReadingEventPublisher;
-        this.alertAdditionService = alertAdditionService;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
+        this.sensorReadingRouterAdditionService = sensorReadingRouterAdditionService;
 
     }
 
@@ -45,7 +46,10 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     @Transactional
     public ScheduledSensorReading create(ScheduledSensorReading scheduledSensorReading) {
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.create(scheduledSensorReading);
-
+        Optional.ofNullable(scheduledSensorReading.getRouters()).ifPresent((Empty) -> scheduledSensorReading.getRouters().forEach((router) -> {
+            router.setScheduledSensorReadingId(scheduledSensorReadingEntity.getId());
+            this.sensorReadingRouterAdditionService.create(router);
+        }));
         this.scheduledReadingEventPublisher.publishScheduledReadingCreateEvent(scheduledSensorReadingEntity.getId());
         return this.scheduledSensorReadingConverter.toModel(scheduledSensorReadingEntity);
     }

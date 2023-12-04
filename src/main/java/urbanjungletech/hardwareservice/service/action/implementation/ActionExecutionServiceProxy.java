@@ -11,10 +11,10 @@ import java.util.HashMap;
 
 @Service
 @Primary
-public class ActionExecutionServiceProxy implements ActionExecutionService<AlertAction> {
-    private HashMap<Class, SpecificActionExecutionService> actionExecutionServices;
+public class ActionExecutionServiceProxy implements ActionExecutionService {
+    private final HashMap<Class<? extends AlertAction>, SpecificActionExecutionService> actionExecutionServices;
 
-    public ActionExecutionServiceProxy(HashMap<Class, SpecificActionExecutionService> actionExecutionServices) {
+    public ActionExecutionServiceProxy(HashMap<Class<? extends AlertAction>, SpecificActionExecutionService> actionExecutionServices) {
         this.actionExecutionServices = actionExecutionServices;
     }
 

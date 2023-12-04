@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.endpoint;
 
+import com.azure.security.keyvault.secrets.SecretClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,12 @@ import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.BasicDatabaseSensorReadingRouter;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
@@ -35,8 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,6 +73,8 @@ public class SensorEndpointIT {
     SensorRepository sensorRepository;
     @Autowired
     ScheduledSensorReadingRepository scheduledSensorReadingRepository;
+    @Autowired
+    SecretClient secretClient;
     @BeforeEach
     void setUp() throws SchedulerException {
         this.hardwareControllerRepository.deleteAll();
@@ -104,7 +113,6 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
-        Thread.sleep(5000);
         HardwareController hardwareController = this.sensorTestService.createBasicSensor();
 
         Sensor createdSensor = hardwareController.getSensors().get(0);
@@ -299,7 +307,7 @@ public class SensorEndpointIT {
         scheduledReading.setCronString("0 0 0 1 1 ? 2099");
         scheduledReading.setSensorId(createdSensor.getId());
         String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
-        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledReading/")
+        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledreading")
                         .content(scheduledReadingJson)
                         .contentType("application/json")
                         .content(scheduledReadingJson))
@@ -319,7 +327,7 @@ public class SensorEndpointIT {
     void createScheduledReading_whenGivenAnInvalidSensorId_shouldReturn404() throws Exception {
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
-        mockMvc.perform(post("/sensor/1/scheduledReading/")
+        mockMvc.perform(post("/sensor/1/scheduledreading")
                         .content(scheduledReadingJson)
                         .contentType("application/json")
                         .content(scheduledReadingJson))
@@ -341,11 +349,13 @@ public class SensorEndpointIT {
         Sensor createdSensor = hardwareController.getSensors().get(0);
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0/1 * * * * ?");
+        BasicDatabaseSensorReadingRouter basicDatabaseSensorReadingRouter = new BasicDatabaseSensorReadingRouter();
+        scheduledReading.getRouters().add(basicDatabaseSensorReadingRouter);
 
         String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
         DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss").toFormatter();
         String startTime = LocalDateTime.now().format(formatter);
-        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledReading/")
+        mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/scheduledreading")
                         .content(scheduledReadingJson)
                         .contentType("application/json")
                         .content(scheduledReadingJson))
@@ -364,5 +374,4 @@ public class SensorEndpointIT {
         SensorReading firstReading = sensorReadings.get(0);
         assertEquals(1, firstReading.getReading());
     }
-
 }

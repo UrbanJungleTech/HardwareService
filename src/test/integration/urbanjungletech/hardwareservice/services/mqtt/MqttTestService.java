@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
-@Profile("test")
 public class MqttTestService {
     private Logger logger = Logger.getLogger(MqttTestService.class.getName());
     public void sendMessage(String payload) throws MqttException, InterruptedException {

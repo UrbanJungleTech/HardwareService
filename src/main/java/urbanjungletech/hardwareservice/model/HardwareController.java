@@ -1,5 +1,7 @@
 package urbanjungletech.hardwareservice.model;
 
+import urbanjungletech.hardwareservice.model.credentials.Credentials;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ public class HardwareController {
     private List<Sensor> sensors;
     private Long hardwareControllerGroupId;
     private Map<String, String> configuration;
+    private Credentials credentials;
 
     public HardwareController(){
         this.sensors = new ArrayList<>();
@@ -80,5 +83,13 @@ public class HardwareController {
 
     public void setConfiguration(Map<String, String> configuration) {
         this.configuration = configuration;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
     }
 }

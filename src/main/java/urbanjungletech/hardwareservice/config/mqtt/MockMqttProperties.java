@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "local.mqtt")
+@ConfigurationProperties(prefix = "development.mqtt.server")
 public class MockMqttProperties {
     private String port;
     private String host;

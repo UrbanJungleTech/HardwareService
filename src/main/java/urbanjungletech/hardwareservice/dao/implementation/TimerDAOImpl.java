@@ -19,29 +19,22 @@ import java.util.List;
 @Service
 public class TimerDAOImpl implements TimerDAO {
 
-    private TimerRepository timerRepository;
-    private HardwareCronJobRepository cronJobrepository;
-    private HardwareRepository hardwareRepository;
-    private ExceptionService exceptionService;
-    private TimerConverter timerConverter;
-    private HardwareStateConverter hardwareStateConverter;
-    private ScheduledHardwareQueryService scheduledHardwareQueryService;
-    private ScheduledHardwareJobConverter scheduledHardwareJobConverter;
+    private final TimerRepository timerRepository;
+    private final HardwareCronJobRepository cronJobrepository;
+    private final HardwareRepository hardwareRepository;
+    private final ExceptionService exceptionService;
+    private final TimerConverter timerConverter;
 
     public TimerDAOImpl(TimerRepository timerRepository,
                         HardwareCronJobRepository cronJobrepository,
                         HardwareRepository hardwareRepository,
                         ExceptionService exceptionService,
-                        TimerConverter timerConverter,
-                        HardwareStateConverter hardwareStateConverter,
-                        ScheduledHardwareQueryService scheduledHardwareQueryService){
+                        TimerConverter timerConverter){
         this.timerRepository = timerRepository;
         this.cronJobrepository = cronJobrepository;
         this.hardwareRepository = hardwareRepository;
         this.exceptionService = exceptionService;
         this.timerConverter = timerConverter;
-        this.hardwareStateConverter = hardwareStateConverter;
-        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
     }
 
     @Override

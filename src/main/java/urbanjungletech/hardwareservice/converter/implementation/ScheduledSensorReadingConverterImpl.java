@@ -2,19 +2,20 @@ package urbanjungletech.hardwareservice.converter.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
-import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
+import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ScheduledSensorReadingConverterImpl implements ScheduledSensorReadingConverter {
-    private final AlertConverter alertConverter;
+    private final SensorReadingRouterConverter sensorReadingRouterConverter;
 
-    public ScheduledSensorReadingConverterImpl(AlertConverter alertConverter){
-        this.alertConverter = alertConverter;
+    public ScheduledSensorReadingConverterImpl(SensorReadingRouterConverter sensorReadingRouterConverter) {
+        this.sensorReadingRouterConverter = sensorReadingRouterConverter;
     }
 
     @Override
@@ -23,14 +24,15 @@ public class ScheduledSensorReadingConverterImpl implements ScheduledSensorReadi
         result.setCronString(scheduledSensorReadingEntity.getCronString());
         result.setSensorId(scheduledSensorReadingEntity.getSensor().getId());
         result.setId(scheduledSensorReadingEntity.getId());
+        Optional.ofNullable(scheduledSensorReadingEntity.getRouters()).ifPresent(routers ->
+                result.setRouters(routers.stream().map(this.sensorReadingRouterConverter::toModel)
+                        .collect(Collectors.toList())));
         return result;
     }
 
     @Override
     public List<ScheduledSensorReading> toModels(List<ScheduledSensorReadingEntity> readings) {
-        return readings.stream().map((ScheduledSensorReadingEntity reading) -> {
-            return this.toModel(reading);
-        }).collect(Collectors.toList());
+        return readings.stream().map(this::toModel).collect(Collectors.toList());
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.HardwareAbstractionLayer;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.CpuSensorType;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.cpu.CpuSensorType;
 
 import java.util.Map;
 import java.util.function.Supplier;

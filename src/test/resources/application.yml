@@ -1,60 +1,23 @@
 spring:
   application:
-    name: hardware-service
-  jackson:
-    default-property-inclusion: non_null
+    name: ${APPLICATION_NAME}
   datasource:
-    url: jdbc:h2:file:~/db/mydb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      naming:
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
-      ddl-auto: create-drop
-    show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2
-  sleuth:
-    quartz:
-      enabled: false
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  profiles:
-    active: test
-server:
-  http2:
-    enabled: true
-  port: 8081
+    url: ${DATABASE_URL}
+    driverClassName: ${DATABASE_DRIVER}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  cloud:
+    azure:
+      keyvault:
+        secret:
+          endpoint: ${AZURE_KEYVAULT_URI}
 logging:
   level:
-    root: INFO
-    urbanjungletech: DEBUG
-    org.hibernate.SQL: INFO
+    root: ${ROOT_LOG_LEVEL:INFO}
+    urbanjungletech: ${ROOT_LOG_LEVEL:INFO}
+    org.hibernate.SQL: ${SQL_LOG_LEVEL:INFO}
   mqtt:
-    level: INFO
-local:
-  mqtt:
-    enabled: true
-    port: 1883
-    host: localhost
-    logAll: true
-scheduling:
-  distribution-strategy: local
-development:
-  mqtt:
-    client:
-      enabled: true
-      serialNumber: "1234"
-      callbacks:
-        SensorReadingCallback : ReadSensor
-        StateChangeCallback : StateChange
-        RegisterHardwareCallback: RegisterHardware
+    level: ${MQTT_LOG_LEVEL:INFO}
 entity:
   names:
     urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
@@ -64,22 +27,47 @@ entity:
     urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity: Scheduled Sensor Reading
     urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
-    urbanjungletech.hardwareservice.entity.alert.AlertEntity: Alert
+    urbanjungletech.hardwareservice.entity.alert.AlertEntity: Sensor Reading Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
 
+azure:
+  keyvault:
+    uri: ${AZURE_KEYVAULT_URI}
+    enabled: ${AZURE_KEYVAULT_ENABLED:false}
+    client-id: ${AZURE_KEYVAULT_CLIENT_ID}
+    client-secret: ${AZURE_KEYVAULT_CLIENT_SECRET}
+    tenant-id: ${AZURE_KEYVAULT_TENANT_ID}
+
 mqtt-rpc:
-  uri: tcp://localhost:1883
-  queue: HardwareServer
+  uri: ${SYSTEM_MQTT_URI}
+  queue: ${SYSTEM_MQTT_QUEUE}
+  enabled: ${SYSTEM_MQTT_ENABLED:true}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: metrics
-
-mock:
+secure-storage:
+  type: ${SECURE_STORAGE_TYPE}
+development:
   mqtt:
-    enabled: true
-    port: 1883
-    host: localhost
-    logAll: true
+    client:
+      enabled: ${DEV_MQTT_CLIENT_ENABLED:true}
+      serialNumber: ${DEV_MQTT_CLIENT_SERIAL_NUMBER}
+      callbacks:
+        SensorReadingCallback : ${DEV_MQTT_CLIENT_SENSOR_READING_CALLBACK}
+        StateChangeCallback : ${DEV_MQTT_CLIENT_STATE_CHANGE_CALLBACK}
+        RegisterHardwareCallback: ${DEV_MQTT_CLIENT_REGISTER_HARDWARE_CALLBACK}
+    server:
+      enabled: ${DEV_MQTT_SERVER_ENABLED:true}
+      port: ${DEV_MQTT_SERVER_PORT:1883}
+      host: ${DEV_MQTT_SERVER_HOST:localhost}
+      logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
+  weather:
+    apikey: ${DEV_WEATHER_API_KEY}
+
+weather:
+  api:
+    uri: ${WEATHER_API_URI}
+    apiKeyParamName: ${WEATHER_API_KEY_PARAM_NAME}
+    targetFieldParamName: ${WEATHER_API_TARGET_FIELD_PARAM_NAME}
+    locationParamName: ${WEATHER_API_LOCATION_PARAM_NAME}
+    enabled: ${WEATHER_API_ENABLED:true}
+
+

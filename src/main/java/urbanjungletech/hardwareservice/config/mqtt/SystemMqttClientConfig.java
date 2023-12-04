@@ -3,8 +3,12 @@ package urbanjungletech.hardwareservice.config.mqtt;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ApplicationStartupAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +23,16 @@ public class SystemMqttClientConfig {
     @Bean
     public Map<SystemMqttClientProperties, IMqttClient> serverMqttClients() throws MqttException {
         Map<SystemMqttClientProperties, IMqttClient> result = new HashMap<>();
-        String serverUri = rpcProperties.getUri();
-        String serverQueue = rpcProperties.getQueue();
-        IMqttClient client = new MqttClient(serverUri, serverQueue, null);
-        SystemMqttClientProperties properties = new SystemMqttClientProperties(serverUri, serverQueue);
-        result.put(properties, client);
         return result;
     }
+
+    @Bean("defaultSystemMqttClient")
+    @ConditionalOnProperty(prefix = "mqtt-rpc", name = "enabled", havingValue = "true")
+    public IMqttClient defaultSystemMqttClient() throws MqttException {
+        String serverUri = rpcProperties.getUri();
+        String serverQueue = rpcProperties.getQueue();
+        IMqttClient result = new MqttClient(serverUri, serverQueue, null);
+        return result;
+    }
+
 }

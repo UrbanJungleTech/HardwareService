@@ -9,7 +9,7 @@ import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException
 @Service
 public class EntityNameServiceImpl implements EntityNameService {
 
-    private EntityNameConfiguration entityNameConfiguration;
+    private final EntityNameConfiguration entityNameConfiguration;
 
     public EntityNameServiceImpl(EntityNameConfiguration entityNameConfiguration){
         this.entityNameConfiguration = entityNameConfiguration;

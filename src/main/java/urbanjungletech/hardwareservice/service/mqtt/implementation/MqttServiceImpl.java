@@ -28,8 +28,8 @@ public class MqttServiceImpl implements MqttService {
     private final AtomicLong sequenceGenerator;
     private final RpcResponseProcessor rpcResponseProcessor;
     private final Map<Long, List<JsonRpcMessage>> failedMessages;
-    private HardwareControllerQueryService hardwareControllerQueryService;
-    private MqttClient mqttClient;
+    private final HardwareControllerQueryService hardwareControllerQueryService;
+    private final MqttClient mqttClient;
 
     public MqttServiceImpl(ObjectMapper objectMapper,
                            AtomicLong sequenceGenerator,

@@ -6,7 +6,7 @@ import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 @Service
 public class ExceptionServiceImpl implements ExceptionService {
 
-    private EntityNameService entityNameService;
+    private final EntityNameService entityNameService;
 
     public ExceptionServiceImpl(EntityNameService entityNameService){
         this.entityNameService = entityNameService;

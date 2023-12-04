@@ -9,7 +9,6 @@ import urbanjungletech.hardwareservice.model.Timer;
 import java.util.List;
 
 @Service
-@Profile("test")
 public class HardwareTestService {
 
     private HardwareControllerTestService hardwareControllerTestService;

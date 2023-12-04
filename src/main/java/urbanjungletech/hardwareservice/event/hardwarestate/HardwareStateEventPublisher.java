@@ -16,5 +16,14 @@ public class HardwareStateEventPublisher {
         this.applicationEventPublisher.publishEvent(hardwareStateUpdateEvent);
     }
 
+    public void publishHardwareStateCreateEvent(long hardwareStateId){
+        HardwareStateCreateEvent hardwareStateCreateEvent = new HardwareStateCreateEvent(hardwareStateId);
+        this.applicationEventPublisher.publishEvent(hardwareStateCreateEvent);
+    }
+
+    public void publishHardwareStateDeleteEvent(long hardwareStateId){
+        HardwareStateDeleteEvent hardwareStateDeleteEvent = new HardwareStateDeleteEvent(hardwareStateId);
+        this.applicationEventPublisher.publishEvent(hardwareStateDeleteEvent);
+    }
 
 }

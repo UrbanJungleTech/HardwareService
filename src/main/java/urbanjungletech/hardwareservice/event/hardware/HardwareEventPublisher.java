@@ -24,4 +24,9 @@ public class HardwareEventPublisher {
         HardwareDeleteEvent hardwareDeleteEvent = new HardwareDeleteEvent(hardwareId);
         this.applicationEventPublisher.publishEvent(hardwareDeleteEvent);
     }
+
+    public void publishUpdateHardwareEvent(long hardwareId){
+        HardwareUpdateEvent hardwareUpdateEvent = new HardwareUpdateEvent(hardwareId);
+        this.applicationEventPublisher.publishEvent(hardwareUpdateEvent);
+    }
 }

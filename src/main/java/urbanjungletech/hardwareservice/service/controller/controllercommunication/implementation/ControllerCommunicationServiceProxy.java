@@ -18,8 +18,8 @@ public class ControllerCommunicationServiceProxy implements ControllerCommunicat
 
     Logger logger = LoggerFactory.getLogger(ControllerCommunicationServiceProxy.class);
 
-    private Map<String, ControllerCommunicationServiceImplementation> controllerCommunicationServices;
-    private HardwareControllerQueryService hardwareControllerQueryService;
+    private final Map<String, ControllerCommunicationServiceImplementation> controllerCommunicationServices;
+    private final HardwareControllerQueryService hardwareControllerQueryService;
 
     public ControllerCommunicationServiceProxy(@Qualifier("ControllerCommunicationServices") Map<String, ControllerCommunicationServiceImplementation> controllerCommunicationServices,
                                                HardwareControllerQueryService hardwareControllerQueryService) {

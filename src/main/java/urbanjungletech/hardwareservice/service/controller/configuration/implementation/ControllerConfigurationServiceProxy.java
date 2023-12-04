@@ -14,7 +14,7 @@ import java.util.Optional;
 @Primary
 public class ControllerConfigurationServiceProxy implements ControllerConfigurationService {
 
-    private Map<String, ControllerConfigurationServiceImplementation> controllerConfigurationServiceImplementations;
+    private final Map<String, ControllerConfigurationServiceImplementation> controllerConfigurationServiceImplementations;
 
     public ControllerConfigurationServiceProxy(@Qualifier("HardwareControllerConfigurationServices") Map<String, ControllerConfigurationServiceImplementation> controllerConfigurationServiceImplementations) {
         this.controllerConfigurationServiceImplementations = controllerConfigurationServiceImplementations;

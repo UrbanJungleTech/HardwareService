@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.ControllerCommunicationServiceImplementation;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.HardwareControllerCommunicationService;
 
-@Profile("test")
 @Service
 @HardwareControllerCommunicationService(type="test")
 public class TestControllerCommunicationService extends ControllerCommunicationServiceImplementation {

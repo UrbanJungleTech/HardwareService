@@ -94,11 +94,9 @@ public class HardwareAdditionServiceImplTest {
 
     @Test
     void testDeleteHardwareFailure() {
-        // Arrange
         long hardwareId = 1L;
         doThrow(new RuntimeException("Database error")).when(hardwareDAO).delete(hardwareId);
 
-        // Act & Assert
         Exception exception = assertThrows(RuntimeException.class, () -> hardwareAdditionService.delete(hardwareId));
         assertEquals("Database error", exception.getMessage());
     }

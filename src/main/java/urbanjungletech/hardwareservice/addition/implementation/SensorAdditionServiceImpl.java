@@ -11,7 +11,7 @@ import urbanjungletech.hardwareservice.event.sensor.SensorEventPublisher;
 import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationError;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.implementation.SensorValidationError;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
 
 import java.util.ArrayList;

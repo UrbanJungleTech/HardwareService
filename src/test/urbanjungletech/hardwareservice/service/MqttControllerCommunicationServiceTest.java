@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.jsonrpc.model.StateChangeRpcMessage;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.MqttControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.mqtt.MqttControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;
 
 @ExtendWith(MockitoExtension.class)
