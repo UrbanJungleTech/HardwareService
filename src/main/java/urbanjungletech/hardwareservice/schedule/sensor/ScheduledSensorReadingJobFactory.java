@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
-import urbanjungletech.hardwareservice.service.scheduledsensorreading.SensorReadingRouterService;
+import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService;
 
 @Service("SensorCronJobFactory")
 public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {

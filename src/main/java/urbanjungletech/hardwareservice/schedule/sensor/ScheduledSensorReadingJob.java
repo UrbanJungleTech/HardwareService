@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
-import urbanjungletech.hardwareservice.service.scheduledsensorreading.SensorReadingRouterService;
+import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService;
 
 public class ScheduledSensorReadingJob implements Job {
 

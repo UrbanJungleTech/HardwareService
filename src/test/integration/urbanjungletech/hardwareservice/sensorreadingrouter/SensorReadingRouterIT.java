@@ -126,8 +126,8 @@ public class SensorReadingRouterIT {
         AzureQueueSensorReadingRouter azureQueueSensorReadingRouter = new AzureQueueSensorReadingRouter();
         azureQueueSensorReadingRouter.setQueueName("testQueueName");
         TokenCredentials credentials = new TokenCredentials();
-        credentials.setUrl("https://frentztesting.queue.core.windows.net/frentz-testing-queue");
-        credentials.setTokenValue("UZ/v0P+8peFSUfuuiZeoUXWlNV8CBxN6X/DpJjMpaax1dFYzKXnbgdb8HjuA2FbVniEFKqfTQCP++AStmp8zIA==");
+        credentials.setUrl("");
+        credentials.setTokenValue("");
         azureQueueSensorReadingRouter.setCredentials(credentials);
         scheduledReading.getRouters().add(azureQueueSensorReadingRouter);
 
