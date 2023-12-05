@@ -15,6 +15,7 @@ import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
+import urbanjungletech.hardwareservice.services.config.AzureProperties;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,8 @@ public class SensorReadingRouterIT {
     private ObjectMapper objectMapper;
     @Autowired
     private SensorTestService sensorTestService;
-
+    @Autowired
+    private AzureProperties azureProperties;
 
     /**
      * Given a valid ScheduledSensorReading with a DatabaseSensorReadingRouter in its list of routers
@@ -126,8 +128,8 @@ public class SensorReadingRouterIT {
         AzureQueueSensorReadingRouter azureQueueSensorReadingRouter = new AzureQueueSensorReadingRouter();
         azureQueueSensorReadingRouter.setQueueName("testQueueName");
         TokenCredentials credentials = new TokenCredentials();
-        credentials.setUrl("");
-        credentials.setTokenValue("");
+        credentials.setUrl(azureProperties.getQueueName());
+        credentials.setTokenValue(azureProperties.getKey());
         azureQueueSensorReadingRouter.setCredentials(credentials);
         scheduledReading.getRouters().add(azureQueueSensorReadingRouter);
 

@@ -61,6 +61,13 @@ development:
       logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
   weather:
     apikey: ${DEV_WEATHER_API_KEY}
+  azure:
+    storageQueue:
+      key: ${DEV_AZURE_STORAGE_QUEUE_KEY}
+      queueName: ${DEV_AZURE_STORAGE_QUEUE_NAME}
+    kafka:
+      topic: ${DEV_AZURE_KAFKA_TOPIC}
+      key: ${DEV_AZURE_KAFKA_KEY}
 
 weather:
   api:
