@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.service.scheduledsensorreading;
+package urbanjungletech.hardwareservice.service.router;
 
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReading;

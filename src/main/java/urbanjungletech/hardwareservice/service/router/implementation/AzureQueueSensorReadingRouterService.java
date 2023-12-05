@@ -1,16 +1,15 @@
-package urbanjungletech.hardwareservice.service.scheduledsensorreading.implementation;
+package urbanjungletech.hardwareservice.service.router.implementation;
 
 import com.azure.storage.queue.QueueClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.RouterSerializationException;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.service.credentials.generator.implementation.AzureQueueClientGenerator;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;
-import urbanjungletech.hardwareservice.service.scheduledsensorreading.SpecificSensorReadingRouterService;
+import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
 @Service
 public class AzureQueueSensorReadingRouterService implements SpecificSensorReadingRouterService<AzureQueueSensorReadingRouter> {
@@ -37,5 +36,6 @@ public class AzureQueueSensorReadingRouterService implements SpecificSensorReadi
         }
         TokenCredentials credentials = (TokenCredentials) this.credentialsRetrievalService.getCredentials(routerData.getCredentials());
         QueueClient queueClient = this.azureQueueClientGenerator.generateClient(credentials);
+        queueClient.sendMessage(sensorReadingJson);
     }
 }

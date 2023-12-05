@@ -2,20 +2,17 @@ package urbanjungletech.hardwareservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificSensorRouterAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
-import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverter;
 import urbanjungletech.hardwareservice.converter.credentials.SpecificCredentialsConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
-import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
 import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
-import urbanjungletech.hardwareservice.service.scheduledsensorreading.SpecificSensorReadingRouterService;
+import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
