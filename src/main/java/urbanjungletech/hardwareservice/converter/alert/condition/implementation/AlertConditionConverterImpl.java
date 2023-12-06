@@ -30,6 +30,7 @@ public class AlertConditionConverterImpl implements AlertConditionConverter {
     public void fillEntity(AlertConditionEntity alertConditionEntity, AlertCondition alertCondition) {
         this.actionConverterMap.get(alertCondition.getClass()).fillEntity(alertConditionEntity, alertCondition);
         alertConditionEntity.setType(alertCondition.getType());
+        alertConditionEntity.setActive(alertCondition.getActive());
     }
 
     @Override

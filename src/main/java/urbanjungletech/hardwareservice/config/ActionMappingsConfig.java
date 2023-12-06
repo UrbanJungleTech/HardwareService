@@ -10,7 +10,7 @@ import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSen
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
-import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
+import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 

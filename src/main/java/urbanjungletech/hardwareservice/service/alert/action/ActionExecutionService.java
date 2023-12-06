@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.service.action;
+package urbanjungletech.hardwareservice.service.alert.action;
 
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 

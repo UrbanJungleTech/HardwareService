@@ -8,13 +8,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.alert.Alert;
+import urbanjungletech.hardwareservice.model.alert.AlertConditions;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +35,10 @@ public class AlertEndpointIT {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private HardwareTestService hardwareTestService;
+    @Autowired
+    private HardwareControllerTestService hardwareControllerTestService;
 
 
     /**
@@ -191,7 +200,12 @@ public class AlertEndpointIT {
         sensorReadingAlertCondition.setSensorId(1L);
         sensorReadingAlertCondition.setThreshold(10L);
         sensorReadingAlertCondition.setThresholdType(ThresholdType.ABOVE);
-        alert.getConditions().add(sensorReadingAlertCondition);
+
+        AlertConditions alertConditions = new AlertConditions();
+        alertConditions.getConditions().add(sensorReadingAlertCondition);
+
+        alert.setConditions(alertConditions);
+
         String requestBody = this.objectMapper.writeValueAsString(alert);
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -200,9 +214,13 @@ public class AlertEndpointIT {
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
-        assertEquals(1, responseAlert.getConditions().size());
-        assertEquals(SensorReadingAlertCondition.class.getSimpleName(), responseAlert.getConditions().get(0).getClass().getSimpleName());
-        SensorReadingAlertCondition responseSensorReadingAlertCondition = (SensorReadingAlertCondition) responseAlert.getConditions().get(0);
+        AlertConditions responseAlertConditions = responseAlert.getConditions();
+        assertNotNull(responseAlertConditions);
+        assertEquals(1, responseAlertConditions.getConditions().size());
+        assertEquals(1, responseAlert.getConditions().getInactiveConditions().size());
+        assertEquals(0, responseAlert.getConditions().getActiveConditions().size());
+        assertEquals(SensorReadingAlertCondition.class.getSimpleName(), responseAlertConditions.getConditions().get(0).getClass().getSimpleName());
+        SensorReadingAlertCondition responseSensorReadingAlertCondition = (SensorReadingAlertCondition) responseAlertConditions.getConditions().get(0);
         assertNotNull(responseSensorReadingAlertCondition.getId());
         assertEquals(responseAlert.getId(), responseSensorReadingAlertCondition.getAlertId());
         assertEquals(sensorReadingAlertCondition.getSensorId(), responseSensorReadingAlertCondition.getSensorId());
@@ -227,7 +245,12 @@ public class AlertEndpointIT {
         HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
         hardwareStateChangeAlertCondition.setHardwareId(1L);
         hardwareStateChangeAlertCondition.setState(ONOFF.ON);
-        alert.getConditions().add(hardwareStateChangeAlertCondition);
+
+        AlertConditions alertConditions = new AlertConditions();
+        alertConditions.getConditions().add(hardwareStateChangeAlertCondition);
+
+        alert.setConditions(alertConditions);
+
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
@@ -235,13 +258,56 @@ public class AlertEndpointIT {
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
-        assertEquals(1, responseAlert.getConditions().size());
-        assertEquals(HardwareStateChangeAlertCondition.class.getSimpleName(), responseAlert.getConditions().get(0).getClass().getSimpleName());
-        HardwareStateChangeAlertCondition responseHardwareStateChangeAlertCondition = (HardwareStateChangeAlertCondition) responseAlert.getConditions().get(0);
+        AlertConditions responseAlertConditions = responseAlert.getConditions();
+        assertNotNull(responseAlertConditions);
+        assertEquals(HardwareStateChangeAlertCondition.class.getSimpleName(), responseAlertConditions.getConditions().get(0).getClass().getSimpleName());
+        HardwareStateChangeAlertCondition responseHardwareStateChangeAlertCondition = (HardwareStateChangeAlertCondition) responseAlertConditions.getConditions().get(0);
         assertNotNull(responseHardwareStateChangeAlertCondition.getId());
         assertEquals(responseAlert.getId(), responseHardwareStateChangeAlertCondition.getAlertId());
         assertEquals(hardwareStateChangeAlertCondition.getHardwareId(), responseHardwareStateChangeAlertCondition.getHardwareId());
         assertEquals(hardwareStateChangeAlertCondition.getState(), responseHardwareStateChangeAlertCondition.getState());
+    }
+
+    /**
+     * Given a valid Alert object has been created, with a single Condition of type HardwareStateChangeAlertCondition and a single Action of type LoggingAlertAction
+     * When the state of the hardware associated with the HardwareStateChangeAlertCondition changes
+     * Then the action is executed
+     */
+    @Test
+    void hardwareStateChangeAlertConditionActionExecution() throws Exception {
+        //create a hardware controller with a hardware.
+        HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
+        Hardware hardware = hardwareController.getHardware().get(0);
+        long hardwareId = hardware.getId();
+
+        Alert alert = new Alert();
+        HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
+        hardwareStateChangeAlertCondition.setHardwareId(hardwareId);
+        hardwareStateChangeAlertCondition.setState(ONOFF.ON);
+
+        LoggingAlertAction loggingAlertAction = new LoggingAlertAction();
+        alert.getActions().add(loggingAlertAction);
+
+        AlertConditions alertConditions = new AlertConditions();
+        alertConditions.getConditions().add(hardwareStateChangeAlertCondition);
+
+        alert.setConditions(alertConditions);
+
+        String response = this.mockMvc.perform(post("/alert/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(alert)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
+
+        //update the hardware state
+        hardware.getDesiredState().setState(ONOFF.ON);
+        this.mockMvc.perform(put("/hardware/" + hardwareId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(hardware)))
+                .andExpect(status().isOk());
+
+        Thread.sleep(10000);
 
     }
 

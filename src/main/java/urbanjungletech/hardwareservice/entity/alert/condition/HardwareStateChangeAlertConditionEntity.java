@@ -6,7 +6,7 @@ import urbanjungletech.hardwareservice.model.ONOFF;
 @Entity
 public class HardwareStateChangeAlertConditionEntity extends AlertConditionEntity{
     private ONOFF state;
-    private Long hardwareId;
+    private Long hardwareStateId;
 
     public ONOFF getState() {
         return state;
@@ -16,11 +16,11 @@ public class HardwareStateChangeAlertConditionEntity extends AlertConditionEntit
         this.state = state;
     }
 
-    public Long getHardwareId() {
-        return hardwareId;
+    public Long getHardwareStateId() {
+        return hardwareStateId;
     }
 
-    public void setHardwareId(Long hardwareId) {
-        this.hardwareId = hardwareId;
+    public void setHardwareStateId(Long hardwareId) {
+        this.hardwareStateId = hardwareId;
     }
 }

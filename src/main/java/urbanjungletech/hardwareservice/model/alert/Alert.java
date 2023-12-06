@@ -10,12 +10,12 @@ public class Alert {
     private Long id;
     private String name;
     private String description;
-    private List<AlertCondition> conditions;
+    private AlertConditions conditions;
     private List<AlertAction> alertActions;
 
     public Alert() {
         this.alertActions = new ArrayList<>();
-        this.conditions = new ArrayList<>();
+        this.conditions = new AlertConditions();
     }
 
     public Long getId() {
@@ -24,14 +24,6 @@ public class Alert {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<AlertCondition> getConditions() {
-        return conditions;
-    }
-
-    public void setConditions(List<AlertCondition> conditions) {
-        this.conditions = conditions;
     }
 
     public List<AlertAction> getActions() {
@@ -56,5 +48,13 @@ public class Alert {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public AlertConditions getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(AlertConditions conditions) {
+        this.conditions = conditions;
     }
 }

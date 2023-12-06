@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.AlertActionAdditionService;
 import urbanjungletech.hardwareservice.addition.AlertAdditionService;
 import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
+import urbanjungletech.hardwareservice.addition.AlertConditionsAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.dao.AlertDAO;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
@@ -21,15 +22,16 @@ public class AlertAdditionServiceImpl implements AlertAdditionService {
     private final AlertDAO alertDAO;
     private final AlertConverter alertConverter;
     private final AlertActionAdditionService alertActionAdditionService;
-    private final AlertConditionAdditionService alertConditionAdditionService;
+    private final AlertConditionsAdditionService alertsConditionsAdditionService;
+
     public AlertAdditionServiceImpl(AlertDAO alertDAO,
                                     AlertConverter alertConverter,
                                     AlertActionAdditionService alertActionAdditionService,
-                                    AlertConditionAdditionService alertConditionAdditionService){
+                                    AlertConditionsAdditionService alertConditionsAdditionService){
         this.alertDAO = alertDAO;
         this.alertConverter = alertConverter;
         this.alertActionAdditionService = alertActionAdditionService;
-        this.alertConditionAdditionService = alertConditionAdditionService;
+        this.alertsConditionsAdditionService = alertConditionsAdditionService;
     }
 
     @Transactional
@@ -42,12 +44,8 @@ public class AlertAdditionServiceImpl implements AlertAdditionService {
                 this.alertActionAdditionService.create(action);
             });
         });
-        Optional.ofNullable(alert.getConditions()).ifPresent((conditions) -> {
-            conditions.forEach((condition) -> {
-                condition.setAlertId(result.getId());
-                this.alertConditionAdditionService.create(condition);
-            });
-        });
+        alert.getConditions().setAlertId(result.getId());
+        this.alertsConditionsAdditionService.create(alert.getConditions());
         return this.alertConverter.toModel(result);
     }
 
