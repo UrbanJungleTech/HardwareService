@@ -9,13 +9,8 @@ import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryServi
 @Service
 public class CancelNextScheduledHardwareAlertActionService implements SpecificActionExecutionService<CancelNextScheduledHardwareAlertAction> {
 
-    private final TimerService timerService;
-    public CancelNextScheduledHardwareAlertActionService(ScheduledHardwareQueryService scheduledHardwareQueryService) {
-        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
-    }
     @Override
     public void execute(CancelNextScheduledHardwareAlertAction action) {
-        ScheduledHardware scheduledHardware = this.scheduledHardwareQueryService.getById(action.getScheduledHardwareId());
 
     }
 }
