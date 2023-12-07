@@ -7,7 +7,9 @@ import com.azure.storage.queue.models.QueueMessageItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
@@ -49,6 +50,7 @@ public class SensorReadingRouterIT {
     private SensorTestService sensorTestService;
     @Autowired
     private AzureProperties azureProperties;
+
 
     /**
      * Given a valid ScheduledSensorReading with a DatabaseSensorReadingRouter in its list of routers

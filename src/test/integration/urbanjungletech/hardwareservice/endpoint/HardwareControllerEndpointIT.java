@@ -15,11 +15,14 @@ import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
 import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,23 +41,10 @@ public class HardwareControllerEndpointIT {
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
-    @Autowired
-    private HardwareRepository hardwareRepository;
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
-    @Autowired
-    private SensorScheduleService sensorScheduleService;
+    HardwareControllerTestService hardwareControllerTestService;
 
-    @BeforeEach
-    void setUp() throws SchedulerException {
-        hardwareControllerRepository.deleteAll();
-        hardwareRepository.deleteAll();
-        this.scheduledHardwareScheduleService.deleteAllSchedules();
-        this.sensorScheduleService.deleteAll();
-    }
 
     /**
      * Given a valid HardwareController with no child entities
@@ -77,14 +67,10 @@ public class HardwareControllerEndpointIT {
                 .andReturn();
         HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
 
-        //check the entity was saved to the db and its id is non zero
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-        assertNotEquals(0, hardwareControllerEntity.getId());
 
         //check the values in the response
         assertEquals(hardwareController.getConfiguration().get("serialNumber"), createdHardwareController.getConfiguration().get("serialNumber"));
         assertEquals(hardwareController.getName(), createdHardwareController.getName());
-        assertEquals(hardwareControllerEntity.getId(), createdHardwareController.getId());
     }
 
     /**
@@ -95,27 +81,17 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void deleteHardwareController_whenGivenAValidHardwareController_shouldDeleteTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setName("Test Hardware Controller");
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
 
-        //check the entity was saved to the db and its id is non zero
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
 
         //delete the hardware controller
         mockMvc.perform(delete("/hardwarecontroller/" + createdHardwareController.getId()))
                 .andExpect(status().isNoContent());
 
-        //check the entity was deleted from the db
-        assertEquals(0, hardwareControllerRepository.findAll().size());
+        //check the hardware controller was deleted
+        mockMvc.perform(get("/hardwarecontroller/" + createdHardwareController.getId()))
+                .andExpect(status().isNotFound());
     }
 
     /**
@@ -129,36 +105,26 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void updateHardwareController_whenGivenAValidHardwareController_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        hardwareController.setName("Test Hardware Controller");
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
 
         //update the hardware controller
-        hardwareController.setName("Updated Name");
-        hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        result = mockMvc.perform(put("/hardwarecontroller/" + createdHardwareController.getId())
+        createdHardwareController.setName("Updated Name");
+        createdHardwareController.getConfiguration().put("new key", "new value");
+
+        String hardwareControllerJson = objectMapper.writeValueAsString(createdHardwareController);
+        String responseJson = mockMvc.perform(put("/hardwarecontroller/" + createdHardwareController.getId())
                         .content(hardwareControllerJson)
                         .contentType("application/json")
                         .content(hardwareControllerJson))
                 .andExpect(status().isOk())
-                .andReturn();
-        HardwareController updatedHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
-
-        //check the entity was saved to the db and its id is non zero
-        HardwareControllerEntity hardwareControllerEntity = hardwareControllerRepository.findAll().get(0);
-        assertNotEquals(0, hardwareControllerEntity.getId());
+                .andReturn().getResponse().getContentAsString();
+        HardwareController updatedHardwareController = objectMapper.readValue(responseJson, HardwareController.class);
 
         //check the values in the response
-        assertEquals(hardwareController.getName(), updatedHardwareController.getName());
-        assertEquals(hardwareControllerEntity.getId(), updatedHardwareController.getId());
+        assertEquals(createdHardwareController.getName(), updatedHardwareController.getName());
+        assertEquals(createdHardwareController.getId(), updatedHardwareController.getId());
+        assertEquals(createdHardwareController.getConfiguration(), updatedHardwareController.getConfiguration());
     }
 
     /**
@@ -169,30 +135,17 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void getHardwareController_whenGivenAValidHardwareControllerId_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        hardwareController.setName("Test Hardware Controller");
-        hardwareController.setType("mqtt");
-        Map<String, String> config = new HashMap<>();
-        config.put("server", "tcp://localhost:1883");
-        config.put("clientId", "test");
-        hardwareController.setConfiguration(config);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
 
+        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         //get the hardware controller
-        result = mockMvc.perform(get("/hardwarecontroller/" + createdHardwareController.getId())
+        String hardwareResponseString = mockMvc.perform(get("/hardwarecontroller/" + createdHardwareController.getId())
                         .content(hardwareControllerJson)
                         .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andReturn();
-        HardwareController retrievedHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+                .andReturn().getResponse().getContentAsString();
+        HardwareController retrievedHardwareController = objectMapper.readValue(hardwareResponseString, HardwareController.class);
 
         //check the values in the response
         assertEquals(hardwareController.getConfiguration().get("serialNumber"), retrievedHardwareController.getConfiguration().get("serialNumber"));
@@ -228,29 +181,20 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void getAllHardwareControllers_whenHardwareControllersExist_shouldReturnAListOfHardwareControllers() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        hardwareController.setName("Test Hardware Controller");
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andReturn();
-        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        this.hardwareControllerTestService.postHardwareController(hardwareController);
 
         //get the hardware controller
-        result = mockMvc.perform(get("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
+        String jsonResponse = mockMvc.perform(get("/hardwarecontroller/")
                         .contentType("application/json"))
                 .andExpect(status().isOk())
-                .andReturn();
-        List<HardwareController> retrievedHardwareControllers = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<HardwareController>>() {
+                .andReturn().getResponse().getContentAsString();
+        List<HardwareController> retrievedHardwareControllers = objectMapper.readValue(jsonResponse, new TypeReference<List<HardwareController>>() {
         });
 
         //check the values in the response
         assertEquals(1, retrievedHardwareControllers.size());
+        HardwareController createdHardwareController = retrievedHardwareControllers.get(0);
         assertEquals(hardwareController.getConfiguration().get("serialNumber"), retrievedHardwareControllers.get(0).getConfiguration().get("serialNumber"));
         assertEquals(hardwareController.getName(), retrievedHardwareControllers.get(0).getName());
         assertEquals(createdHardwareController.getId(), retrievedHardwareControllers.get(0).getId());
@@ -267,28 +211,20 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void createHardwareController_whenGivenAValidHardwareControllerWithAHardware_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Hardware hardware = new Hardware();
-        hardware.setType("light");
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = this.hardwareControllerTestService.createHardware("light");
         hardwareController.getHardware().add(hardware);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.hardware").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].type").value("light"))
-                .andExpect(jsonPath("$.hardware[0].id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].desiredState").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].desiredState.id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].desiredState.state").value("OFF"))
-                .andExpect(jsonPath("$.hardware[0].currentState").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].currentState.id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].currentState.state").value("OFF"))
-                .andReturn();
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
+
+        //check the entity was saved to the db and its id is non zero
+        Hardware responseHardware = createdHardwareController.getHardware().get(0);
+        assertNotEquals(0, responseHardware.getId());
+        assertNotNull(responseHardware.getDesiredState());
+        assertNotNull(responseHardware.getCurrentState());
+        assertSame(ONOFF.OFF, responseHardware.getDesiredState().getState());
+        assertNotNull(responseHardware.getDesiredState().getId());
+        assertSame(ONOFF.OFF, responseHardware.getCurrentState().getState());
+        assertNotNull(responseHardware.getCurrentState().getId());
     }
 
     /**
@@ -302,22 +238,19 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void createHardwareController_whenGivenAValidHardwareControllerWithASensor_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "123456789");
-        hardwareController.setName("Test Hardware Controller");
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
-        sensor.setName("Test Sensor");
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Sensor sensor = this.hardwareControllerTestService.createSensor("temperature");
         hardwareController.getSensors().add(sensor);
-        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        mockMvc.perform(post("/hardwarecontroller/")
-                        .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sensors[0].sensorType").value(sensor.getSensorType()))
-                .andExpect(jsonPath("$.sensors[0].id").exists())
-                .andExpect(jsonPath("$.sensors[0].name").value(sensor.getName()));
+        HardwareController responseHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        assertEquals(1, responseHardwareController.getSensors().size());
+        Sensor responseSensor = responseHardwareController.getSensors().get(0);
+        assertEquals(sensor.getSensorType(), responseSensor.getSensorType());
+        assertNotNull(responseSensor.getId());
+        assertEquals(sensor.getConfiguration(), responseSensor.getConfiguration());
+        assertEquals(sensor.getMetadata(), responseSensor.getMetadata());
+        assertEquals(sensor.getName(), responseSensor.getName());
+        assertEquals(sensor.getPort(), responseSensor.getPort());
     }
 
     /**

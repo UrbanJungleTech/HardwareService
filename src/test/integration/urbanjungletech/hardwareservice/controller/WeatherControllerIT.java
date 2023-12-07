@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.services.config.WeatherProperties;
 import urbanjungletech.hardwareservice.model.HardwareController;
@@ -45,7 +46,7 @@ public class WeatherControllerIT {
         hardwareController.setType("weather");
         TokenCredentials tokenCredentials = new TokenCredentials();
         tokenCredentials.setTokenValue(weatherProperties.getApikey());
-        tokenCredentials.setUrl("https://api.tomorrow.io/v4/timelines");
+        tokenCredentials.setUrl(weatherProperties.getUrl());
         hardwareController.setCredentials(tokenCredentials);
         Sensor temperatureSensor = new Sensor();
         temperatureSensor.setName("Temperature Sensor");
@@ -75,7 +76,6 @@ public class WeatherControllerIT {
         Double temperatureReading = sensorReading.getReading();
         assertNotNull(temperatureReading);
         assertNotEquals(0, temperatureReading);
-        System.out.println("Temperature: " + temperatureReading);
 
         //test the humidity
         Sensor humiditySensorResponse = controllerResponse.getSensors().get(0);
@@ -86,6 +86,5 @@ public class WeatherControllerIT {
         Double humidityReading = humiditySensorReading.getReading();
         assertNotNull(humidityReading);
         assertNotEquals(0, humidityReading);
-        System.out.println("Humidity: " + humidityReading);
     }
 }

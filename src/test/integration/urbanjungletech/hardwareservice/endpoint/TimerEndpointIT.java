@@ -1,9 +1,7 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +13,6 @@ import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.List;
@@ -40,18 +36,8 @@ public class TimerEndpointIT {
     private ObjectMapper objectMapper;
     @Autowired
     HardwareControllerRepository hardwareControllerRepository;
-    @Autowired
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
-    @Autowired
-    private SensorScheduleService sensorScheduleService;
 
-    @BeforeEach
-    public void setup() throws SchedulerException {
-        hardwareControllerRepository.deleteAll();
-        hardwareControllerRepository.flush();
-        this.sensorScheduleService.deleteAll();
-        this.scheduledHardwareScheduleService.deleteAllSchedules();
-    }
+
 
     /**
      * Given a HardwareController has been created via the endpoint /hardwarecontroller with a single hardware

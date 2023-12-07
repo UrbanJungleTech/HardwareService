@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface SensorReadingAlertConditionRepository extends JpaRepository<SensorReadingAlertConditionEntity, Long> {
-    List<SensorReadingAlertCondition> findBySensorId(Long sensorId);
+    List<SensorReadingAlertConditionEntity> findBySensorId(Long sensorId);
 }

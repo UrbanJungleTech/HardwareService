@@ -107,11 +107,9 @@ public class cpuIT {
         Map<String, String> configuration = Map.of("sensorType", "INVALID");
         sensor.setConfiguration(configuration);
         hardwareController.setSensors(List.of(sensor));
-        String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
+        this.mockMvc.perform(post("/hardwarecontroller/")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(hardwareController)))
-                .andExpect(status().isBadRequest())
-                .andReturn().getResponse().getContentAsString();
-        HardwareController controllerResponse = objectMapper.readValue(controllerResponseString, HardwareController.class);
+                .andExpect(status().isBadRequest());
     }
 }

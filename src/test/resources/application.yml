@@ -61,6 +61,7 @@ development:
       logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
   weather:
     apikey: ${DEV_WEATHER_API_KEY}
+    url: ${DEV_WEATHER_API_URL}
   azure:
     storageQueue:
       key: ${DEV_AZURE_STORAGE_QUEUE_KEY}

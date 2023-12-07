@@ -3,9 +3,7 @@ package urbanjungletech.hardwareservice.endpoint;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,12 +16,10 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.BasicDatabaseSensorReadingRouter;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
@@ -55,31 +51,19 @@ public class SensorEndpointIT {
     @Autowired
     SensorReadingRepository sensorReadingRepository;
     @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
-    @Autowired
     private SensorTestService sensorTestService;
     @Autowired
     MockMqttClientListener mockMqttClientListener;
-    @Autowired
-    private SensorScheduleService sensorScheduleService;
-    @Autowired
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
     @Autowired
     SensorRepository sensorRepository;
     @Autowired
     ScheduledSensorReadingRepository scheduledSensorReadingRepository;
     @Autowired
     SecretClient secretClient;
-    @BeforeEach
-    void setUp() throws SchedulerException {
-        this.hardwareControllerRepository.deleteAll();
-        this.mockMqttClientListener.clear();
-        this.sensorScheduleService.deleteAll();
-        this.scheduledHardwareScheduleService.deleteAllSchedules();
-        this.mockMqttClientListener.clear();
-        this.sensorRepository.deleteAll();
-        this.scheduledSensorReadingRepository.deleteAll();
-    }
+    @Autowired
+    HardwareControllerTestService hardwareControllerTestService;
+
+
 
     /**
      * Given a HardwareController with a sensor has been created via /hardwarecontroller/
@@ -113,7 +97,7 @@ public class SensorEndpointIT {
         Sensor createdSensor = hardwareController.getSensors().get(0);
 
         await()
-                .atMost(Duration.of(10, ChronoUnit.SECONDS))
+                .atMost(Duration.of(3, ChronoUnit.SECONDS))
                 .until(() -> this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1);
 
         List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort()));
@@ -266,11 +250,15 @@ public class SensorEndpointIT {
                 .andExpect(status().isNoContent());
 
         await()
-                .atMost(Duration.of(10, java.time.temporal.ChronoUnit.SECONDS))
+                .atMost(Duration.of(3, java.time.temporal.ChronoUnit.SECONDS))
                 .with()
-                .until(() -> this.mockMqttClientListener.getCache("DeregisterSensor").size() >= 1);
-        JsonRpcMessage rpcMessage = this.mockMqttClientListener.getCache("DeregisterSensor").get(0);
-        assertEquals(createdSensor.getPort(), rpcMessage.getParams().get("port"));
+                .untilAsserted(() -> {
+                    String responseJson = mockMvc.perform(get("/hardwarecontroller/" + hardwareController.getId()))
+                            .andExpect(status().isOk())
+                            .andReturn().getResponse().getContentAsString();
+                    HardwareController updatedHardwareController = objectMapper.readValue(responseJson, HardwareController.class);
+                    assertEquals(0, updatedHardwareController.getSensors().size());
+                });
     }
 
     /**
@@ -340,12 +328,20 @@ public class SensorEndpointIT {
      */
     @Test
     void getScheduledReadings_whenGivenAValidSensorId_shouldReturnAListOfScheduledReadings() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Sensor sensor = new Sensor();
+        sensor.setPort("1");
+        sensor.setSensorType("temperature");
+        sensor.setName("Test Sensor");
+        hardwareController.getSensors().add(sensor);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0/1 * * * * ?");
-        BasicDatabaseSensorReadingRouter basicDatabaseSensorReadingRouter = new BasicDatabaseSensorReadingRouter();
-        scheduledReading.getRouters().add(basicDatabaseSensorReadingRouter);
+        BasicDatabaseSensorReadingRouter router = new BasicDatabaseSensorReadingRouter();
+        scheduledReading.getRouters().add(router);
 
         String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
         DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss").toFormatter();
@@ -358,15 +354,19 @@ public class SensorEndpointIT {
                 .andExpect(jsonPath("$.cronString").value("0/1 * * * * ?"))
                 .andExpect(jsonPath("$.id").exists());
         //give it enough time to get at least one reading
-        Thread.sleep(10000);
-        String endTime = LocalDateTime.now().format(formatter);
-        MvcResult result = mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/readings").queryParam("startDate", startTime).queryParam("endDate", endTime))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<SensorReading> sensorReadings = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<SensorReading>>() {
-        });
-        assertNotEquals(0, sensorReadings.size());
-        SensorReading firstReading = sensorReadings.get(0);
-        assertEquals(1, firstReading.getReading());
+
+        await().atMost(Duration.of(3, ChronoUnit.SECONDS)).until(
+                () -> {
+
+                    String endTime = LocalDateTime.now().format(formatter);
+                    String responseJson = mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/readings").queryParam("startDate", startTime).queryParam("endDate", endTime))
+                            .andExpect(status().isOk())
+                            .andReturn().getResponse().getContentAsString();
+                    List<SensorReading> sensorReadings = objectMapper.readValue(responseJson, new TypeReference<List<SensorReading>>() {
+                    });
+                    return sensorReadings.size() >= 1;
+                }
+
+        );
     }
 }

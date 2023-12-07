@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.services;
+package urbanjungletech.hardwareservice.mock.action;
 
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 

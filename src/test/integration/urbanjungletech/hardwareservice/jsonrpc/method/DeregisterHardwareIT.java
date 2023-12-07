@@ -15,6 +15,7 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
@@ -22,38 +23,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DeregisterHardwareIT {
 
-    @Autowired
-    private HardwareRepository hardwareRepository;
 
-    @BeforeEach
-    public void setup() {
-        this.hardwareRepository.deleteAll();
-    }
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private MqttTestService mqttTestService;
     @Autowired
-    private HardwareTestService hardwareTestService;
+    private HardwareControllerTestService hardwareControllerTestService;
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
 
-    @BeforeEach
-    public void setUp() {
-        this.hardwareControllerRepository.deleteAll();
-    }
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" and a Hardware with the port 1
      * When a json payload of the form:
@@ -70,31 +61,28 @@ public class DeregisterHardwareIT {
      */
     @Test
     public void testDeregisterHardware() throws Exception{
-        HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardware.setPort("1");
+        hardware.getConfiguration().put("serialNumber", "1234");
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", hardwareController.getConfiguration().get("serialNumber"));
-        params.put("port", hardwareController.getHardware().get(0).getPort());
+        params.put("serialNumber", createdHardwareController.getConfiguration().get("serialNumber"));
+        params.put("port", createdHardware.getPort());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterHardware", params);
 
         String rpcMessage = objectMapper.writeValueAsString(jsonRpcMessage);
 
         this.mqttTestService.sendMessage(rpcMessage);
 
-        boolean isHardwareDeleted = false;
-        long timeoutMillis = 3000;
-        long sleepMillis = 500;
-        long timeWaitedMillis = 0;
-        while (!isHardwareDeleted && timeWaitedMillis < timeoutMillis) {
-            Thread.sleep(sleepMillis);
-            timeWaitedMillis += sleepMillis;
-            MvcResult hardwareResponse = mockMvc.perform(get("/hardwarecontroller/" + hardwareController.getId() + "/hardware"))
-                    .andReturn();
-            if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
-                List<Hardware> hardwareList = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), List.class);
-                isHardwareDeleted = hardwareList.isEmpty();
-            }
-        }
-        assertTrue(isHardwareDeleted);
+        await().atMost(3, java.util.concurrent.TimeUnit.SECONDS).untilAsserted(() -> {
+            String hardwareResponseJson = mockMvc.perform(get("/hardwarecontroller/" + createdHardwareController.getId() + "/hardware"))
+                    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+            List<Hardware> hardwareList = objectMapper.readValue(hardwareResponseJson, List.class);
+            assertTrue(hardwareList.isEmpty());
+        });
     }
 }
