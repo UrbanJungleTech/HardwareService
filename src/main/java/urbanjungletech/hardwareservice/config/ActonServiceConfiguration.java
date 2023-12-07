@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
+import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 
 import java.util.HashMap;
 import java.util.List;

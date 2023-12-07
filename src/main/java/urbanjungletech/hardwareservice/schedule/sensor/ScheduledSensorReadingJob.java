@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.schedule.sensor;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
 import urbanjungletech.hardwareservice.exception.exception.ScheduledSensorReadingJobException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReading;
@@ -15,15 +16,18 @@ public class ScheduledSensorReadingJob implements Job {
     private SensorQueryService sensorQueryService;
     private ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
     private SensorReadingRouterService sensorReadingRouterService;
+    private SensorReadingAdditionService sensorReadingAdditionService;
 
     public ScheduledSensorReadingJob(long scheduledSensorReadingId,
                                      SensorQueryService sensorQueryService,
                                      ScheduledSensorReadingQueryService scheduledSensorReadingQueryService,
-                                     SensorReadingRouterService sensorReadingRouterService){
+                                     SensorReadingRouterService sensorReadingRouterService,
+                                     SensorReadingAdditionService sensorReadingAdditionService){
         this.scheduledSensorReadingId = scheduledSensorReadingId;
         this.sensorQueryService = sensorQueryService;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
         this.sensorReadingRouterService = sensorReadingRouterService;
+        this.sensorReadingAdditionService = sensorReadingAdditionService;
     }
 
     @Override
@@ -31,6 +35,7 @@ public class ScheduledSensorReadingJob implements Job {
         try {
             ScheduledSensorReading scheduledSensorReading = this.scheduledSensorReadingQueryService.getScheduledSensorReading(this.scheduledSensorReadingId);
             SensorReading result = this.sensorQueryService.readSensor(scheduledSensorReading.getSensorId());
+            this.sensorReadingAdditionService.create(result);
             this.sensorReadingRouterService.route(scheduledSensorReading, result);
         }
         catch(Exception ex){

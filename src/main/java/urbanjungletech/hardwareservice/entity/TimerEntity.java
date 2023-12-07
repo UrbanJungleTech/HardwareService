@@ -18,6 +18,10 @@ public class TimerEntity {
 
     private Boolean skipNext;
 
+    public TimerEntity() {
+        this.skipNext = false;
+    }
+
     public Long getId() {
         return id;
     }

@@ -5,6 +5,7 @@ import org.quartz.Scheduler;
 import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
@@ -14,18 +15,18 @@ import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService
 public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {
 
     private final SensorQueryService sensorQueryService;
-    private final SensorReadingDAO sensorReadingDAO;
     private final ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
     private final SensorReadingRouterService sensorReadingRouterService;
+    private final SensorReadingAdditionService sensorReadingAdditionService;
 
     public ScheduledSensorReadingJobFactory(SensorQueryService sensorQueryService,
-                                            SensorReadingDAO sensorReadingDAO,
                                             ScheduledSensorReadingQueryService scheduledSensorReadingQueryService,
-                                            SensorReadingRouterService sensorReadingRouterService){
+                                            SensorReadingRouterService sensorReadingRouterService,
+                                            SensorReadingAdditionService sensorReadingAdditionService){
         this.sensorQueryService = sensorQueryService;
-        this.sensorReadingDAO = sensorReadingDAO;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
         this.sensorReadingRouterService = sensorReadingRouterService;
+        this.sensorReadingAdditionService = sensorReadingAdditionService;
     }
 
     @Override
@@ -34,7 +35,8 @@ public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {
         ScheduledSensorReadingJob result = new ScheduledSensorReadingJob(sensorId,
                 this.sensorQueryService,
                 this.scheduledSensorReadingQueryService,
-                this.sensorReadingRouterService);
+                this.sensorReadingRouterService,
+                this.sensorReadingAdditionService);
         return result;
     }
 }

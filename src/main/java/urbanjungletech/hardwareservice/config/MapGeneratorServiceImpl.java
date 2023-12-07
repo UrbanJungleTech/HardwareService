@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.config;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.service.action.ActionExecutionService;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

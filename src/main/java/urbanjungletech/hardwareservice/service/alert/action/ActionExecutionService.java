@@ -1,7 +1,7 @@
-package urbanjungletech.hardwareservice.service.action;
+package urbanjungletech.hardwareservice.service.alert.action;
 
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 
 public interface ActionExecutionService {
-    void execute(AlertAction action);
+    void executeAction(AlertAction action);
 }

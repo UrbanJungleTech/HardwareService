@@ -23,6 +23,7 @@ public class AlertConditionConverterImpl implements AlertConditionConverter {
         AlertCondition result = this.actionConverterMap.get(alertConditionEntity.getClass()).toModel(alertConditionEntity);
         result.setId(alertConditionEntity.getId());
         result.setAlertId(alertConditionEntity.getAlert().getId());
+        result.setActive(alertConditionEntity.getActive());
         return result;
     }
 
@@ -30,6 +31,7 @@ public class AlertConditionConverterImpl implements AlertConditionConverter {
     public void fillEntity(AlertConditionEntity alertConditionEntity, AlertCondition alertCondition) {
         this.actionConverterMap.get(alertCondition.getClass()).fillEntity(alertConditionEntity, alertCondition);
         alertConditionEntity.setType(alertCondition.getType());
+        alertConditionEntity.setActive(alertCondition.getActive());
     }
 
     @Override
