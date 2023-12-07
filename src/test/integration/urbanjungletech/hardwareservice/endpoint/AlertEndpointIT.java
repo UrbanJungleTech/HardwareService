@@ -18,8 +18,8 @@ import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
-import urbanjungletech.hardwareservice.services.MockAction;
-import urbanjungletech.hardwareservice.services.MockActionService;
+import urbanjungletech.hardwareservice.mock.action.MockAction;
+import urbanjungletech.hardwareservice.mock.action.MockActionService;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
@@ -30,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest()
+@AutoConfigureMockMvc()
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AlertEndpointIT {
 
@@ -40,7 +40,7 @@ public class AlertEndpointIT {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private HardwareTestService hardwareTestService;
+    private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     private MockActionService mockActionService;
 
@@ -63,7 +63,7 @@ public class AlertEndpointIT {
      */
     @Test
     void deleteSensorReadingAlertByIdNotFound() throws Exception {
-        this.mockMvc.perform(delete("/alert/1"))
+        this.mockMvc.perform(delete("/alert/345"))
                 .andExpect(status().isNotFound());
     }
 
@@ -280,9 +280,12 @@ public class AlertEndpointIT {
     @Test
     void hardwareStateChangeAlertConditionActionExecution() throws Exception {
         //create a hardware controller with a hardware.
-        HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
-        Hardware hardware = hardwareController.getHardware().get(0);
-        long hardwareId = hardware.getId();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        long hardwareId = createdHardware.getId();
 
         Alert alert = new Alert();
         HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
@@ -305,10 +308,10 @@ public class AlertEndpointIT {
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
 
         //update the hardware state
-        hardware.getDesiredState().setState(ONOFF.ON);
+        createdHardware.getDesiredState().setState(ONOFF.ON);
         this.mockMvc.perform(put("/hardware/" + hardwareId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(hardware)))
+                        .content(this.objectMapper.writeValueAsString(createdHardware)))
                 .andExpect(status().isOk());
 
         //check that the actions was performed and that the alerts were updated in the alert conditions
@@ -325,10 +328,10 @@ public class AlertEndpointIT {
         /** test that updating the state in the other direction will also updates the persisted states while not triggering
         the action
          **/
-        hardware.getDesiredState().setState(ONOFF.OFF);
+        createdHardware.getDesiredState().setState(ONOFF.OFF);
         this.mockMvc.perform(put("/hardware/" + hardwareId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(this.objectMapper.writeValueAsString(hardware)))
+                        .content(this.objectMapper.writeValueAsString(createdHardware)))
                 .andExpect(status().isOk());
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {

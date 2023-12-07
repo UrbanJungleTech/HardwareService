@@ -48,7 +48,6 @@ public class MockMqttStarter implements ApplicationListener<ContextRefreshedEven
                     ready = true;
                 }
                 client.subscribe("1234ToMicro", mockMqttClientListener);
-                client.subscribe("HardwareServer", microcontrollerMessageListener);
             } catch (Exception e) {
                 e.printStackTrace();
             }

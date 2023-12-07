@@ -8,6 +8,5 @@ import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecut
 public class LoggingActionServiceExecutionService implements SpecificActionExecutionService<LoggingAlertAction> {
     @Override
     public void execute(LoggingAlertAction action) {
-        System.out.println("Logging action executed");
     }
 }

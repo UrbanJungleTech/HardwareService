@@ -32,6 +32,8 @@ public class HardwareControllerGroupEndpointIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+
+
     /**
      * Given a HardwareControllerGroup
      * When a POST request is made to /hardwareControllerGroup
@@ -62,7 +64,8 @@ public class HardwareControllerGroupEndpointIT {
      */
     @Test
     public void createHardwareControllerGroupWithHardwareController() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createBasicHardwareControllerHttp();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         HardwareControllerGroup hardwareControllerGroup = new HardwareControllerGroup();
         hardwareControllerGroup.setName("test");
         hardwareControllerGroup.setHardwareControllers(List.of(hardwareController.getId()));
@@ -87,7 +90,8 @@ public class HardwareControllerGroupEndpointIT {
      */
     @Test
     public void getHardwareControllerGroupWithHardwareController() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createBasicHardwareControllerHttp();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         HardwareControllerGroup hardwareControllerGroup = new HardwareControllerGroup();
         hardwareControllerGroup.setName("test");
         hardwareControllerGroup.setHardwareControllers(List.of(hardwareController.getId()));

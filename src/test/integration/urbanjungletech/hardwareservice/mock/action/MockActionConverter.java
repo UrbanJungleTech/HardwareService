@@ -1,9 +1,7 @@
-package urbanjungletech.hardwareservice.services;
+package urbanjungletech.hardwareservice.mock.action;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
-import urbanjungletech.hardwareservice.entity.alert.action.AlertActionEntity;
-import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 
 @Service
 public class MockActionConverter implements SpecificAlertActionConverter<MockAction, MockEntity> {

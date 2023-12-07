@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.services;
+package urbanjungletech.hardwareservice.mock.action;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;

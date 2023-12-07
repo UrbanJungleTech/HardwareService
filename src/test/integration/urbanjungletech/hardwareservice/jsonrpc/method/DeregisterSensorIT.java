@@ -3,26 +3,22 @@ package urbanjungletech.hardwareservice.jsonrpc.method;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -30,27 +26,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DeregisterSensorIT {
-
-    @Autowired
-    private SensorTestService sensorTestService;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private MqttTestService mqttTestService;
     @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
-    @Autowired
-    private SensorScheduleService sensorScheduleService;
-    @Autowired
-    private SensorRepository sensorRepository;
-    @BeforeEach
-    public void setup() throws Exception {
-        scheduledHardwareScheduleService.deleteAllSchedules();
-        sensorScheduleService.deleteAll();
-        this.sensorRepository.deleteAll();
-    }
+    HardwareControllerTestService hardwareControllerTestService;
+
 
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" with a sensor with the port 1
@@ -68,7 +50,13 @@ public class DeregisterSensorIT {
      */
     @Test
     public void testDeregisterSensor() throws Exception{
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        hardwareController.getConfiguration().put("serialNumber", "1234");
+        Sensor sensor = new Sensor();
+        sensor.setPort("1");
+        hardwareController.getSensors().add(sensor);
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        long sensorId = hardwareController.getSensors().get(0).getId();
 
         Map<String, Object> params = new HashMap<>();
         params.put("serialNumber", hardwareController.getConfiguration().get("serialNumber"));
@@ -79,20 +67,10 @@ public class DeregisterSensorIT {
 
         this.mqttTestService.sendMessage(rpcMessage);
 
-        boolean isSensorDeleted = false;
-        long timeoutMillis = 3000;
-        long sleepMillis = 500;
-        long timeWaitedMillis = 0;
-        while (!isSensorDeleted && timeWaitedMillis < timeoutMillis) {
-            Thread.sleep(sleepMillis);
-            timeWaitedMillis += sleepMillis;
-            MvcResult hardwareResponse = mockMvc.perform(get("/hardwarecontroller/" + hardwareController.getId() + "/sensor"))
-                    .andReturn();
-            if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
-                List<Sensor> sensorList = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), List.class);
-                isSensorDeleted = sensorList.isEmpty();
-            }
-        }
-        assertTrue(isSensorDeleted);
+
+        await().untilAsserted(() -> {
+            Sensor responseSensor = this.hardwareControllerTestService.findSensor(sensorId);
+            assertNull(responseSensor);
+        });
     }
 }

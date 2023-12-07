@@ -6,7 +6,6 @@ import urbanjungletech.hardwareservice.model.credentials.Credentials;
 
 @Entity
 public class AzureQueueSensorReadingRouterEntity extends SensorReadingRouterEntity{
-    @Id
     private Long id;
     private String queueName;
     @ManyToOne

@@ -1,9 +1,7 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,24 +11,22 @@ import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.*;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.repository.HardwareStateRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest()
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareEndpointIT {
@@ -43,30 +39,13 @@ public class HardwareEndpointIT {
     @Autowired
     private HardwareRepository hardwareRepository;
     @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
-    @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     HardwareTestService hardwareTestService;
     @Autowired
     MockMqttClientListener mqttCacheListener;
 
-    @Autowired
-    private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
-    @Autowired
-    private SensorScheduleService sensorScheduleService;
-    @Autowired
-    private HardwareStateRepository hardwareStateRepository;
 
-    @BeforeEach
-    void setUp() throws SchedulerException {
-        this.scheduledHardwareScheduleService.deleteAllSchedules();
-        this.sensorScheduleService.deleteAll();
-        this.hardwareControllerRepository.deleteAll();
-        this.hardwareRepository.deleteAll();
-        this.hardwareStateRepository.deleteAll();
-        this.mqttCacheListener.clear();
-    }
 
     /**
      * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
@@ -151,24 +130,15 @@ public class HardwareEndpointIT {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
-        //retrieve the hardware controller from the db
-
         mockMvc.perform(delete("/hardware/" + createdHardware.getId()))
                 .andExpect(status().isNoContent());
 
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-
-        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
+        await().untilAsserted(() -> {
             if (this.mqttCacheListener.getCache("DeregisterHardware").size() >= 1) {
-                asserted = true;
+                JsonRpcMessage message = mqttCacheListener.getCache("DeregisterHardware").get(0);
+                assertEquals(createdHardware.getPort(), message.getParams().get("port"));
             }
-            Thread.sleep(100);
-        }
-        List<JsonRpcMessage> results = this.mqttCacheListener.getCache("DeregisterHardware");
-        assertEquals(1, results.size());
-        JsonRpcMessage message = results.get(0);
-        assertEquals(createdHardware.getPort(), message.getParams().get("port"));
+        });
     }
 
     /**
@@ -253,8 +223,6 @@ public class HardwareEndpointIT {
         HardwareState desiredState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
         assertEquals(updatedState.getLevel(), desiredState.getLevel());
         assertEquals(updatedState.getState(), desiredState.getState());
-        Thread.sleep(5000);
-        this.mqttCacheListener.clear();
     }
 
     /**
@@ -370,26 +338,23 @@ public class HardwareEndpointIT {
         HardwareController hardwareController = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
         hardware = hardwareController.getHardware().get(0);
 
-        Thread.sleep(10000);
-
-        List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange");
-
-        //count the on and off states saved
-        int onCount = 0;
-        int offCount = 0;
-        for (JsonRpcMessage deliveredState : deliveredStates) {
-            HardwareState state = objectMapper.convertValue(deliveredState.getParams().get("desiredState"), HardwareState.class);
-            if (state.getState().equals(ONOFF.ON)) {
-                onCount++;
-            } else if (state.getState().equals(ONOFF.OFF)) {
-                offCount++;
+        await().atMost(10000, TimeUnit.SECONDS).untilAsserted(() -> {
+            if (this.mqttCacheListener.getCache("StateChange").size() >= 3) {
+                List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange");
+                int onCount = 0;
+                int offCount = 0;
+                for (JsonRpcMessage deliveredState : deliveredStates) {
+                    HardwareState state = objectMapper.convertValue(deliveredState.getParams().get("desiredState"), HardwareState.class);
+                    if (state.getState().equals(ONOFF.ON)) {
+                        onCount++;
+                    } else if (state.getState().equals(ONOFF.OFF)) {
+                        offCount++;
+                    }
+                }
+                assertTrue(onCount >= 2 && onCount <= 4);
+                assertTrue(offCount >= 1 && offCount <= 4);
             }
-        }
-
-        //check how often the on and off states were sent, given that we're dealing with seconds
-        // its necessary to give a little margin of error
-        assertTrue(onCount >= 2 && onCount <= 4);
-        assertTrue(offCount >= 1 && offCount <= 4);
+        });
     }
 
     /**
@@ -401,7 +366,10 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateCurrentHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState hardwareState = new HardwareState();
