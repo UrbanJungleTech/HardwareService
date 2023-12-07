@@ -20,7 +20,7 @@ public class ActionExecutionServiceProxy implements ActionExecutionService {
     }
 
     @Override
-    public void execute(AlertAction alertAction) {
+    public void executeAction(AlertAction alertAction) {
         actionExecutionServices.get(alertAction.getClass()).execute(alertAction);
     }
 }

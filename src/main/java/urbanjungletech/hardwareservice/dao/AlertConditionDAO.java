@@ -5,4 +5,7 @@ import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 
 public interface AlertConditionDAO {
     AlertConditionEntity create(AlertCondition alertCondition);
+    AlertConditionEntity update(AlertCondition condition);
+
+    void delete(long id);
 }

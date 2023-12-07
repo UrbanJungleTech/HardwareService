@@ -12,6 +12,7 @@ public class AlertConditions {
     private Set<AlertCondition> inactiveConditions;
     private List<AlertCondition> conditions;
     private Long alertId;
+    private Long id;
 
     public AlertConditions() {
         this.activeConditions = new HashSet<>();
@@ -49,5 +50,13 @@ public class AlertConditions {
 
     public void setAlertId(Long alertId) {
         this.alertId = alertId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -6,4 +6,5 @@ import urbanjungletech.hardwareservice.entity.alert.AlertConditionsEntity;
 
 @Repository
 public interface AlertConditionsRepository extends JpaRepository<AlertConditionsEntity, Long> {
+    AlertConditionsEntity findByAlertId(Long alertId);
 }

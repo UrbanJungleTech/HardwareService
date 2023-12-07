@@ -39,12 +39,14 @@ public class AlertConditionsAdditionServiceImpl implements AlertConditionsAdditi
 
     @Override
     public void delete(long id) {
-
+        this.alertConditionsDAO.delete(id);
     }
 
     @Override
     public AlertConditions update(long id, AlertConditions alertConditions) {
-        return null;
+        alertConditions.setId(id);
+        AlertConditionsEntity alertConditionsEntity = this.alertConditionsDAO.update(alertConditions);
+        return this.alertConditionsConverter.toModel(alertConditionsEntity);
     }
 
     @Override

@@ -13,13 +13,13 @@ public class AlertConditionsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private AlertEntity alert;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<AlertConditionEntity> activeConditions;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<AlertConditionEntity> inactiveConditions;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<AlertConditionEntity> conditions;
 
     public AlertConditionsEntity() {

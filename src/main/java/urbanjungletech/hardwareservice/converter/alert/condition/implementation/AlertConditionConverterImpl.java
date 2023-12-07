@@ -23,6 +23,7 @@ public class AlertConditionConverterImpl implements AlertConditionConverter {
         AlertCondition result = this.actionConverterMap.get(alertConditionEntity.getClass()).toModel(alertConditionEntity);
         result.setId(alertConditionEntity.getId());
         result.setAlertId(alertConditionEntity.getAlert().getId());
+        result.setActive(alertConditionEntity.getActive());
         return result;
     }
 

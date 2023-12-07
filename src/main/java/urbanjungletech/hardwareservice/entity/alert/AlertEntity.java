@@ -14,9 +14,9 @@ public class AlertEntity {
     private Long id;
     private String name;
     private String description;
-    @OneToMany(mappedBy = "alert", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "alert", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AlertActionEntity> actions;
-    @OneToOne(mappedBy = "alert", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "alert", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private AlertConditionsEntity conditions;
 
     public AlertEntity() {

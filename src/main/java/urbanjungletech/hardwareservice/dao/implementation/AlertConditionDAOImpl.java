@@ -57,4 +57,34 @@ public class AlertConditionDAOImpl implements AlertConditionDAO {
         this.alertConditionsRepository.save(alertConditionsEntity);
         return result;
     }
+
+    @Override
+    public AlertConditionEntity update(AlertCondition condition) {
+        AlertConditionEntity alertConditionEntity = this.alertConditionRepository.findById(condition.getId()).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionEntity.class, condition.getId())
+        );
+        this.alertConditionConverter.fillEntity(alertConditionEntity, condition);
+        AlertConditionEntity result = this.alertConditionRepository.save(alertConditionEntity);
+        AlertConditionsEntity alertConditionsEntity = this.alertConditionsRepository.findById(alertConditionEntity.getAlert().getConditions().getId()).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionsEntity.class, alertConditionEntity.getAlert().getConditions().getId())
+        );
+        if(alertConditionEntity.getActive() == null || alertConditionEntity.getActive() == false){
+            alertConditionsEntity.getActiveConditions().remove(alertConditionEntity);
+            alertConditionsEntity.getInactiveConditions().add(alertConditionEntity);
+        }
+        else {
+            alertConditionsEntity.getInactiveConditions().remove(alertConditionEntity);
+            alertConditionsEntity.getActiveConditions().add(alertConditionEntity);
+        }
+        this.alertConditionsRepository.save(alertConditionsEntity);
+        return result;
+    }
+
+    @Override
+    public void delete(long id) {
+        AlertConditionEntity alertConditionEntity = this.alertConditionRepository.findById(id).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionEntity.class, id)
+        );
+        this.alertConditionRepository.delete(alertConditionEntity);
+    }
 }

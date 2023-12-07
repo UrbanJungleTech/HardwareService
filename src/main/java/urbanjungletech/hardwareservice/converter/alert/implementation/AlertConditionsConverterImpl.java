@@ -1,6 +1,7 @@
-package urbanjungletech.hardwareservice.converter.alert;
+package urbanjungletech.hardwareservice.converter.alert.implementation;
 
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.converter.alert.AlertConditionsConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.AlertConditionsEntity;
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class AlertConditionsConverterImpl implements AlertConditionsConverter{
+public class AlertConditionsConverterImpl implements AlertConditionsConverter {
     private AlertConditionConverter alertConditionConverter;
 
     public AlertConditionsConverterImpl(AlertConditionConverter alertConditionConverter){
@@ -30,6 +31,7 @@ public class AlertConditionsConverterImpl implements AlertConditionsConverter{
         Set<AlertCondition> alertInactiveConditions = alertConditionsEntity.getInactiveConditions()
                 .stream().map(alertConditionConverter::toModel).collect(HashSet::new, HashSet::add, HashSet::addAll);
         result.setInactiveConditions(alertInactiveConditions);
+        result.setId(alertConditionsEntity.getId());
         return result;
     }
 

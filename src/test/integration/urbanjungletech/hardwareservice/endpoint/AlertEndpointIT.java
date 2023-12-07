@@ -18,11 +18,15 @@ import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
+import urbanjungletech.hardwareservice.services.MockAction;
+import urbanjungletech.hardwareservice.services.MockActionService;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +42,7 @@ public class AlertEndpointIT {
     @Autowired
     private HardwareTestService hardwareTestService;
     @Autowired
-    private HardwareControllerTestService hardwareControllerTestService;
+    private MockActionService mockActionService;
 
 
     /**
@@ -285,8 +289,8 @@ public class AlertEndpointIT {
         hardwareStateChangeAlertCondition.setHardwareId(hardwareId);
         hardwareStateChangeAlertCondition.setState(ONOFF.ON);
 
-        LoggingAlertAction loggingAlertAction = new LoggingAlertAction();
-        alert.getActions().add(loggingAlertAction);
+        MockAction mockAction = new MockAction();
+        alert.getActions().add(mockAction);
 
         AlertConditions alertConditions = new AlertConditions();
         alertConditions.getConditions().add(hardwareStateChangeAlertCondition);
@@ -307,8 +311,35 @@ public class AlertEndpointIT {
                         .content(this.objectMapper.writeValueAsString(hardware)))
                 .andExpect(status().isOk());
 
-        Thread.sleep(10000);
+        //check that the actions was performed and that the alerts were updated in the alert conditions
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Alert getResponseAlert = this.objectMapper.readValue(getResponse, Alert.class);
+            assertEquals(0, getResponseAlert.getConditions().getInactiveConditions().size());
+            assertEquals(1, getResponseAlert.getConditions().getActiveConditions().size());
+            assertEquals(1L, mockActionService.getCounter());
+        });
 
+        /** test that updating the state in the other direction will also updates the persisted states while not triggering
+        the action
+         **/
+        hardware.getDesiredState().setState(ONOFF.OFF);
+        this.mockMvc.perform(put("/hardware/" + hardwareId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(hardware)))
+                .andExpect(status().isOk());
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Alert getResponseAlert = this.objectMapper.readValue(getResponse, Alert.class);
+            assertEquals(1, getResponseAlert.getConditions().getInactiveConditions().size());
+            assertEquals(0, getResponseAlert.getConditions().getActiveConditions().size());
+            assertEquals(1L, mockActionService.getCounter());
+        });
     }
 
 }

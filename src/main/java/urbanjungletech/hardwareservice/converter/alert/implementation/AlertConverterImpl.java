@@ -1,6 +1,8 @@
-package urbanjungletech.hardwareservice.converter.alert;
+package urbanjungletech.hardwareservice.converter.alert.implementation;
 
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.converter.alert.AlertConditionsConverter;
+import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.converter.alert.action.AlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;

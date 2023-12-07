@@ -9,7 +9,7 @@ public class AlertConditionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne()
     private AlertEntity alert;
     private String type;
     private Boolean isActive;
