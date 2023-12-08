@@ -2,9 +2,10 @@ package urbanjungletech.hardwareservice.model;
 
 public class Timer {
     private Long id;
-    private long onLevel;
-    private String onCronString;
-    private String offCronString;
+    private boolean skipNext;
+    private String state;
+    private long level;
+    private String cronString;
     private long hardwareId;
 
     public Long getId() {
@@ -15,14 +16,6 @@ public class Timer {
         this.id = id;
     }
 
-    public long getOnLevel() {
-        return onLevel;
-    }
-
-    public void setOnLevel(long onLevel) {
-        this.onLevel = onLevel;
-    }
-
     public long getHardwareId() {
         return hardwareId;
     }
@@ -31,19 +24,35 @@ public class Timer {
         this.hardwareId = hardwareId;
     }
 
-    public String getOnCronString() {
-        return onCronString;
+    public String getCronString() {
+        return cronString;
     }
 
-    public void setOnCronString(String onCronString) {
-        this.onCronString = onCronString;
+    public void setCronString(String cronString) {
+        this.cronString = cronString;
     }
 
-    public String getOffCronString() {
-        return offCronString;
+    public String getState() {
+        return state;
     }
 
-    public void setOffCronString(String offCronString) {
-        this.offCronString = offCronString;
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public long getLevel() {
+        return level;
+    }
+
+    public void setLevel(long level) {
+        this.level = level;
+    }
+
+    public boolean isSkipNext() {
+        return skipNext;
+    }
+
+    public void setSkipNext(boolean skipNext) {
+        this.skipNext = skipNext;
     }
 }

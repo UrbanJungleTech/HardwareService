@@ -21,7 +21,7 @@ public class HardwareStateChangeAlertActionConverterImpl implements SpecificAler
     public HardwareStateChangeAlertAction toModel(HardwareStateChangeAlertActionEntity hardwareStateChangeActionEntity) {
         HardwareStateChangeAlertAction result = new HardwareStateChangeAlertAction();
         result.setHardwareId(hardwareStateChangeActionEntity.getHardwareId());
-        result.setOnoff(hardwareStateChangeActionEntity.getOnoff());
+        result.setState(hardwareStateChangeActionEntity.getState());
         result.setLevel(hardwareStateChangeActionEntity.getLevel());
         return result;
     }
@@ -29,7 +29,7 @@ public class HardwareStateChangeAlertActionConverterImpl implements SpecificAler
     @Override
     public void fillEntity(HardwareStateChangeAlertActionEntity hardwareStateChangeActionEntity, HardwareStateChangeAlertAction hardwareStateChangeAction) {
         hardwareStateChangeActionEntity.setHardwareId(hardwareStateChangeAction.getHardwareId());
-        hardwareStateChangeActionEntity.setOnoff(hardwareStateChangeAction.getOnoff());
+        hardwareStateChangeActionEntity.setState(hardwareStateChangeAction.getState());
         hardwareStateChangeActionEntity.setLevel(hardwareStateChangeAction.getLevel());
     }
 

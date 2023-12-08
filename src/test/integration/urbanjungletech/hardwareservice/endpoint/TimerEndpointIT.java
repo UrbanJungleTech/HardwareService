@@ -13,10 +13,12 @@ import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +33,7 @@ public class TimerEndpointIT {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    private HardwareTestService hardwareTestService;
+    private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -46,12 +48,14 @@ public class TimerEndpointIT {
      */
     @Test
     public void testGetTimer() throws Exception {
-        HardwareController hardwareController = hardwareTestService.createBasicHardware();
-        Hardware hardware = hardwareController.getHardware().get(0);
+        HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        hardware = hardwareController.getHardware().get(0);
         Timer timer = new Timer();
-        timer.setOnLevel(100);
-        timer.setOnCronString("0 0 0 1 1 ? 2099");
-        timer.setOffCronString("1 0 0 1 1 ? 2099");
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
         hardware.getTimers().add(timer);
         String timerJson = objectMapper.writeValueAsString(timer);
         MvcResult timerResult = this.mockMvc.perform(post("/hardware/" + hardware.getId() + "/timer")
@@ -85,9 +89,17 @@ public class TimerEndpointIT {
      */
     @Test
     public void testDeleteTimer() throws Exception {
-        HardwareController hardwareController = hardwareTestService.createBasicHardwareWithTimer();
-        Hardware hardware = hardwareController.getHardware().get(0);
-        Timer createdTimer = hardware.getTimers().get(0);
+        HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardware.setOffState("off");
+        Timer timer = new Timer();
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        hardware.getTimers().add(timer);
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        Timer createdTimer = createdHardware.getTimers().get(0);
 
         long timerId = createdTimer.getId();
         this.mockMvc.perform(delete("/timer/" + timerId))
@@ -115,15 +127,19 @@ public class TimerEndpointIT {
     @Test
     public void testGetAllTimers() throws Exception {
         Timer timer1 = new Timer();
-        timer1.setOnCronString("0 0 0 1 1 ? 2099");
-        timer1.setOffCronString("1 0 0 1 1 ? 2099");
+        timer1.setCronString("0 0 0 1 1 ? 2099");
         Timer timer2 = new Timer();
-        timer2.setOnCronString("0 0 0 1 1 ? 2099");
-        timer2.setOffCronString("1 0 0 1 1 ? 2099");
+        timer2.setCronString("0 0 0 1 1 ? 2099");
 
-        HardwareController hardwareController = hardwareTestService.createBasicHardwareWithTimers(List.of(timer1, timer2));
-        Timer createdTimer1 = hardwareController.getHardware().get(0).getTimers().get(0);
-        Timer createdTimer2 = hardwareController.getHardware().get(0).getTimers().get(1);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        hardwareController.getHardware().get(0).getTimers().add(timer1);
+        hardwareController.getHardware().get(0).getTimers().add(timer2);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        Timer createdTimer1 = createdHardwareController.getHardware().get(0).getTimers().get(0);
+        Timer createdTimer2 = createdHardwareController.getHardware().get(0).getTimers().get(1);
         this.mockMvc.perform(get("/timer/"))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
@@ -142,29 +158,39 @@ public class TimerEndpointIT {
      */
     @Test
     public void testUpdateTimer() throws Exception {
-        HardwareController hardwareController = hardwareTestService.createBasicHardwareWithTimer();
-        Hardware hardware = hardwareController.getHardware().get(0);
-        Timer updatedTimer = hardware.getTimers().get(0);
+        HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        Timer timer = new Timer();
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        hardware.getTimers().add(timer);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        Timer updatedTimer = createdHardware.getTimers().get(0);
         long timerId = updatedTimer.getId();
-        updatedTimer.setOnLevel(50);
-        updatedTimer.setOnCronString("0 0 0 1 1 ? 2011");
-        updatedTimer.setOffCronString("1 0 0 1 1 ? 2011");
+        updatedTimer.setLevel(50);
+        updatedTimer.setCronString("0 0 0 1 1 ? 2011");
         String timerJson = objectMapper.writeValueAsString(updatedTimer);
-        this.mockMvc.perform(put("/timer/" + timerId)
+        String responseJson = this.mockMvc.perform(put("/timer/" + timerId)
                         .contentType("application/json")
                         .content(timerJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(timerId))
-                .andExpect(jsonPath("$.onLevel").value(50))
-                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
-                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
+                .andReturn().getResponse().getContentAsString();
 
-        this.mockMvc.perform(get("/timer/" + timerId))
+        Timer responseTimer = objectMapper.readValue(responseJson, Timer.class);
+        assertEquals(updatedTimer.getLevel(), responseTimer.getLevel());
+        assertEquals(updatedTimer.getCronString(), responseTimer.getCronString());
+
+        responseJson = this.mockMvc.perform(get("/timer/" + timerId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(timerId))
-                .andExpect(jsonPath("$.onLevel").value(updatedTimer.getOnLevel()))
-                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
-                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
+                .andReturn().getResponse().getContentAsString();
+
+        responseTimer = objectMapper.readValue(responseJson, Timer.class);
+        assertEquals(updatedTimer.getLevel(), responseTimer.getLevel());
+        assertEquals(updatedTimer.getCronString(), responseTimer.getCronString());
+
     }
 
     /**

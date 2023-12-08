@@ -3,13 +3,13 @@ package urbanjungletech.hardwareservice.model;
 public class HardwareState {
     private Long id;
     private long level;
-    private ONOFF state;
+    private String state;
     private Long hardwareId;
 
     public HardwareState(){
     }
 
-    public HardwareState(ONOFF state, long level){
+    public HardwareState(String state, long level){
         this.level = level;
         this.state = state;
     }
@@ -21,13 +21,6 @@ public class HardwareState {
         this.level = level;
     }
 
-    public ONOFF getState() {
-        return state;
-    }
-
-    public void setState(ONOFF state) {
-        this.state = state;
-    }
 
     public Long getId() {
         return id;
@@ -43,5 +36,13 @@ public class HardwareState {
 
     public void setHardwareId(Long hardwareId) {
         this.hardwareId = hardwareId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

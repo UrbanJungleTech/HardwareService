@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
@@ -19,7 +18,6 @@ import java.time.temporal.ChronoUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,11 +51,13 @@ public class HardwareStateEndpointIT {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
 
-        this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(desiredState.getId()))
-                .andExpect(jsonPath("$.hardwareId").value(desiredState.getHardwareId()))
-                .andExpect(jsonPath("$.state").value(desiredState.getState().toString()));
+        String responseJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        HardwareState responseHardwareState = objectMapper.readValue(responseJson, HardwareState.class);
+        assertEquals(desiredState.getLevel(), responseHardwareState.getLevel());
+        assertEquals(desiredState.getState(), responseHardwareState.getState());
+        assertEquals(desiredState.getHardwareId(), responseHardwareState.getHardwareId());
     }
 
     /**
@@ -87,7 +87,7 @@ public class HardwareStateEndpointIT {
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
-        desiredState.setState(ONOFF.ON);
+        desiredState.setState("on");
         desiredState.setLevel(50);
 
         this.mockMvc.perform(put("/hardwarestate/" + desiredState.getId())

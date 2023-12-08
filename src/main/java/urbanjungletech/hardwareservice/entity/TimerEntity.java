@@ -8,15 +8,14 @@ public class TimerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private ScheduledHardwareEntity onCronJob;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private ScheduledHardwareEntity offCronJob;
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "hardware_id")
     private HardwareEntity hardware;
 
-    private Boolean skipNext;
+    private String cronString;
+
+    private boolean skipNext;
+    private long level;
 
     public TimerEntity() {
         this.skipNext = false;
@@ -38,27 +37,28 @@ public class TimerEntity {
         this.hardware = hardware;
     }
 
-    public ScheduledHardwareEntity getOnCronJob() {
-        return onCronJob;
+
+    public String getCronString() {
+        return cronString;
     }
 
-    public void setOnCronJob(ScheduledHardwareEntity onCronJob) {
-        this.onCronJob = onCronJob;
+    public void setCronString(String cronString) {
+        this.cronString = cronString;
     }
 
-    public ScheduledHardwareEntity getOffCronJob() {
-        return offCronJob;
-    }
-
-    public void setOffCronJob(ScheduledHardwareEntity offCronJob) {
-        this.offCronJob = offCronJob;
-    }
-
-    public Boolean getSkipNext() {
+    public boolean isSkipNext() {
         return skipNext;
     }
 
-    public void setSkipNext(Boolean skipNext) {
+    public void setSkipNext(boolean skipNext) {
         this.skipNext = skipNext;
+    }
+
+    public long getLevel() {
+        return level;
+    }
+
+    public void setLevel(long level) {
+        this.level = level;
     }
 }

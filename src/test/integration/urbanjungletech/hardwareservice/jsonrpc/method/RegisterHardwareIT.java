@@ -1,22 +1,16 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
@@ -28,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -81,7 +74,7 @@ public class RegisterHardwareIT {
         hardware.setPort("1");
         hardware.getConfiguration().put("serialNumber", "1234");
         HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(ONOFF.ON);
+        hardwareState.setState("on");
         hardwareState.setLevel(100);
         hardware.setCurrentState(hardwareState);
 

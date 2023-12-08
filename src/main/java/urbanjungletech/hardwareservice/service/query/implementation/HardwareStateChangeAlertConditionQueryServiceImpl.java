@@ -2,8 +2,6 @@ package urbanjungletech.hardwareservice.service.query.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
-import urbanjungletech.hardwareservice.converter.alert.condition.implementation.HardwareStateChangeConditionConverter;
-import urbanjungletech.hardwareservice.entity.alert.condition.HardwareStateChangeAlertConditionEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.repository.HardwareStateChangeAlertConditionRepository;
@@ -28,7 +26,7 @@ public class HardwareStateChangeAlertConditionQueryServiceImpl implements Hardwa
 
     @Override
     public List<HardwareStateChangeAlertCondition> findByHardwareStateId(Long hardwareStateId) {
-        return this.hardwareStateChangeAlertConditionRepository.findByHardwareStateId(hardwareStateId)
+        return this.hardwareStateChangeAlertConditionRepository.findByHardwareId(hardwareStateId)
                 .stream()
                 .map((condition) -> {
                     return (HardwareStateChangeAlertCondition) this.alertConditionConverter.toModel(condition);

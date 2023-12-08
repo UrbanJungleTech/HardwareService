@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
-import urbanjungletech.hardwareservice.model.ONOFF;
 
 @Entity
 public class HardwareStateEntity {
@@ -9,7 +8,7 @@ public class HardwareStateEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private long level;
-    private ONOFF state;
+    private String state;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private HardwareEntity hardware;
     public long getLevel() {
@@ -20,13 +19,6 @@ public class HardwareStateEntity {
         this.level = level;
     }
 
-    public ONOFF getState() {
-        return state;
-    }
-
-    public void setState(ONOFF state) {
-        this.state = state;
-    }
 
     public Long getId() {
         return id;
@@ -42,5 +34,13 @@ public class HardwareStateEntity {
 
     public void setHardware(HardwareEntity hardware) {
         this.hardware = hardware;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

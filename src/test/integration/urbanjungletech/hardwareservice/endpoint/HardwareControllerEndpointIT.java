@@ -2,33 +2,25 @@ package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareScheduleService;
-import urbanjungletech.hardwareservice.schedule.sensor.SensorScheduleService;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -213,18 +205,26 @@ public class HardwareControllerEndpointIT {
     void createHardwareController_whenGivenAValidHardwareControllerWithAHardware_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
         Hardware hardware = this.hardwareControllerTestService.createHardware("light");
+        hardware.setOffState("off");
         hardwareController.getHardware().add(hardware);
-        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
+        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
+        String responseJson = mockMvc.perform(post("/hardwarecontroller/")
+                        .content(hardwareControllerJson)
+                        .contentType("application/json")
+                        .content(hardwareControllerJson))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
 
-        //check the entity was saved to the db and its id is non zero
-        Hardware responseHardware = createdHardwareController.getHardware().get(0);
-        assertNotEquals(0, responseHardware.getId());
-        assertNotNull(responseHardware.getDesiredState());
-        assertNotNull(responseHardware.getCurrentState());
-        assertSame(ONOFF.OFF, responseHardware.getDesiredState().getState());
-        assertNotNull(responseHardware.getDesiredState().getId());
-        assertSame(ONOFF.OFF, responseHardware.getCurrentState().getState());
-        assertNotNull(responseHardware.getCurrentState().getId());
+        HardwareController createdHardwareController = objectMapper.readValue(responseJson, HardwareController.class);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        assertEquals(createdHardware.getType(), hardware.getType());
+        assertNotNull(createdHardware.getId());
+        assertNotNull(createdHardware.getDesiredState());
+        assertNotNull(createdHardware.getDesiredState().getId());
+        assertNotNull(createdHardware.getDesiredState().getState());
+        assertNotNull(createdHardware.getCurrentState());
+        assertNotNull(createdHardware.getCurrentState().getId());
+        assertNotNull(createdHardware.getCurrentState().getState());
     }
 
     /**

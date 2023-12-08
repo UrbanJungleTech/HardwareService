@@ -14,7 +14,6 @@ import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
@@ -44,6 +43,7 @@ public class ConfirmHardwareStateIT {
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
 
+
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" and a Hardware with the port 1
      * When a PUT request is made to /hardware/{hardwareId}/state with a payload of the form:
@@ -67,7 +67,7 @@ public class ConfirmHardwareStateIT {
     public void confirmHardwareState() throws Exception {
         HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
         controller.getConfiguration().put("serialNumber", "1234");
-        Hardware hardware = this.hardwareControllerTestService.createHardware("test hardware");
+        Hardware hardware = new Hardware();
         controller.getHardware().add(hardware);
         hardware.setPort("1");
         controller = this.hardwareControllerTestService.postHardwareController(controller);
@@ -82,7 +82,7 @@ public class ConfirmHardwareStateIT {
         params.put("port", "1");
         HardwareState hardwareState = new HardwareState();
         hardwareState.setLevel(2);
-        hardwareState.setState(ONOFF.OFF);
+        hardwareState.setState("off");
         params.put("hardwareState", hardwareState);
         jsonRpcMessage.setParams(params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
@@ -99,7 +99,7 @@ public class ConfirmHardwareStateIT {
                     if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
                         Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
                         HardwareState state = updatedHardware.getCurrentState();
-                        return state.getState() == ONOFF.OFF && state.getLevel() == 2;
+                        return state.getState().equals("off") && state.getLevel() == 2;
                     }
                     return false;
                 });

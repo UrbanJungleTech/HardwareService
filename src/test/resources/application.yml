@@ -1,6 +1,10 @@
 spring:
   application:
     name: ${APPLICATION_NAME}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    database-platform: ${JPA_HIBERNATE_DATABASE_PLATFORM}
   datasource:
     url: ${DATABASE_URL}
     driverClassName: ${DATABASE_DRIVER}

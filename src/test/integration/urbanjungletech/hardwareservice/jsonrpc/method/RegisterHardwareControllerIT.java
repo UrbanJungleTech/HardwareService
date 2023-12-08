@@ -12,6 +12,7 @@ import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

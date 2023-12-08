@@ -9,7 +9,6 @@ import urbanjungletech.hardwareservice.converter.implementation.HardwareStateCon
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +25,7 @@ class HardwareStateConverterImplTest {
     @Test
     void toModel() {
         HardwareStateEntity hardwareStateEntity = new HardwareStateEntity();
-        hardwareStateEntity.setState(ONOFF.ON);
+        hardwareStateEntity.setState("on");
         hardwareStateEntity.setLevel(1);
         hardwareStateEntity.setId(1L);
         HardwareEntity hardwareEntity = new HardwareEntity();
@@ -42,7 +41,7 @@ class HardwareStateConverterImplTest {
     void fillEntity() {
         HardwareState hardwareState = new HardwareState();
         hardwareState.setLevel(1);
-        hardwareState.setState(ONOFF.ON);
+        hardwareState.setState("on");
         HardwareStateEntity result = this.hardwareStateConverter.toEntity(hardwareState);
         assertEquals(null, result.getId());
         Assertions.assertEquals(hardwareState.getState(), result.getState());

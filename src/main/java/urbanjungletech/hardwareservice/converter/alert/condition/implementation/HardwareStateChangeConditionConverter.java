@@ -12,14 +12,14 @@ public class HardwareStateChangeConditionConverter implements SpecificAlertCondi
     public HardwareStateChangeAlertCondition toModel(HardwareStateChangeAlertConditionEntity alertConditionEntity) {
         HardwareStateChangeAlertCondition result = new HardwareStateChangeAlertCondition();
         result.setState(alertConditionEntity.getState());
-        result.setHardwareId(alertConditionEntity.getHardwareStateId());
+        result.setHardwareId(alertConditionEntity.getHardwareId());
         return result;
     }
 
     @Override
     public void fillEntity(HardwareStateChangeAlertConditionEntity alertConditionEntity, HardwareStateChangeAlertCondition alertCondition) {
         alertConditionEntity.setState(alertCondition.getState());
-        alertConditionEntity.setHardwareStateId(alertCondition.getHardwareId());
+        alertConditionEntity.setHardwareId(alertCondition.getHardwareId());
     }
 
     @Override

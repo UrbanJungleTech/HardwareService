@@ -10,7 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
@@ -143,7 +142,7 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         HardwareStateChangeAlertAction hardwareStateChangeAlertAction = new HardwareStateChangeAlertAction();
         hardwareStateChangeAlertAction.setHardwareId(1L);
-        hardwareStateChangeAlertAction.setOnoff(ONOFF.ON);
+        hardwareStateChangeAlertAction.setState("on");
         hardwareStateChangeAlertAction.setLevel(100L);
         alert.getActions().add(hardwareStateChangeAlertAction);
         String requestBody = this.objectMapper.writeValueAsString(alert);
@@ -160,7 +159,7 @@ public class AlertEndpointIT {
         assertEquals(responseAlert.getId(), responseAlert.getActions().get(0).getAlertId());
         HardwareStateChangeAlertAction responseHardwareStateChangeAlertAction = (HardwareStateChangeAlertAction) responseAlert.getActions().get(0);
         assertEquals(1L, responseHardwareStateChangeAlertAction.getHardwareId());
-        assertEquals(hardwareStateChangeAlertAction.getOnoff(), responseHardwareStateChangeAlertAction.getOnoff());
+        assertEquals(hardwareStateChangeAlertAction.getState(), responseHardwareStateChangeAlertAction.getState());
         assertEquals(hardwareStateChangeAlertAction.getLevel(), responseHardwareStateChangeAlertAction.getLevel());
     }
 
@@ -248,7 +247,8 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
         hardwareStateChangeAlertCondition.setHardwareId(1L);
-        hardwareStateChangeAlertCondition.setState(ONOFF.ON);
+
+        hardwareStateChangeAlertCondition.setState("on");
 
         AlertConditions alertConditions = new AlertConditions();
         alertConditions.getConditions().add(hardwareStateChangeAlertCondition);
@@ -290,7 +290,7 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
         hardwareStateChangeAlertCondition.setHardwareId(hardwareId);
-        hardwareStateChangeAlertCondition.setState(ONOFF.ON);
+        hardwareStateChangeAlertCondition.setState("on");
 
         MockAction mockAction = new MockAction();
         alert.getActions().add(mockAction);
@@ -308,7 +308,7 @@ public class AlertEndpointIT {
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
 
         //update the hardware state
-        createdHardware.getDesiredState().setState(ONOFF.ON);
+        createdHardware.getDesiredState().setState("on");
         this.mockMvc.perform(put("/hardware/" + hardwareId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(createdHardware)))
@@ -328,7 +328,7 @@ public class AlertEndpointIT {
         /** test that updating the state in the other direction will also updates the persisted states while not triggering
         the action
          **/
-        createdHardware.getDesiredState().setState(ONOFF.OFF);
+        createdHardware.getDesiredState().setState("off");
         this.mockMvc.perform(put("/hardware/" + hardwareId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(createdHardware)))

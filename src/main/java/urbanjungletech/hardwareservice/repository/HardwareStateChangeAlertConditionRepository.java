@@ -6,5 +6,5 @@ import urbanjungletech.hardwareservice.entity.alert.condition.HardwareStateChang
 import java.util.List;
 
 public interface HardwareStateChangeAlertConditionRepository extends JpaRepository<HardwareStateChangeAlertConditionEntity, Long> {
-    List<HardwareStateChangeAlertConditionEntity> findByHardwareStateId(long hardwareStateId);
+    List<HardwareStateChangeAlertConditionEntity> findByHardwareId(long hardwareStateId);
 }
