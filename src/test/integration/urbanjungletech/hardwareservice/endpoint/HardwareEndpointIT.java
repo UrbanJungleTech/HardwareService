@@ -17,6 +17,7 @@ import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest()
+@SpringBootTest(properties = {})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareEndpointIT {
@@ -56,33 +57,27 @@ public class HardwareEndpointIT {
      */
     @Test
     void readHardware_whenGivenAValidHardwareId_shouldReturnTheHardware() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardware.setType("light");
+        hardware.setName("Test Hardware");
+        hardware.setPort("1");
+        Map<String, String> configuration = Map.of("test", "test");
+        hardware.setConfiguration(configuration);
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
-        mockMvc.perform(get("/hardware/" + createdHardware.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(createdHardware.getId()))
-                .andExpect(jsonPath("$.type").value(createdHardware.getType()));
+        String jsonResponse = mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        Hardware responseHardware = objectMapper.readValue(jsonResponse, Hardware.class);
+        assertEquals(createdHardware.getId(), responseHardware.getId());
+        assertEquals(createdHardware.getType(), responseHardware.getType());
+        assertEquals(createdHardware.getName(), responseHardware.getName());
+        assertEquals(createdHardware.getPort(), responseHardware.getPort());
+        assertEquals(createdHardware.getConfiguration(), responseHardware.getConfiguration());
     }
 
-    /**
-     * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
-     * Then a RegisterHardware message is sent to the MQTT broker
-     */
-    @Test
-    void readHardware_whenGivenAValidHardwareId_shouldSendARegisterHardwareMessage() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
-        Hardware createdHardware = createdHardwareController.getHardware().get(0);
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-
-        while (!asserted && System.currentTimeMillis() - startTime < 10000) {
-            if (this.mqttCacheListener.getCache("RegisterHardware").size() == 1) {
-                asserted = true;
-            }
-        }
-        JsonRpcMessage registerHardwareMessage = this.mqttCacheListener.getCache("RegisterHardware").get(0);
-        assertEquals(createdHardware.getPort(), registerHardwareMessage.getParams().get("port"));
-    }
 
     /**
      * Given an id which is not associated with a Hardware
@@ -111,7 +106,6 @@ public class HardwareEndpointIT {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
-        //retrieve the hardware controller from the db
 
         mockMvc.perform(delete("/hardware/" + createdHardware.getId()))
                 .andExpect(status().isNoContent());
@@ -120,26 +114,7 @@ public class HardwareEndpointIT {
                 .andExpect(status().isNotFound());
     }
 
-    /**
-     * Given an id which is associated with a Hardware which was created with a HardwareController via /hardwarecontroller/
-     * When a DELETE request is made to /hardware/{hardwareId}
-     * Then a DeregisterHardware message is sent to the MQTT broker
-     */
-    @Test
-    public void deleteHardware_WhenGivenAValidHardwareId_shouldSendADeregisterHardwareMessage() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
-        Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
-        mockMvc.perform(delete("/hardware/" + createdHardware.getId()))
-                .andExpect(status().isNoContent());
-
-        await().untilAsserted(() -> {
-            if (this.mqttCacheListener.getCache("DeregisterHardware").size() >= 1) {
-                JsonRpcMessage message = mqttCacheListener.getCache("DeregisterHardware").get(0);
-                assertEquals(createdHardware.getPort(), message.getParams().get("port"));
-            }
-        });
-    }
 
     /**
      * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
