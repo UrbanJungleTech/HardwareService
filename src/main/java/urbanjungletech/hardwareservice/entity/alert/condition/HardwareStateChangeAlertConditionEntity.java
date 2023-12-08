@@ -1,20 +1,11 @@
 package urbanjungletech.hardwareservice.entity.alert.condition;
 
 import jakarta.persistence.Entity;
-import urbanjungletech.hardwareservice.model.ONOFF;
 
 @Entity
 public class HardwareStateChangeAlertConditionEntity extends AlertConditionEntity{
-    private ONOFF state;
+    private String state;
     private Long hardwareId;
-
-    public ONOFF getState() {
-        return state;
-    }
-
-    public void setState(ONOFF state) {
-        this.state = state;
-    }
 
     public Long getHardwareId() {
         return hardwareId;
@@ -22,5 +13,13 @@ public class HardwareStateChangeAlertConditionEntity extends AlertConditionEntit
 
     public void setHardwareId(Long hardwareId) {
         this.hardwareId = hardwareId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

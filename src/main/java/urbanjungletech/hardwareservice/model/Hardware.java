@@ -10,6 +10,8 @@ public class Hardware {
     private String port;
     private String name;
     private String type;
+    private List<String> possibleStates;
+    private String offState;
     private HardwareState desiredState;
     private HardwareState currentState;
     private Long hardwareControllerId;
@@ -100,5 +102,21 @@ public class Hardware {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public List<String> getPossibleStates() {
+        return possibleStates;
+    }
+
+    public void setPossibleStates(List<String> possibleStates) {
+        this.possibleStates = possibleStates;
+    }
+
+    public String getOffState() {
+        return offState;
+    }
+
+    public void setOffState(String offState) {
+        this.offState = offState;
     }
 }

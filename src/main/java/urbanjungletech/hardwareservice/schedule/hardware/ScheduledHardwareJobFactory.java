@@ -6,36 +6,31 @@ import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
-import urbanjungletech.hardwareservice.dao.ScheduledHardwareDAO;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
-import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
+import urbanjungletech.hardwareservice.service.query.TimerQueryService;
 
 @Service("HardwareCronJobFactory")
 public class ScheduledHardwareJobFactory extends SimpleJobFactory {
 
     private final HardwareStateAdditionService hardwareStateAdditionService;
     private final HardwareQueryService hardwareQueryService;
-    private final ScheduledHardwareDAO scheduledHardwareDAO;
-    private final ScheduledHardwareQueryService scheduledHardwareQueryService;
+    private final TimerQueryService timerQueryService;
 
     public ScheduledHardwareJobFactory(HardwareStateAdditionService hardwareStateAdditionService,
                                        HardwareQueryService hardwareQueryService,
-                                       ScheduledHardwareDAO scheduledHardwareDAO,
-                                       ScheduledHardwareQueryService scheduledHardwareQueryService){
+                                       TimerQueryService timerQueryService){
         this.hardwareStateAdditionService = hardwareStateAdditionService;
         this.hardwareQueryService = hardwareQueryService;
-        this.scheduledHardwareDAO = scheduledHardwareDAO;
-        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
+        this.timerQueryService = timerQueryService;
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
-        Long scheduledHardwareId = (Long) bundle.getJobDetail().getJobDataMap().get("scheduledHardwareId");
-        ScheduledHardwareJob result = new ScheduledHardwareJob(scheduledHardwareId,
+        Long timerId = (Long) bundle.getJobDetail().getJobDataMap().get("timerId");
+        ScheduledHardwareJob result = new ScheduledHardwareJob(timerId,
                 hardwareStateAdditionService,
                 hardwareQueryService,
-                scheduledHardwareDAO,
-                scheduledHardwareQueryService);
+                timerQueryService);
         return result;
     }
 }

@@ -1,10 +1,8 @@
 package urbanjungletech.hardwareservice.model.alert.action;
 
-import urbanjungletech.hardwareservice.model.ONOFF;
-
 public class HardwareStateChangeAlertAction extends AlertAction {
     private long hardwareId;
-    private ONOFF onoff;
+    private String state;
     private Long level;
 
     public HardwareStateChangeAlertAction() {
@@ -20,19 +18,19 @@ public class HardwareStateChangeAlertAction extends AlertAction {
     }
 
 
-    public ONOFF getOnoff() {
-        return onoff;
-    }
-
-    public void setOnoff(ONOFF onoff) {
-        this.onoff = onoff;
-    }
-
     public Long getLevel() {
         return level;
     }
 
     public void setLevel(Long level) {
         this.level = level;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

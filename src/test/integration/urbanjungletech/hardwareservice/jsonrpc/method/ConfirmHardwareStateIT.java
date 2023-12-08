@@ -14,7 +14,6 @@ import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
@@ -45,10 +44,7 @@ public class ConfirmHardwareStateIT {
 
     @Autowired
     private HardwareControllerRepository hardwareControllerRepository;
-    @BeforeEach
-    public void setup() throws Exception {
-        this.hardwareControllerRepository.deleteAll();
-    }
+
 
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234" and a Hardware with the port 1
@@ -82,7 +78,7 @@ public class ConfirmHardwareStateIT {
         params.put("port", "1");
         HardwareState hardwareState = new HardwareState();
         hardwareState.setLevel(2);
-        hardwareState.setState(ONOFF.OFF);
+        hardwareState.setState("off");
         params.put("hardwareState", hardwareState);
         jsonRpcMessage.setParams(params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
@@ -99,7 +95,7 @@ public class ConfirmHardwareStateIT {
                     if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
                         Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
                         HardwareState state = updatedHardware.getCurrentState();
-                        return state.getState() == ONOFF.OFF && state.getLevel() == 2;
+                        return state.getState() == "off" && state.getLevel() == 2;
                     }
                     return false;
                 });

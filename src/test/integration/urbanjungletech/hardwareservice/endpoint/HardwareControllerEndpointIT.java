@@ -274,21 +274,23 @@ public class HardwareControllerEndpointIT {
         hardware.setType("light");
         hardwareController.getHardware().add(hardware);
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
-        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
+        String responseJson = mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)
                         .contentType("application/json")
                         .content(hardwareControllerJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.hardware").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].type").value("light"))
-                .andExpect(jsonPath("$.hardware[0].id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].desiredState").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].desiredState.id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].desiredState.state").value("OFF"))
-                .andExpect(jsonPath("$.hardware[0].currentState").isNotEmpty())
-                .andExpect(jsonPath("$.hardware[0].currentState.id").isNumber())
-                .andExpect(jsonPath("$.hardware[0].currentState.state").value("OFF"))
-                .andReturn();
+                .andReturn().getResponse().getContentAsString();
+
+        HardwareController createdHardwareController = objectMapper.readValue(responseJson, HardwareController.class);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        assertEquals(createdHardware.getType(), hardware.getType());
+        assertNotNull(createdHardware.getId());
+        assertNotNull(createdHardware.getDesiredState());
+        assertNotNull(createdHardware.getDesiredState().getId());
+        assertNotNull(createdHardware.getDesiredState().getState());
+        assertNotNull(createdHardware.getCurrentState());
+        assertNotNull(createdHardware.getCurrentState().getId());
+        assertNotNull(createdHardware.getCurrentState().getState());
     }
 
     /**

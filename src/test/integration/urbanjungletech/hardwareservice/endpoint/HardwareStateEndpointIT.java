@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
@@ -90,7 +89,7 @@ public class HardwareStateEndpointIT {
     public void updateHardwareState() throws Exception {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
-        desiredState.setState(ONOFF.ON);
+        desiredState.setState("on");
         desiredState.setLevel(50);
 
         this.mockMvc.perform(put("/hardwarestate/" + desiredState.getId())

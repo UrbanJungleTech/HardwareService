@@ -31,7 +31,7 @@ public class TplinkActionServiceImpl implements TplinkActionService {
         String macAddress = hardware.getConfiguration().get("macAddress");
         String ipAddress = this.tpLinkQueryService.getIpAddressFromMac(macAddress);
         if (ipAddress != null) {
-            String payload = this.tpLinkCommandService.createStateCommand(hardware.getDesiredState().getState());
+            String payload = this.tpLinkCommandService.createStateCommand(hardware.getDesiredState().getState() == hardware.getOffState());
             byte[] encryptedPayload = this.tpLinkEncryptionService.encryptWithHeader(payload);
             try (Socket socket = new Socket(ipAddress, 9999)) {
                 OutputStream os = socket.getOutputStream();

@@ -4,46 +4,45 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.ScheduledHardwareDeleteException;
 import urbanjungletech.hardwareservice.exception.exception.ScheduledHardwareStartException;
-import urbanjungletech.hardwareservice.model.ScheduledHardware;
-import urbanjungletech.hardwareservice.service.query.ScheduledHardwareQueryService;
+import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.service.query.TimerQueryService;
 
 @Service
 public class LocalScheduledHardwareScheduleService implements ScheduledHardwareScheduleService {
 
     private final Logger logger = LoggerFactory.getLogger(LocalScheduledHardwareScheduleService.class);
     private final Scheduler scheduler;
-    private final ScheduledHardwareQueryService scheduledHardwareQueryService;
+    private TimerQueryService timerQueryService;
 
     public LocalScheduledHardwareScheduleService(@Qualifier("HardwareScheduler") Scheduler scheduler,
-                                                  ScheduledHardwareQueryService scheduledHardwareQueryService){
+                                                  TimerQueryService timerQueryService){
         this.scheduler = scheduler;
-        this.scheduledHardwareQueryService = scheduledHardwareQueryService;
+        this.timerQueryService = timerQueryService;
     }
 
     @Override
-    public void start(long scheduledHardwareId) {
+    public void start(long timerId) {
         try {
-            logger.info("Starting scheduled hardware with id {}", scheduledHardwareId);
-            ScheduledHardware scheduledHardware = this.scheduledHardwareQueryService.getById(scheduledHardwareId);
+            logger.info("Starting scheduled hardware with id {}", timerId);
+            Timer timer = this.timerQueryService.getTimer(timerId);
             JobDataMap jobDataMap = new JobDataMap();
-            jobDataMap.put("scheduledHardwareId", scheduledHardwareId);
+            jobDataMap.put("scheduledHardwareId", timerId);
             JobDetail details = JobBuilder.newJob(ScheduledHardwareJob.class)
-                    .withIdentity(String.valueOf(scheduledHardwareId))
+                    .withIdentity(String.valueOf(timerId))
                     .usingJobData(jobDataMap)
                     .build();
             CronTrigger trigger = TriggerBuilder.newTrigger()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(scheduledHardware.getCronString()))
-                    .withIdentity(String.valueOf(scheduledHardwareId))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(timer.getCronString()))
+                    .withIdentity(String.valueOf(timerId))
                     .build();
             this.scheduler.scheduleJob(details, trigger);
         }
         catch(Exception ex){
             ex.printStackTrace();
-            throw new ScheduledHardwareStartException(scheduledHardwareId, ex);
+            throw new ScheduledHardwareStartException(timerId, ex);
         }
     }
 

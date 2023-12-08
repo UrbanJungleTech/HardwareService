@@ -22,7 +22,7 @@ public class HardwareStateChangeActionExecutionService implements SpecificAction
     public void execute(HardwareStateChangeAlertAction action) {
         Hardware hardware = this.hardwareQueryService.getHardware(action.getHardwareId());
         hardware.getDesiredState().setLevel(action.getLevel());
-        hardware.getDesiredState().setState(action.getOnoff());
+        hardware.getDesiredState().setState(action.getState());
         this.hardwareStateAdditionService.update(hardware.getDesiredState().getId(), hardware.getDesiredState());
     }
 }

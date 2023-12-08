@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
@@ -130,7 +129,7 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         HardwareStateChangeAlertAction hardwareStateChangeAlertAction = new HardwareStateChangeAlertAction();
         hardwareStateChangeAlertAction.setHardwareId(1L);
-        hardwareStateChangeAlertAction.setOnoff(ONOFF.ON);
+        hardwareStateChangeAlertAction.setState("on");
         hardwareStateChangeAlertAction.setLevel(100L);
         alert.getActions().add(hardwareStateChangeAlertAction);
         String requestBody = this.objectMapper.writeValueAsString(alert);
@@ -147,7 +146,7 @@ public class AlertEndpointIT {
         assertEquals(responseAlert.getId(), responseAlert.getActions().get(0).getAlertId());
         HardwareStateChangeAlertAction responseHardwareStateChangeAlertAction = (HardwareStateChangeAlertAction) responseAlert.getActions().get(0);
         assertEquals(1L, responseHardwareStateChangeAlertAction.getHardwareId());
-        assertEquals(hardwareStateChangeAlertAction.getOnoff(), responseHardwareStateChangeAlertAction.getOnoff());
+        assertEquals(hardwareStateChangeAlertAction.getState(), responseHardwareStateChangeAlertAction.getState());
         assertEquals(hardwareStateChangeAlertAction.getLevel(), responseHardwareStateChangeAlertAction.getLevel());
     }
 
@@ -226,7 +225,7 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         HardwareStateChangeAlertCondition hardwareStateChangeAlertCondition = new HardwareStateChangeAlertCondition();
         hardwareStateChangeAlertCondition.setHardwareId(1L);
-        hardwareStateChangeAlertCondition.setState(ONOFF.ON);
+        hardwareStateChangeAlertCondition.setState("on");
         alert.getConditions().add(hardwareStateChangeAlertCondition);
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)

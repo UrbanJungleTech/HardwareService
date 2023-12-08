@@ -225,7 +225,7 @@ public class HardwareEndpointIT {
         HardwareState updatedState = createdHardware.getDesiredState();
 
         createdHardware.getDesiredState().setLevel(10);
-        createdHardware.getDesiredState().setState(ONOFF.ON);
+        createdHardware.getDesiredState().setState("on");
 
 
         String updatedHardwareJson = objectMapper.writeValueAsString(createdHardware);
@@ -332,20 +332,23 @@ public class HardwareEndpointIT {
 
 
         Timer timer = new Timer();
-        timer.setOnLevel(100);
-        timer.setOnCronString("0 0 0 1 1 ? 2099");
-        timer.setOffCronString("1 0 0 1 1 ? 2099");
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
         createdHardware.getTimers().add(timer);
         String hardwareJson = objectMapper.writeValueAsString(createdHardware);
 
-        mockMvc.perform(put("/hardware/" + createdHardware.getId())
+        String responseJson = mockMvc.perform(put("/hardware/" + createdHardware.getId())
                         .content(hardwareJson)
                         .contentType("application/json")
                         .content(hardwareJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.timers[0].onLevel").value(timer.getOnLevel()))
-                .andExpect(jsonPath("$.timers[0].onCronString").value(timer.getOnCronString()))
-                .andExpect(jsonPath("$.timers[0].offCronString").value(timer.getOffCronString()));
+                .andReturn().getResponse().getContentAsString();
+        Hardware updatedHardware = objectMapper.readValue(responseJson, Hardware.class);
+        assertEquals(1, updatedHardware.getTimers().size());
+        Timer addedTimer = updatedHardware.getTimers().get(0);
+        assertEquals(timer.getCronString(), addedTimer.getCronString());
+        assertEquals(timer.getLevel(), addedTimer.getLevel());
+        assertEquals(timer.getState(), addedTimer.getState());
     }
 
 
@@ -362,11 +365,15 @@ public class HardwareEndpointIT {
     public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
         Hardware hardware = new Hardware();
         hardware.setPort("1");
-        Timer timer = new Timer();
-        timer.setOnLevel(100);
-        timer.setOnCronString("0/3 * * * * ?");
-        timer.setOffCronString("0/5 * * * * ?");
-        hardware.getTimers().add(timer);
+        Timer timer1 = new Timer();
+        timer1.setLevel(100);
+        timer1.setCronString("0/3 * * * * ?");
+        hardware.getTimers().add(timer1);
+        Timer timer2 = new Timer();
+        timer2.setLevel(0);
+        timer2.setState("off");
+        timer2.setCronString("0/2 * * * * ?");
+        hardware.getTimers().add(timer2);
         HardwareController hardwareController = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
         hardware = hardwareController.getHardware().get(0);
 
@@ -379,9 +386,9 @@ public class HardwareEndpointIT {
         int offCount = 0;
         for (JsonRpcMessage deliveredState : deliveredStates) {
             HardwareState state = objectMapper.convertValue(deliveredState.getParams().get("desiredState"), HardwareState.class);
-            if (state.getState().equals(ONOFF.ON)) {
+            if (state.getState().equals("on")) {
                 onCount++;
-            } else if (state.getState().equals(ONOFF.OFF)) {
+            } else if (state.getState().equals("off")) {
                 offCount++;
             }
         }
@@ -405,7 +412,7 @@ public class HardwareEndpointIT {
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(ONOFF.ON);
+        hardwareState.setState("on");
         hardwareState.setLevel(10);
         String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
 
@@ -436,7 +443,7 @@ public class HardwareEndpointIT {
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState hardwareState = new HardwareState();
-        hardwareState.setState(ONOFF.ON);
+        hardwareState.setState("on");
         String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
 
         mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/desiredstate")

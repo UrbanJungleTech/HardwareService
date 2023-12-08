@@ -9,11 +9,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -25,7 +28,7 @@ public class RegisterHardwareControllerIT {
     @Autowired
     private MqttTestService mqttTestService;
     @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
+    private HardwareControllerTestService hardwareControllerTestService;
 
     /**
      * Given a HardwareController object with the serial number 1234
@@ -54,17 +57,13 @@ public class RegisterHardwareControllerIT {
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("RegisterHardwareController", params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
         this.mqttTestService.sendMessage(mqttPayload);
-        boolean isConfirmed = false;
-        long timeoutMillis = 3000;
-        long sleepMillis = 500;
-        long timeWaitedMillis = 0;
-        while (!isConfirmed && timeWaitedMillis < timeoutMillis) {
-            Thread.sleep(sleepMillis);
-            timeWaitedMillis += sleepMillis;
-            if(this.hardwareControllerRepository.findBySerialNumber("1234") != null)
-                isConfirmed = true;
-        }
-        assertTrue(isConfirmed);
+
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    assertTrue(this.hardwareControllerTestService.g
+                });
+
     }
 
 }

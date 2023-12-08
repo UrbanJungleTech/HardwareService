@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
-import urbanjungletech.hardwareservice.builder.HardwareStateBuilder;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
@@ -29,7 +28,6 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
 
     private final HardwareDAO hardwareDAO;
     private final TimerAdditionService timerAdditionService;
-    private final HardwareStateBuilder hardwareStateBuilder;
     private final HardwareConverter hardwareConverter;
     private final Logger logger = LoggerFactory.getLogger(HardwareAdditionServiceImpl.class);
     private final ObjectLoggerService objectLoggerService;
@@ -39,7 +37,6 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
-                                       HardwareStateBuilder hardwareStateBuilder,
                                        HardwareConverter hardwareConverter,
                                        ObjectLoggerService objectLoggerService,
                                        HardwareStateConverter hardwareStateConverter,
@@ -47,7 +44,6 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
                                        HardwareStateAdditionService hardwareStateAdditionService) {
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
-        this.hardwareStateBuilder = hardwareStateBuilder;
         this.hardwareConverter = hardwareConverter;
         this.objectLoggerService = objectLoggerService;
         this.hardwareStateConverter = hardwareStateConverter;
@@ -77,13 +73,13 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
         this.objectLoggerService.logInfo("Creating hardware", hardware);
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
         if (hardware.getDesiredState() == null) {
-            HardwareState hardwareState = this.hardwareStateBuilder.getOffHardwareState();
+            HardwareState hardwareState = new HardwareState(hardware.getOffState(), 0);
             hardware.setDesiredState(hardwareState);
         }
         hardware.getDesiredState().setHardwareId(result.getId());
         this.hardwareStateAdditionService.create(hardware.getDesiredState(), HardwareStateType.DESIRED);
         if (hardware.getCurrentState() == null) {
-            HardwareState hardwareState = this.hardwareStateBuilder.getOffHardwareState();
+            HardwareState hardwareState = new HardwareState(hardware.getOffState(), 0);
             hardware.setCurrentState(hardwareState);
         }
         hardware.getCurrentState().setHardwareId(result.getId());

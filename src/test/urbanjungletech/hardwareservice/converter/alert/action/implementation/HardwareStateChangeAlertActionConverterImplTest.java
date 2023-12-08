@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.entity.alert.action.HardwareStateChangeAlertActionEntity;
-import urbanjungletech.hardwareservice.model.ONOFF;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,13 +19,13 @@ public class HardwareStateChangeAlertActionConverterImplTest {
     public void testToModel() {
         HardwareStateChangeAlertActionEntity actionEntity = new HardwareStateChangeAlertActionEntity();
         actionEntity.setHardwareId(123L);
-        actionEntity.setOnoff(ONOFF.OFF);
+        actionEntity.setState("off");
         actionEntity.setLevel(5L);
 
         HardwareStateChangeAlertAction result = converter.toModel(actionEntity);
 
         assertEquals(actionEntity.getHardwareId(), result.getHardwareId());
-        assertEquals(actionEntity.getOnoff(), result.getOnoff());
+        assertEquals(actionEntity.getState(), result.getState());
         assertEquals(actionEntity.getLevel(), result.getLevel());
     }
 
@@ -35,13 +34,13 @@ public class HardwareStateChangeAlertActionConverterImplTest {
         HardwareStateChangeAlertActionEntity entity = new HardwareStateChangeAlertActionEntity();
         HardwareStateChangeAlertAction action = new HardwareStateChangeAlertAction();
         action.setHardwareId(123L);
-        action.setOnoff(ONOFF.ON);
+        action.setState("on");
         action.setLevel(5L);
 
         converter.fillEntity(entity, action);
 
         assertEquals(action.getHardwareId(), entity.getHardwareId());
-        assertEquals(action.getOnoff(), entity.getOnoff());
+        assertEquals(action.getState(), entity.getState());
         assertEquals(action.getLevel(), entity.getLevel());
     }
 
@@ -53,7 +52,7 @@ public class HardwareStateChangeAlertActionConverterImplTest {
 
         assertNotNull(result);
         assertNull(result.getHardwareId());
-        assertNull(result.getOnoff());
+        assertNull(result.getState());
         assertNull(result.getLevel());
     }
 }

@@ -63,9 +63,8 @@ public class TimerEndpointIT {
         HardwareController hardwareController = hardwareTestService.createBasicHardware();
         Hardware hardware = hardwareController.getHardware().get(0);
         Timer timer = new Timer();
-        timer.setOnLevel(100);
-        timer.setOnCronString("0 0 0 1 1 ? 2099");
-        timer.setOffCronString("1 0 0 1 1 ? 2099");
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
         hardware.getTimers().add(timer);
         String timerJson = objectMapper.writeValueAsString(timer);
         MvcResult timerResult = this.mockMvc.perform(post("/hardware/" + hardware.getId() + "/timer")
@@ -129,11 +128,9 @@ public class TimerEndpointIT {
     @Test
     public void testGetAllTimers() throws Exception {
         Timer timer1 = new Timer();
-        timer1.setOnCronString("0 0 0 1 1 ? 2099");
-        timer1.setOffCronString("1 0 0 1 1 ? 2099");
+        timer1.setCronString("0 0 0 1 1 ? 2099");
         Timer timer2 = new Timer();
-        timer2.setOnCronString("0 0 0 1 1 ? 2099");
-        timer2.setOffCronString("1 0 0 1 1 ? 2099");
+        timer2.setCronString("0 0 0 1 1 ? 2099");
 
         HardwareController hardwareController = hardwareTestService.createBasicHardwareWithTimers(List.of(timer1, timer2));
         Timer createdTimer1 = hardwareController.getHardware().get(0).getTimers().get(0);
@@ -160,9 +157,8 @@ public class TimerEndpointIT {
         Hardware hardware = hardwareController.getHardware().get(0);
         Timer updatedTimer = hardware.getTimers().get(0);
         long timerId = updatedTimer.getId();
-        updatedTimer.setOnLevel(50);
-        updatedTimer.setOnCronString("0 0 0 1 1 ? 2011");
-        updatedTimer.setOffCronString("1 0 0 1 1 ? 2011");
+        updatedTimer.setLevel(50);
+        updatedTimer.setCronString("0 0 0 1 1 ? 2011");
         String timerJson = objectMapper.writeValueAsString(updatedTimer);
         this.mockMvc.perform(put("/timer/" + timerId)
                         .contentType("application/json")
@@ -170,15 +166,13 @@ public class TimerEndpointIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(timerId))
                 .andExpect(jsonPath("$.onLevel").value(50))
-                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
-                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
+                .andExpect(jsonPath("$.cronString").value(updatedTimer.getCronString()));
 
         this.mockMvc.perform(get("/timer/" + timerId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(timerId))
-                .andExpect(jsonPath("$.onLevel").value(updatedTimer.getOnLevel()))
-                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getOnCronString()))
-                .andExpect(jsonPath("$.offCronString").value(updatedTimer.getOffCronString()));
+                .andExpect(jsonPath("$.onLevel").value(updatedTimer.getLevel()))
+                .andExpect(jsonPath("$.onCronString").value(updatedTimer.getCronString()));
     }
 
     /**

@@ -32,9 +32,8 @@ public class HardwareTestService {
         hardware.setName("hardware1");
         hardware.setType("temperature");
         Timer timer = new Timer();
-        timer.setOffCronString("0 0 0 1 1 ? 2099");
-        timer.setOnCronString("1 0 0 1 1 ? 2099");
-        timer.setOnLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        timer.setLevel(100);
         hardware.getTimers().add(timer);
         HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
         return result;
