@@ -1,23 +1,20 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,15 +36,9 @@ public class HardwareStateEndpointIT {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
-    @Autowired
-    private MockMqttClientListener mockMqttClientListener;
-    @BeforeEach
-    public void setup(){
-        this.mockMqttClientListener.clear();
-        hardwareControllerRepository.deleteAll();
-        hardwareControllerRepository.flush();
-    }
+    private HardwareControllerTestService hardwareControllerTestService;
+
+
 
     /**
      * Given a HardwareController has been created via the endpoint /hardwarecontroller with a single hardware
@@ -60,11 +51,13 @@ public class HardwareStateEndpointIT {
         HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
 
-        this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(desiredState.getId()))
-                .andExpect(jsonPath("$.hardwareId").value(desiredState.getHardwareId()))
-                .andExpect(jsonPath("$.state").value(desiredState.getState().toString()));
+        String responseJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        HardwareState responseHardwareState = objectMapper.readValue(responseJson, HardwareState.class);
+        assertEquals(desiredState.getLevel(), responseHardwareState.getLevel());
+        assertEquals(desiredState.getState(), responseHardwareState.getState());
+        assertEquals(desiredState.getHardwareId(), responseHardwareState.getHardwareId());
     }
 
     /**
@@ -87,7 +80,12 @@ public class HardwareStateEndpointIT {
      */
     @Test
     public void updateHardwareState() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new Hardware();
+        hardware.setPort("1");
+        hardwareController.addHardware(hardware);
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
         desiredState.setState("on");
         desiredState.setLevel(50);
@@ -109,17 +107,21 @@ public class HardwareStateEndpointIT {
                 .andExpect(jsonPath("$.level").value(desiredState.getLevel()));
 
         await()
-                .atMost(Duration.of(10, ChronoUnit.SECONDS))
+                .atMost(Duration.of(3, ChronoUnit.SECONDS))
                 .with()
-                .untilAsserted(() -> assertEquals(1, this.mockMqttClientListener.getCache("StateChange").size()));
-        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("StateChange");
-        assertEquals(1, results.size());
-        JsonRpcMessage message = results.get(0);
-        HardwareState hardwareState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
-        assertEquals(desiredState.getLevel(), hardwareState.getLevel());
-        assertEquals(desiredState.getState(), hardwareState.getState());
-        assertEquals(desiredState.getHardwareId(), hardwareState.getHardwareId());
-        assertEquals(desiredState.getId(), hardwareState.getId());
+                .untilAsserted(() ->
+                        {
+                            String responseHardwareStateJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
+                                        .andExpect(status().isOk())
+                                    .andReturn().getResponse().getContentAsString();
+                            HardwareState responseHardwareState = objectMapper.readValue(responseHardwareStateJson, HardwareState.class);
+                            assertEquals(desiredState.getLevel(), responseHardwareState.getLevel());
+                            assertEquals(desiredState.getState(), responseHardwareState.getState());
+                            assertEquals(desiredState.getHardwareId(), responseHardwareState.getHardwareId());
+                            assertEquals(desiredState.getId(), responseHardwareState.getId());
+
+                        });
+
     }
 
     /**

@@ -36,8 +36,10 @@ public class TimerDAOImpl implements TimerDAO {
             return this.exceptionService.createNotFoundException(HardwareEntity.class, timer.getHardwareId());
         });
         TimerEntity timerEntity = new TimerEntity();
-        timerEntity = this.timerRepository.save(timerEntity);
+        this.timerConverter.fillEntity(timerEntity, timer);
         timerEntity.setHardware(hardwareEntity);
+        timerEntity = this.timerRepository.save(timerEntity);
+
 
         hardwareEntity.getTimers().add(timerEntity);
         timerEntity = this.timerRepository.save(timerEntity);

@@ -18,6 +18,7 @@ public class TimerConverterImpl implements TimerConverter {
         result.setHardwareId(timerEntity.getHardware().getId());
         result.setCronString(timerEntity.getCronString());
         result.setSkipNext(timerEntity.isSkipNext());
+        result.setLevel(timerEntity.getLevel());
         return result;
     }
 
@@ -30,5 +31,6 @@ public class TimerConverterImpl implements TimerConverter {
     public void fillEntity(TimerEntity timerEntity, Timer timer) {
         timerEntity.setCronString(timer.getCronString());
         timerEntity.setSkipNext(timer.isSkipNext());
+        timerEntity.setLevel(timer.getLevel());
     }
 }

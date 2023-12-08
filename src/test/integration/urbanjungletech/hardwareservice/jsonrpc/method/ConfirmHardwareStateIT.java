@@ -15,6 +15,7 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
@@ -40,10 +41,7 @@ public class ConfirmHardwareStateIT {
     private MqttTestService mqttTestService;
 
     @Autowired
-    private HardwareTestService hardwareTestService;
-
-    @Autowired
-    private HardwareControllerRepository hardwareControllerRepository;
+    private HardwareControllerTestService hardwareControllerTestService;
 
 
     /**
@@ -67,8 +65,14 @@ public class ConfirmHardwareStateIT {
      */
     @Test
     public void confirmHardwareState() throws Exception {
-        HardwareController controller = this.hardwareTestService.createBasicHardware();
-        Hardware hardware = controller.getHardware().get(0);
+        HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
+        controller.getConfiguration().put("serialNumber", "1234");
+        Hardware hardware = new Hardware();
+        controller.getHardware().add(hardware);
+        hardware.setPort("1");
+        controller = this.hardwareControllerTestService.postHardwareController(controller);
+
+        Hardware responseHardware = controller.getHardware().get(0);
 
         //generate json payload for updating state
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage();
@@ -87,15 +91,15 @@ public class ConfirmHardwareStateIT {
         this.mqttTestService.sendMessage(mqttPayload);
         //wait for the current state to be updated
         await()
-                .atMost(Duration.of(10, java.time.temporal.ChronoUnit.SECONDS))
+                .atMost(Duration.of(3, java.time.temporal.ChronoUnit.SECONDS))
                 .with()
                 .until(() -> {
-                    MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + hardware.getId()))
+                    MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + responseHardware.getId()))
                             .andReturn();
                     if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
                         Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
                         HardwareState state = updatedHardware.getCurrentState();
-                        return state.getState() == "off" && state.getLevel() == 2;
+                        return state.getState().equals("off") && state.getLevel() == 2;
                     }
                     return false;
                 });

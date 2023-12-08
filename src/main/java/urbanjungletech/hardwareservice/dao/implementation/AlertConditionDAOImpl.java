@@ -1,13 +1,16 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.dao.AlertConditionDAO;
+import urbanjungletech.hardwareservice.entity.alert.AlertConditionsEntity;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
 import urbanjungletech.hardwareservice.entity.alert.condition.AlertConditionEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.repository.AlertConditionRepository;
+import urbanjungletech.hardwareservice.repository.AlertConditionsRepository;
 import urbanjungletech.hardwareservice.repository.AlertRepository;
 
 @Service
@@ -17,15 +20,18 @@ public class AlertConditionDAOImpl implements AlertConditionDAO {
     private final AlertConditionConverter alertConditionConverter;
     private final AlertRepository alertRepository;
     private final ExceptionService exceptionService;
+    private final AlertConditionsRepository alertConditionsRepository;
 
     public AlertConditionDAOImpl(AlertConditionRepository alertConditionRepository,
                                  AlertConditionConverter alertConditionConverter,
                                  AlertRepository alertRepository,
-                                 ExceptionService exceptionService) {
+                                 ExceptionService exceptionService,
+                                 AlertConditionsRepository alertConditionsRepository) {
         this.alertConditionRepository = alertConditionRepository;
         this.alertConditionConverter = alertConditionConverter;
         this.alertRepository = alertRepository;
         this.exceptionService = exceptionService;
+        this.alertConditionsRepository = alertConditionsRepository;
     }
     @Override
     public AlertConditionEntity create(AlertCondition alertCondition) {
@@ -33,11 +39,52 @@ public class AlertConditionDAOImpl implements AlertConditionDAO {
         AlertEntity alertEntity = this.alertRepository.findById(alertCondition.getAlertId()).orElseThrow(
                 () -> this.exceptionService.createNotFoundException(AlertEntity.class, alertCondition.getAlertId())
         );
+        AlertConditionsEntity alertConditionsEntity = this.alertConditionsRepository.findById(alertEntity.getConditions().getId()).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionsEntity.class, alertEntity.getConditions().getId())
+        );
         alertConditionEntity.setAlert(alertEntity);
         AlertConditionEntity result = this.alertConditionRepository.save(alertConditionEntity);
 
-        alertEntity.getConditions().add(alertConditionEntity);
+        alertEntity.getConditions().getConditions().add(result);
         this.alertRepository.save(alertEntity);
+
+        if(alertCondition.getActive() == null || alertCondition.getActive() == false){
+            alertConditionsEntity.getInactiveConditions().add(result);
+        }
+        else {
+            alertConditionsEntity.getActiveConditions().add(result);
+        }
+        this.alertConditionsRepository.save(alertConditionsEntity);
         return result;
+    }
+
+    @Override
+    public AlertConditionEntity update(AlertCondition condition) {
+        AlertConditionEntity alertConditionEntity = this.alertConditionRepository.findById(condition.getId()).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionEntity.class, condition.getId())
+        );
+        this.alertConditionConverter.fillEntity(alertConditionEntity, condition);
+        AlertConditionEntity result = this.alertConditionRepository.save(alertConditionEntity);
+        AlertConditionsEntity alertConditionsEntity = this.alertConditionsRepository.findById(alertConditionEntity.getAlert().getConditions().getId()).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionsEntity.class, alertConditionEntity.getAlert().getConditions().getId())
+        );
+        if(alertConditionEntity.getActive() == null || alertConditionEntity.getActive() == false){
+            alertConditionsEntity.getActiveConditions().remove(alertConditionEntity);
+            alertConditionsEntity.getInactiveConditions().add(alertConditionEntity);
+        }
+        else {
+            alertConditionsEntity.getInactiveConditions().remove(alertConditionEntity);
+            alertConditionsEntity.getActiveConditions().add(alertConditionEntity);
+        }
+        this.alertConditionsRepository.save(alertConditionsEntity);
+        return result;
+    }
+
+    @Override
+    public void delete(long id) {
+        AlertConditionEntity alertConditionEntity = this.alertConditionRepository.findById(id).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(AlertConditionEntity.class, id)
+        );
+        this.alertConditionRepository.delete(alertConditionEntity);
     }
 }

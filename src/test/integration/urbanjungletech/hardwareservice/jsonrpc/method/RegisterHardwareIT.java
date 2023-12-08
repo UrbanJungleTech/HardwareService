@@ -1,27 +1,27 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.HardwareRepository;
+import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +33,6 @@ public class RegisterHardwareIT {
 
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
-    HardwareRepository hardwareRepository;
 
     @Autowired
     MqttTestService mqttTestService;
@@ -45,13 +43,8 @@ public class RegisterHardwareIT {
     @Autowired
     MqttClient mqttClient;
     @Autowired
-    HardwareControllerRepository hardwareControllerRepository;
+    HardwareControllerTestService hardwareControllerTestService;
 
-    @BeforeEach
-    public void setUp() {
-        this.hardwareRepository.deleteAll();
-        this.hardwareControllerRepository.deleteAll();
-    }
 
     /**
      * Given a HardwareController has been created via a POST call to /hardwarecontroller/ with the serial number "1234"
@@ -73,30 +66,32 @@ public class RegisterHardwareIT {
      */
     @Test
     public void testRegisterHardware() throws Exception {
-        HardwareController hardwareControllerResponse = this.hardwareTestService.createBasicHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        hardwareController.getConfiguration().put("serialNumber", "1234");
+        HardwareController hardwareControllerResponse = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
         Hardware hardware = new Hardware();
         hardware.setPort("1");
-        hardware.setType("light");
+        hardware.getConfiguration().put("serialNumber", "1234");
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState("on");
+        hardwareState.setLevel(100);
+        hardware.setCurrentState(hardwareState);
 
-        String hardwareJson = objectMapper.writeValueAsString(hardware);
 
-        this.mqttTestService.sendMessage(hardwareJson);
+        RegisterHardwareMessage registerHardwareMessage = new RegisterHardwareMessage();
+        registerHardwareMessage.getParams().put("hardware", hardware);
 
-        boolean isHardwareCreated = false;
-        long timeoutMillis = 30000;
-        long sleepMillis = 500;
-        long timeWaitedMillis = 0;
-        while (!isHardwareCreated && timeWaitedMillis < timeoutMillis) {
-            Thread.sleep(sleepMillis);
-            timeWaitedMillis += sleepMillis;
-            MvcResult hardwareResponse = mockMvc.perform(get("/hardwarecontroller/" + hardwareControllerResponse.getId() + "/hardware"))
-                    .andReturn();
-            if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
-                List<Hardware> hardwareList = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), List.class);
-                isHardwareCreated = !hardwareList.isEmpty();
-            }
-        }
-        assertTrue(isHardwareCreated);
+        String messageJson = objectMapper.writeValueAsString(registerHardwareMessage);
+
+        this.mqttTestService.sendMessage(messageJson);
+
+        await().atMost(10, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+            HardwareController retrievedHardwareController = this.hardwareControllerTestService.findHardwareControllerById(hardwareControllerResponse.getId());
+            assertNotNull(retrievedHardwareController);
+            List<Hardware> hardwareList = retrievedHardwareController.getHardware();
+            assertTrue(hardwareList.size() >= 1);
+        });
     }
 }

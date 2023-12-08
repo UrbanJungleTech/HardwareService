@@ -8,9 +8,11 @@ import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertCo
 import urbanjungletech.hardwareservice.converter.credentials.SpecificCredentialsConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
+import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
-import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
+import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
+import urbanjungletech.hardwareservice.service.alert.condition.service.SpecificConditionTriggerService;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
@@ -37,6 +39,14 @@ public class ActionMappingsConfig {
     sensorReadingRouterServices(List<SpecificSensorReadingRouterService> routerServices,
                                 MapGeneratorService mapGeneratorService){
         Map<Class <? extends SensorReadingRouter>, SpecificSensorReadingRouterService> result = mapGeneratorService.generateMap(routerServices, SpecificSensorReadingRouterService.class);
+        return result;
+    }
+
+    @Bean
+    public Map<Class <? extends AlertCondition>, SpecificConditionTriggerService>
+            conditionTriggerServiceMap(List<SpecificConditionTriggerService> routerServices,
+                                MapGeneratorService mapGeneratorService){
+        Map<Class <? extends AlertCondition>, SpecificConditionTriggerService> result = mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
         return result;
     }
 

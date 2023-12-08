@@ -14,14 +14,13 @@ public class AlertEntity {
     private Long id;
     private String name;
     private String description;
-    @OneToMany(mappedBy = "alert")
+    @OneToMany(mappedBy = "alert", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AlertActionEntity> actions;
-    @OneToMany(mappedBy = "alert")
-    private List<AlertConditionEntity> conditions;
+    @OneToOne(mappedBy = "alert", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private AlertConditionsEntity conditions;
 
     public AlertEntity() {
         this.actions = new ArrayList<>();
-        this.conditions = new ArrayList<>();
     }
 
     private Double threshold;
@@ -65,11 +64,11 @@ public class AlertEntity {
         this.description = description;
     }
 
-    public List<AlertConditionEntity> getConditions() {
+    public AlertConditionsEntity getConditions() {
         return conditions;
     }
 
-    public void setConditions(List<AlertConditionEntity> conditions) {
+    public void setConditions(AlertConditionsEntity conditions) {
         this.conditions = conditions;
     }
 }

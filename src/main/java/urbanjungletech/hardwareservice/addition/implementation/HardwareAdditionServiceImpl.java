@@ -76,11 +76,17 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
             HardwareState hardwareState = new HardwareState(hardware.getOffState(), 0);
             hardware.setDesiredState(hardwareState);
         }
+        if(hardware.getDesiredState().getState() == null){
+            hardware.getDesiredState().setState(hardware.getOffState());
+        }
         hardware.getDesiredState().setHardwareId(result.getId());
         this.hardwareStateAdditionService.create(hardware.getDesiredState(), HardwareStateType.DESIRED);
         if (hardware.getCurrentState() == null) {
             HardwareState hardwareState = new HardwareState(hardware.getOffState(), 0);
             hardware.setCurrentState(hardwareState);
+        }
+        if(hardware.getCurrentState().getState() == null){
+            hardware.getCurrentState().setState(hardware.getOffState());
         }
         hardware.getCurrentState().setHardwareId(result.getId());
         this.hardwareStateAdditionService.create(hardware.getCurrentState(), HardwareStateType.CURRENT);

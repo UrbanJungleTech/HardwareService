@@ -1,8 +1,15 @@
 package urbanjungletech.hardwareservice.sensorreadingrouter;
 
 import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.storage.queue.QueueClient;
+import com.azure.storage.queue.QueueClientBuilder;
+import com.azure.storage.queue.models.QueueMessageItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,14 +17,19 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
+import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
 import urbanjungletech.hardwareservice.services.config.AzureProperties;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
 
+import javax.sql.DataSource;
+import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,6 +51,7 @@ public class SensorReadingRouterIT {
     @Autowired
     private AzureProperties azureProperties;
 
+
     /**
      * Given a valid ScheduledSensorReading with a DatabaseSensorReadingRouter in its list of routers
      * When the ScheduledSensorReading is created via a POST to /scheduledreading
@@ -51,13 +64,27 @@ public class SensorReadingRouterIT {
 
         Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
 
-        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         DatabaseSensorReadingRouter databaseSensorReadingRouter = new DatabaseSensorReadingRouter();
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
+        credentials.setUsername("testUsername");
+        credentials.setPassword("testPassword");
+
+        //create the datasource now to test later
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:h2:mem:testdb");
+        config.setUsername(credentials.getUsername());
+        config.setPassword(credentials.getPassword());
+        DataSource datasource = new HikariDataSource(config);
+
+
+        databaseSensorReadingRouter.setCredentials(credentials);
         databaseSensorReadingRouter.setTableName("testTable");
         databaseSensorReadingRouter.setValueColumn("testValueColumn");
         databaseSensorReadingRouter.setTimestampColumn("testTimestampColumn");
 
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.getRouters().add(databaseSensorReadingRouter);
+        scheduledReading.setCronString("0/1 * * * * ?");
 
         String scheduledReadingResponseString = this.mockMvc.perform(post("/sensor/" + sensor.getId() + "/scheduledreading")
                         .contentType("application/json")
@@ -121,6 +148,14 @@ public class SensorReadingRouterIT {
      */
     @Test
     void createScheduledReadingWithAzureQueueSensorReadingRouter() throws Exception {
+
+        //make sure we start with a clean queue.
+        QueueClient queueClient = new QueueClientBuilder()
+                .endpoint(azureProperties.getStorageQueue().getQueueName())
+                .sasToken(azureProperties.getStorageQueue().getKey())
+                .buildClient();
+        queueClient.clearMessages();
+
         Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
@@ -128,8 +163,8 @@ public class SensorReadingRouterIT {
         AzureQueueSensorReadingRouter azureQueueSensorReadingRouter = new AzureQueueSensorReadingRouter();
         azureQueueSensorReadingRouter.setQueueName("testQueueName");
         TokenCredentials credentials = new TokenCredentials();
-        credentials.setUrl(azureProperties.getQueueName());
-        credentials.setTokenValue(azureProperties.getKey());
+        credentials.setUrl(azureProperties.getStorageQueue().getQueueName());
+        credentials.setTokenValue(azureProperties.getStorageQueue().getKey());
         azureQueueSensorReadingRouter.setCredentials(credentials);
         scheduledReading.getRouters().add(azureQueueSensorReadingRouter);
 
@@ -143,9 +178,6 @@ public class SensorReadingRouterIT {
         AzureQueueSensorReadingRouter azureQueueSensorReadingRouterResponse = (AzureQueueSensorReadingRouter) scheduledReadingResponse.getRouters().get(0);
         assertNotNull(azureQueueSensorReadingRouterResponse.getCredentials());
 
-        assertSame(azureQueueSensorReadingRouterResponse.getClass(), AzureQueueSensorReadingRouter.class);
-        Credentials returnedCredentials = azureQueueSensorReadingRouterResponse.getCredentials();
-        assertSame(returnedCredentials.getClass(), TokenCredentials.class);
         TokenCredentials returnedTokenCredentials = (TokenCredentials) azureQueueSensorReadingRouterResponse.getCredentials();
 
         assertEquals(azureQueueSensorReadingRouter.getType(), azureQueueSensorReadingRouterResponse.getType());
@@ -156,6 +188,14 @@ public class SensorReadingRouterIT {
         assertEquals(credentials.getTokenValue(), secretClient.getSecret(returnedTokenCredentials.getTokenValue()).getValue());
         assertEquals(credentials.getUrl(), secretClient.getSecret(returnedTokenCredentials.getUrl()).getValue());
 
-        Thread.sleep(10000);
+
+        //Check that the message is sent to the queue and check the contents
+        await().atMost(10, TimeUnit.SECONDS).until(() -> queueClient.peekMessage() != null);
+
+        QueueMessageItem queueMessageItem = queueClient.receiveMessage();
+        String messageBody = queueMessageItem.getBody().toString();
+        SensorReading sensorReading = objectMapper.readValue(messageBody, SensorReading.class);
+        assertEquals(sensorReading.getSensorId(), sensor.getId());
+        assertEquals(1.0, sensorReading.getReading());
     }
 }

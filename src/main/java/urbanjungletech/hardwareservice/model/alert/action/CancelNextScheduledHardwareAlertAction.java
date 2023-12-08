@@ -4,7 +4,7 @@ public class CancelNextScheduledHardwareAlertAction extends AlertAction{
     private Long scheduledHardwareId;
 
     public CancelNextScheduledHardwareAlertAction(String type) {
-        super("cancelNextScheduledHardware");
+        super();
     }
 
     public Long getScheduledHardwareId() {

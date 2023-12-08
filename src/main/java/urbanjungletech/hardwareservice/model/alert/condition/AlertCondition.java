@@ -14,6 +14,21 @@ public class AlertCondition {
     protected Long id;
     protected Long alertId;
     protected String type;
+    protected Boolean active;
+
+    public AlertCondition() {
+        this.active = false;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+
 
     public AlertCondition(String type) {
         this.type = type;
@@ -41,5 +56,25 @@ public class AlertCondition {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AlertCondition)) return false;
+
+        AlertCondition that = (AlertCondition) o;
+
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
+        if (getAlertId() != null ? !getAlertId().equals(that.getAlertId()) : that.getAlertId() != null) return false;
+        return getType() != null ? getType().equals(that.getType()) : that.getType() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 0;
+        result += 31 * result + (getType() != null ? getType().hashCode() : 0);
+        result += 31 * result + (getId() != null ? getId().hashCode() : 0);
+        return result;
     }
 }

@@ -1,17 +1,17 @@
 package urbanjungletech.hardwareservice.event.sensorreading;
 
 public class SensorReadingCreateEvent {
-    private Long id;
+    private Long sensorId;
 
     public SensorReadingCreateEvent(Long sensorReadingId) {
-        this.id = sensorReadingId;
+        this.sensorId = sensorReadingId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getSensorId() {
+        return sensorId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSensorId(Long sensorId) {
+        this.sensorId = sensorId;
     }
 }

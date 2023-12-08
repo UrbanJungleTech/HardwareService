@@ -1,10 +1,13 @@
-package urbanjungletech.hardwareservice.converter.alert;
+package urbanjungletech.hardwareservice.converter.alert.implementation;
 
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.converter.alert.AlertConditionsConverter;
+import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.converter.alert.action.AlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
 import urbanjungletech.hardwareservice.model.alert.Alert;
+import urbanjungletech.hardwareservice.model.alert.AlertConditions;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 
@@ -16,12 +19,12 @@ import java.util.stream.Collectors;
 public class AlertConverterImpl implements AlertConverter {
 
     private final AlertActionConverter alertActionConverter;
-    private final AlertConditionConverter alertConditionConverter;
+    private AlertConditionsConverter alertConditionsConverter;
 
     public AlertConverterImpl(AlertActionConverter alertActionConverter,
-                              AlertConditionConverter alertConditionConverter){
+                              AlertConditionsConverter alertConditionsConverter){
         this.alertActionConverter = alertActionConverter;
-        this.alertConditionConverter = alertConditionConverter;
+        this.alertConditionsConverter = alertConditionsConverter;
     }
     @Override
     public Alert toModel(AlertEntity alertEntity) {
@@ -35,12 +38,8 @@ public class AlertConverterImpl implements AlertConverter {
                     .collect(Collectors.toList());
             result.setActions(alertActionList);
         });
-        Optional.ofNullable(alertEntity.getConditions()).ifPresent(conditions -> {
-            List<AlertCondition> alertConditionList = conditions.stream()
-                    .map(alertConditionConverter::toModel)
-                    .collect(Collectors.toList());
-            result.setConditions(alertConditionList);
-        });
+        AlertConditions alertConditions = this.alertConditionsConverter.toModel(alertEntity.getConditions());
+        result.setConditions(alertConditions);
         return result;
     }
 

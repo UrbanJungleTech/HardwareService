@@ -14,7 +14,9 @@ import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,11 +48,7 @@ public class RegisterHardwareControllerIT {
      */
     @Test
     public void testRegisterHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setType("mqtt");
-        hardwareController.getConfiguration().put("serialNumber", "1234");
-        hardwareController.getConfiguration().put("server", "tcp://localhost:1883");
-        hardwareController.getConfiguration().put("clientId", "hardwareController");
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
         Map<String, Object> params = new HashMap<>();
         params.put("hardwareController", hardwareController);
         params.put("serialNumber", "1234");
@@ -58,12 +56,13 @@ public class RegisterHardwareControllerIT {
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
         this.mqttTestService.sendMessage(mqttPayload);
 
-        await()
-                .atMost(Duration.ofSeconds(3))
+        await().atMost(3, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-                    assertTrue(this.hardwareControllerTestService.g
+                    List<HardwareController> hardwareControllers = this.hardwareControllerTestService.findAllHardwareControllers();
+                    assertTrue(hardwareControllers.size() == 1);
+                    HardwareController hardwareControllerResponse = hardwareControllers.get(0);
+                    assertTrue(hardwareControllerResponse.getConfiguration().get("serialNumber").equals("1234"));
                 });
-
     }
 
 }

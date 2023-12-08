@@ -22,6 +22,7 @@ public class Hardware {
     public Hardware(){
         this.metadata = new HashMap<>();
         this.timers = new ArrayList<>();
+        this.configuration = new HashMap<>();
     }
     public String getName() {
         return name;

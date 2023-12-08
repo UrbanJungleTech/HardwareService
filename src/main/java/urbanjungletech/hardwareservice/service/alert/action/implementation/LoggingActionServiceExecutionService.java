@@ -1,8 +1,8 @@
-package urbanjungletech.hardwareservice.service.action.implementation;
+package urbanjungletech.hardwareservice.service.alert.action.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
-import urbanjungletech.hardwareservice.service.action.SpecificActionExecutionService;
+import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 
 @Service
 public class LoggingActionServiceExecutionService implements SpecificActionExecutionService<LoggingAlertAction> {

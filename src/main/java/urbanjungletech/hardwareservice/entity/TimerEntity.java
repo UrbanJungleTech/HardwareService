@@ -15,6 +15,11 @@ public class TimerEntity {
     private String cronString;
 
     private boolean skipNext;
+    private long level;
+
+    public TimerEntity() {
+        this.skipNext = false;
+    }
 
     public Long getId() {
         return id;
@@ -47,5 +52,13 @@ public class TimerEntity {
 
     public void setSkipNext(boolean skipNext) {
         this.skipNext = skipNext;
+    }
+
+    public long getLevel() {
+        return level;
+    }
+
+    public void setLevel(long level) {
+        this.level = level;
     }
 }

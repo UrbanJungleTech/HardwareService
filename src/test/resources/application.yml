@@ -1,6 +1,10 @@
 spring:
   application:
     name: ${APPLICATION_NAME}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    database-platform: ${JPA_HIBERNATE_DATABASE_PLATFORM}
   datasource:
     url: ${DATABASE_URL}
     driverClassName: ${DATABASE_DRIVER}
@@ -61,6 +65,7 @@ development:
       logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
   weather:
     apikey: ${DEV_WEATHER_API_KEY}
+    url: ${DEV_WEATHER_API_URL}
   azure:
     storageQueue:
       key: ${DEV_AZURE_STORAGE_QUEUE_KEY}

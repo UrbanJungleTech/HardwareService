@@ -59,11 +59,8 @@ public class MqttControllerCommunicationService extends ControllerCommunicationS
     @Override
     public double getSensorReading(Sensor sensor) {
         SensorPortReadingMessage message = new SensorPortReadingMessage(sensor.getPort());
-        String serialNumber = this.hardwareControllerQueryService.getSerialNumber(sensor.getHardwareControllerId());
         JsonRpcMessage result = this.mqttService
                 .publishWithResponse(sensor.getHardwareControllerId(), message, 10000).blockingFirst();
         return (Double) result.getResult().get("reading");
     }
-
-
 }

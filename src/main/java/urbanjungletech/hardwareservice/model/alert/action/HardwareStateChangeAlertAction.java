@@ -6,7 +6,7 @@ public class HardwareStateChangeAlertAction extends AlertAction {
     private Long level;
 
     public HardwareStateChangeAlertAction() {
-        super("HardwareStateChange");
+        super();
     }
 
     public long getHardwareId() {

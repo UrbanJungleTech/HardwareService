@@ -6,22 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "development.azure")
 public class AzureProperties {
-    private String key;
-    private String queueName;
+    private StorageQueueProperties storageQueue;
 
-    public String getKey() {
-        return key;
+    public StorageQueueProperties getStorageQueue() {
+        return storageQueue;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getQueueName() {
-        return queueName;
-    }
-
-    public void setQueueName(String queueName) {
-        this.queueName = queueName;
+    public void setStorageQueue(StorageQueueProperties storageQueue) {
+        this.storageQueue = storageQueue;
     }
 }
