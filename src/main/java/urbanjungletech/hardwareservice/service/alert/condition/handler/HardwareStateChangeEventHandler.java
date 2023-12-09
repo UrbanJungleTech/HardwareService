@@ -5,14 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import urbanjungletech.hardwareservice.event.hardwarestate.HardwareStateUpdateEvent;
-import urbanjungletech.hardwareservice.event.sensorreading.SensorReadingCreateEvent;
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
-import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
-import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.service.alert.condition.service.HardwareConditionTriggerService;
-import urbanjungletech.hardwareservice.service.alert.condition.service.SpecificConditionTriggerService;
-
-import java.util.Map;
 
 @Service
 public class HardwareStateChangeEventHandler {

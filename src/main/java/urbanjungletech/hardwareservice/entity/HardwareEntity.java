@@ -19,6 +19,9 @@ public class HardwareEntity {
     private String port;
     private String name;
     private String hardwareCategory;
+    private String offState;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> possibleStates;
     @ManyToOne
 //    @Transient
     private HardwareEntity backup;
@@ -144,5 +147,21 @@ public class HardwareEntity {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public String getOffState() {
+        return offState;
+    }
+
+    public void setOffState(String offState) {
+        this.offState = offState;
+    }
+
+    public List<String> getPossibleStates() {
+        return possibleStates;
+    }
+
+    public void setPossibleStates(List<String> possibleStates) {
+        this.possibleStates = possibleStates;
     }
 }

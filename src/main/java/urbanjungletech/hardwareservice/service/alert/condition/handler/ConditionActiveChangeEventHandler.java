@@ -4,7 +4,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
-import urbanjungletech.hardwareservice.addition.AlertConditionsAdditionService;
 import urbanjungletech.hardwareservice.event.condition.ConditionActiveEvent;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
@@ -32,10 +31,8 @@ public class ConditionActiveChangeEventHandler {
         AlertCondition alertCondition = this.alertConditionQueryService.getAlertCondition(conditionActiveEvent.getConditionId());
         Alert alert = this.alertQueryService.getSensorReadingAlert(alertCondition.getAlertId());
 
-        if(alert.getConditions().getInactiveConditions().size() == 0){
-            alert.getActions().stream().forEach(action -> {
-                this.actionExecutionService.executeAction(action);
-            });
+        if(alert.getConditions().getInactiveConditions().isEmpty()){
+            alert.getActions().forEach(this.actionExecutionService::executeAction);
         }
     }
 }

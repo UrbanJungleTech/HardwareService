@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.implementation;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.exception.DeviceNotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.DeviceNotFoundException;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.TpLinkCommandService;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.TpLinkEncryptionService;

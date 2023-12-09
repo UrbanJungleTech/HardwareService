@@ -510,7 +510,7 @@ This action sets the desired state and power level of the specified hardware.
 
 ## Overview
 
-The event system in our IoT Automation Framework is designed around CRUD (Create, Read, Update, Delete) events for each entity. These events facilitate easy integration and interaction with the system without modifying the core code. Events are based on Spring's event publishers, allowing developers to implement services with event handlers to respond to these events. This is the prefered way to integrate with the system if it suits the developers needs as it will not require modifying core business logic and thus is indepenent of any other integrations. 
+The event system in our IoT Automation Framework is designed around CRUD (Create, Read, Update, Delete) events for each entity. These events facilitate easy integration and interaction with the system without modifying the core code. Events are based on Spring's event publishers, allowing developers to implement services with event handlers to respond to these events. This is the prefered way to integrate with the system if it suits the developers needs as it will not require modifying core business logic and thus is indepenent of any other integrations.
 
 ## Event Handling
 
@@ -614,7 +614,7 @@ NotFoundException createNotFoundException(Class clazz, long id);
 
 
 
-    
+
 # System Flows
 
 # Scheduled Sensor Reading Flow
@@ -625,17 +625,17 @@ The Scheduled Sensor Reading flow is triggered when a Scheduled Sensor Reading e
 ## Flow Steps
 
 1. **Sensor Reading Request**:
-   - The system requests a sensor reading from the controller at the scheduled time defined by the cron string.
+    - The system requests a sensor reading from the controller at the scheduled time defined by the cron string.
 
 2. **Saving to Database**:
-   - The sensor reading is saved to the local database. This data can then be utilized by event handlers that are set up to react to specific sensor readings.
+    - The sensor reading is saved to the local database. This data can then be utilized by event handlers that are set up to react to specific sensor readings.
 
 3. **Router Service Call**:
-   - After saving the sensor reading, the system calls the router service.
+    - After saving the sensor reading, the system calls the router service.
 
 4. **Executing Router Entities**:
-   - For each router associated with the scheduled sensor reading, the system executes the corresponding router service. This step typically involves passing the router entity for execution.
-   - The execution often results in sending the sensor data to a third-party data store or messaging system, as defined by the specific router entity.
+    - For each router associated with the scheduled sensor reading, the system executes the corresponding router service. This step typically involves passing the router entity for execution.
+    - The execution often results in sending the sensor data to a third-party data store or messaging system, as defined by the specific router entity.
 
 ## Example Use Case
 - A scheduled sensor reading is set up to monitor soil moisture levels. The reading is scheduled to occur every morning at 6 AM.
@@ -649,7 +649,7 @@ CRUD operations in the IoT Automation Framework are divided into two main servic
 
 ## Addition Services
 
-Addition services are used for creating, updating and deleting entities. 
+Addition services are used for creating, updating and deleting entities.
 
 ### Interface
 
@@ -666,7 +666,7 @@ public interface AdditionService <T>{
 
 ### Behavior Pattern
 
-#### Creation: 
+#### Creation:
 The addition service first calls the DAO for its primary entity, then handles any child entities.
 For example, in the Hardware Controller Addition Service, it:
 - Creates the hardware controller entity using its DAO.
@@ -677,7 +677,7 @@ For example, in the Hardware Controller Addition Service, it:
 #### Updates:
 - The updateList method is generally used for updates.
 - The method checks each element in the list to determine if it's a new or existing entity, calling create or update accordingly.
-- 
+-
 Note: Updating a parent entity updates and creates children as needed, but does not delete. Deletion should be handled separately.
 
 ## Query Services
@@ -690,7 +690,7 @@ Query services are used for retrieving entities from the database.
 - The converted model is returned.
 
 ### Note: query services should only return models, not entities.
-        
+
 # Alert Flow
 
 ## Overview
@@ -718,10 +718,10 @@ In this scenario the user has a garden, and would like to make sure they keep th
 
 ### Alert Setup
 - **Conditions**:
-   1. Sensor reading condition: Temperature above 40 degrees.
-   2. Hardware state change condition: Fan is off.
+    1. Sensor reading condition: Temperature above 40 degrees.
+    2. Hardware state change condition: Fan is off.
 - **Action**:
-   - Hardware state change: Turn the fan on.
+    - Hardware state change: Turn the fan on.
 
 ### Triggering
 - The fan turns off.
@@ -730,10 +730,10 @@ In this scenario the user has a garden, and would like to make sure they keep th
 
 ### Additional Alert for Regulation
 - **Conditions**:
-   1. Temperature below 30 degrees.
-   2. Fan is on.
+    1. Temperature below 30 degrees.
+    2. Fan is on.
 - **Action**:
-   - Turn the fan off.
+    - Turn the fan off.
 
 This setup effectively regulates the temperature within a desired range.
 

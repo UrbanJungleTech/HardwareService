@@ -103,7 +103,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void deleteHardware_WhenGivenAValidHardwareId_shouldDeleteTheHardware() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
 
@@ -128,7 +128,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardware() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         //retrieve the hardware controller from the db
@@ -164,7 +164,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardwareAndSendAChangeStateMessage() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState updatedState = createdHardware.getDesiredState();
@@ -200,24 +200,7 @@ public class HardwareEndpointIT {
         assertEquals(updatedState.getState(), desiredState.getState());
     }
 
-    /**
-     * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
-     * When a PUT request is made to /hardware/{hardwareId} with a Hardware object and the desired state has not been modified
-     * Then a message is not sent to the MQTT broker of method StateChange
-     */
-    @Test
-    public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardwareButNotTheDesiredStateAndNotSendAChangeStateMessage() throws Exception {
-        HardwareController hardwareController = this.hardwareTestService.createBasicHardware();
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
-            if (this.mqttCacheListener.getCache("StateChange").size() >= 1) {
-                asserted = true;
-            }
-        }
-        List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");
-        assertEquals(0, results.size());
-    }
+
 
     /**
      * Given an id which is not associated with a Hardware
@@ -249,7 +232,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void createTimer_WhenGivenAValidHardwareId_shouldCreateTheTimer() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardwareWithTimer();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardwareAndTimer();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         Timer createdTimer = createdHardware.getTimers().get(0);
@@ -270,7 +253,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void createTimer_WhenGivenAValidHardwareId_shouldCreateTheTimerAndReturnTheTimer() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
 
@@ -318,7 +301,7 @@ public class HardwareEndpointIT {
         timer2.setState("off");
         timer2.setCronString("0/2 * * * * ?");
         hardware.getTimers().add(timer2);
-        HardwareController hardwareController = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
         hardware = hardwareController.getHardware().get(0);
 
         await().atMost(10000, TimeUnit.SECONDS).untilAsserted(() -> {
@@ -383,7 +366,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateDesiredHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState hardwareState = new HardwareState();

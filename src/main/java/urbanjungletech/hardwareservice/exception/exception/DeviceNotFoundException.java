@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.exception;
+package urbanjungletech.hardwareservice.exception.exception;
 
 public class DeviceNotFoundException extends RuntimeException {
     private String message;

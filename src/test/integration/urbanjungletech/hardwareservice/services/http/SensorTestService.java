@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.services.http;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
@@ -32,7 +31,7 @@ public class SensorTestService {
         sensor.setPort(String.valueOf(this.portCounter.getAndIncrement()));
         sensor.setName(UUID.randomUUID().toString());
         sensor.setSensorType("temperature");
-        HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithSensors(List.of(sensor));
+        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithSensors(List.of(sensor));
         return result;
     }
 

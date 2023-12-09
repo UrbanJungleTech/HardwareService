@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.mock.action.MockAction;
+import urbanjungletech.hardwareservice.mock.action.MockActionService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.alert.Alert;
@@ -17,15 +19,13 @@ import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
-import urbanjungletech.hardwareservice.mock.action.MockAction;
-import urbanjungletech.hardwareservice.mock.action.MockActionService;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -131,6 +131,17 @@ public class AlertEndpointIT {
     }
 
     /**
+     * Given an invalid alert id
+     * When a GET request is made to /alert/{id}
+     * Then a 404 is returned
+     */
+    @Test
+    void getSensorReadingAlertByIdInvalidId() throws Exception {
+        this.mockMvc.perform(get("/alert/123"))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
      * Given a valid Alert object, with a single Action of type HardwareStateChangeAlertAction
      * When a POST request is made to /alert/ with the Alert object
      * Then the Alert object is returned
@@ -216,6 +227,7 @@ public class AlertEndpointIT {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
+
         assertNotNull(responseAlert.getId());
         AlertConditions responseAlertConditions = responseAlert.getConditions();
         assertNotNull(responseAlertConditions);
@@ -239,7 +251,7 @@ public class AlertEndpointIT {
      * And the Condition object has an id
      * And the Condition object has an alertId which matches the Alert object
      * And the Condition object has a hardwareId which matches the HardwareStateChangeAlertAction
-     * And the Condition object has an onoff which matches the HardwareStateChangeAlertAction
+     * And the Condition object has a state which matches the HardwareStateChangeAlertAction
      * And the Condition object has a level which matches the HardwareStateChangeAlertAction
     */
     @Test
@@ -273,7 +285,7 @@ public class AlertEndpointIT {
     }
 
     /**
-     * Given a valid Alert object has been created, with a single Condition of type HardwareStateChangeAlertCondition and a single Action of type LoggingAlertAction
+     * Given a valid Alert object has been created, with a single Condition of type HardwareStateChangeAlertCondition and a single Action of type MockAction
      * When the state of the hardware associated with the HardwareStateChangeAlertCondition changes
      * Then the action is executed
      */
@@ -325,9 +337,8 @@ public class AlertEndpointIT {
             assertEquals(1L, mockActionService.getCounter());
         });
 
-        /** test that updating the state in the other direction will also updates the persisted states while not triggering
-        the action
-         **/
+        /** test that updating the state in the other direction will also update the persisted states while not triggering
+        the action**/
         createdHardware.getDesiredState().setState("off");
         this.mockMvc.perform(put("/hardware/" + hardwareId)
                         .contentType(MediaType.APPLICATION_JSON)

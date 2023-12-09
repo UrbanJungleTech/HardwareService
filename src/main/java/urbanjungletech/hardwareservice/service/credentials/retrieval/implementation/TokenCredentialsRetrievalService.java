@@ -1,12 +1,9 @@
 package urbanjungletech.hardwareservice.service.credentials.retrieval.implementation;
 
-import com.azure.security.keyvault.secrets.SecretClient;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
 import urbanjungletech.hardwareservice.service.credentials.securestorage.SecureStorageService;
-
-import java.util.UUID;
 
 @Service
 public class TokenCredentialsRetrievalService implements SpecificCredentialRetrievalService<TokenCredentials> {
