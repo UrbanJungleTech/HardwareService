@@ -1,3 +1,30 @@
+# IoT Automation Framework Accelerator
+
+## Overview
+
+Welcome to the IoT Automation Framework Accelerator, a foundational platform designed to expedite the development and management of IoT systems. This project serves as a robust starting point for integrating and automating a wide array of IoT devices and sensors, tailored to a variety of applications including home automation, automated gardening, and more.
+
+### Key Features
+
+- **Modular Entity Management**: Streamlines the handling of diverse IoT entities like hardware devices, sensors, and controllers.
+- **Dynamic Alert System**: Enables responsive system behavior with complex alert conditions and actions based on real-time data.
+- **Scheduling and Timers**: Offers precise scheduling capabilities for device actions and sensor readings.
+- **Customizable Conditions and Actions**: Adaptable to specific requirements, ensuring flexibility across different IoT applications.
+- **Data-Driven Decision Making**: Facilitates informed automation decisions using sensor data.
+- **Extensible and Scalable**: Easily expands to accommodate new devices and sensors, growing with your project needs.
+
+### Project Scope
+
+1. **Accelerator, Not a Complete Product**: This framework is designed to provide the majority of functionalities required for integrating hardware with a smart controller. It is an accelerator, meaning it sets up the foundation but leaves aspects such as security to be implemented by the end user according to their specific requirements.
+2. **Custom Integration Support**: For integrations not included out-of-the-box, we provide guidelines and methods to seamlessly incorporate your unique hardware and requirements into the system.
+
+### Ideal for Custom IoT Solutions
+
+Whether it's for automating a compact home garden, orchestrating a complex smart home system, or building a tailored IoT solution, this framework offers the tools and adaptability needed for a wide range of IoT projects.
+
+### Getting Started
+
+Explore our extensive documentation to learn how to set up and utilize the framework effectively. You'll find detailed entity setups, flow documentation, and example scenarios to guide you in your IoT journey.
 
 # Hardware Entity
 
@@ -479,7 +506,115 @@ This action sets the desired state and power level of the specified hardware.
 #### Example Use Case
 - If the temperature drops too far, this action can be used to turn on a heater.
 
+# Event System
 
+## Overview
+
+The event system in our IoT Automation Framework is designed around CRUD (Create, Read, Update, Delete) events for each entity. These events facilitate easy integration and interaction with the system without modifying the core code. Events are based on Spring's event publishers, allowing developers to implement services with event handlers to respond to these events. This is the prefered way to integrate with the system if it suits the developers needs as it will not require modifying core business logic and thus is indepenent of any other integrations. 
+
+## Event Handling
+
+To listen and react to an event, developers need to implement a service containing their event handlers. Below is an example demonstrating how to handle CRUD events related to the Hardware entity:
+```java
+/**
+ * Listens for CRUD events related to the Hardware entity and calls the hardware communication service
+ * to execute appropriate actions based on the event.
+ */
+@Service
+public class HardwareControllerHardwareEventListener {
+    private static final Logger logger = LoggerFactory.getLogger(HardwareControllerHardwareEventListener.class);
+    private final ControllerCommunicationService controllerCommunicationService;
+    private final HardwareQueryService hardwareQueryService;
+
+    public HardwareControllerHardwareEventListener(ControllerCommunicationService controllerCommunicationService, HardwareQueryService hardwareQueryService){
+        this.controllerCommunicationService = controllerCommunicationService;
+        this.hardwareQueryService = hardwareQueryService;
+    }
+
+    @Async
+    @TransactionalEventListener
+    public void handleHardwareCreateEvent(HardwareCreateEvent HardwareCreateEvent){
+        logger.debug("Sending hardware create event to hardware controller.");
+        Hardware hardware = this.hardwareQueryService.getHardware(HardwareCreateEvent.getHardwareId());
+        this.controllerCommunicationService.registerHardware(hardware);
+    }
+
+    @Async
+    @EventListener
+    public void handleHardwareDeleteEvent(HardwareDeleteEvent hardwareDeleteEvent){
+        Hardware hardware = this.hardwareQueryService.getHardware(hardwareDeleteEvent.getHardwareId());
+        this.controllerCommunicationService.deregisterHardware(hardware);
+    }
+}
+```
+
+## Key Annotations
+
+@Async: Ensures that the processing of the event does not block the thread on which it was published. This is crucial as multiple event handlers might be listening to the same event.
+@TransactionalEventListener: Guarantees that the event handler is invoked only after the completion of the CRUD operation it is linked to. It also ensures that in case of a transaction failure, the event handler will not be executed.
+
+## Event Data
+
+All events carry only the ID of the associated entity. This design is intentional, as events are published before the completion of the transaction, and a complete model of the entity might not be available. To retrieve the complete model, use the query service associated with that entity.
+
+# Exception Handling
+## Overview
+
+In our IoT Automation Framework, exception handling is centralized and not performed where the exception occurs. This approach is based on the premise that while we cannot always recover from exceptions, it is crucial to inform the user of the occurrence and handle any necessary cleanup, such as transaction rollbacks.
+Throwing Exceptions
+
+## Custom Exceptions
+When an exception is anticipated, it should be caught and rethrown as a custom exception. Custom exceptions must extend RuntimeException to avoid mandatory catch or specify clauses.
+
+### Logging
+Before rethrowing the exception, log the occurrence at the INFO level. This level is chosen as it provides useful information in a production environment.
+
+### HTTP Exceptions
+
+Central Exception Handler (ErrorHandler): HTTP exceptions are managed in a central exception handler. To handle new types of exceptions, you can add methods following this template:
+
+```java
+@ExceptionHandler(value = StandardErrorException.class)
+public ResponseEntity<WebRequestException> handleError(StandardErrorException exception){
+    WebRequestException error = new WebRequestException();
+    error.setMessage(exception.getMessage());
+    error.setHttpStatus(exception.getStatus().value());
+    return ResponseEntity.status(exception.getStatus()).body(error);
+}
+```
+
+### Entity Name Service
+
+Usage: The EntityNameService provides human-readable names for entities, useful in logs and HTTP responses. Names are configured in Spring under entity.names.
+Configured Names:
+urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
+urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
+(and other entity names)
+
+An example is in the NotFoundException
+
+```java
+    @Override
+    public NotFoundException createNotFoundException(Class clazz, long id) {
+        String name = this.entityNameService.getName(clazz);
+        NotFoundException result = new NotFoundException(name, id);
+        return result;
+    }
+```
+
+### ExceptionService
+
+For exceptions that are frequently used but require specific logic for field population, new methods should be added to the ExceptionService.
+
+Example Method: The createNotFoundException method in ExceptionService is an example. It returns a NotFoundException with a custom message and HTTP status code 404.
+
+```java
+NotFoundException createNotFoundException(Class clazz, long id);
+```
+
+
+
+    
 # System Flows
 
 # Scheduled Sensor Reading Flow
@@ -506,7 +641,56 @@ The Scheduled Sensor Reading flow is triggered when a Scheduled Sensor Reading e
 - A scheduled sensor reading is set up to monitor soil moisture levels. The reading is scheduled to occur every morning at 6 AM.
 - Once the reading is taken, the data is stored in the local database and then routes the reading to an azure table queue.
 
+# CRUD Operations
 
+## Overview
+
+CRUD operations in the IoT Automation Framework are divided into two main service types: Addition Services and Query Services. These services manage the creation, update, deletion, and querying of entities in the system.
+
+## Addition Services
+
+Addition services are used for creating, updating and deleting entities. 
+
+### Interface
+
+Addition services implement the AdditionService interface, defined as follows:
+
+```java
+public interface AdditionService <T>{
+    T create(T t);
+    void delete(long id);
+    T update(long id, T t);
+    List<T> updateList(List<T> models);
+}
+```
+
+### Behavior Pattern
+
+#### Creation: 
+The addition service first calls the DAO for its primary entity, then handles any child entities.
+For example, in the Hardware Controller Addition Service, it:
+- Creates the hardware controller entity using its DAO.
+- Sets the hardware controller ID for all related hardware.
+- Repeats the process for sensors.
+- Converts and returns the hardware controller entity as a model.
+
+#### Updates:
+- The updateList method is generally used for updates.
+- The method checks each element in the list to determine if it's a new or existing entity, calling create or update accordingly.
+- 
+Note: Updating a parent entity updates and creates children as needed, but does not delete. Deletion should be handled separately.
+
+## Query Services
+
+Query services are used for retrieving entities from the database.
+
+### Typical Pattern:
+- The DAO is called to retrieve the entity.
+- The entity is converted to a model using the appropriate converter.
+- The converted model is returned.
+
+### Note: query services should only return models, not entities.
+        
 # Alert Flow
 
 ## Overview
