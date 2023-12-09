@@ -46,18 +46,18 @@ Note: Hardware entities are created under the `HardwareController` endpoint.
 # Timer Entity
 
 ## Overview
-The Timer entity is used to schedule state changes for hardware. It uses a cron string to determine when it should update the state of the hardware, along with a state to set the hardware to. 
+The Timer entity is used to schedule state changes for hardware. It uses a cron string to determine when it should update the state of the hardware, along with a state to set the hardware to.
 
 ## Fields
 
-| Field Name   | Data Type | Description                                                    |
-|--------------|-----------|----------------------------------------------------------------|
-| `id`         | Long      | The database ID of the timer.                                  |
-| `skipNext`   | Boolean   | Determines if the next execution of the timer should be skipped. |
+| Field Name   | Data Type | Description                                                                              |
+|--------------|-----------|------------------------------------------------------------------------------------------|
+| `id`         | Long      | The database ID of the timer.                                                            |
+| `skipNext`   | Boolean   | Determines if the next execution of the timer should be skipped.                         |
 | `state`      | String    | A string representing the desired state of the hardware. Refer to the `Hardware` entity. |
-| `level`      | Long      | The power level to set for the hardware. Refer to the `Hardware` entity. |
-| `cronString` | String    | The cron expression defining the schedule for the timer.       |
-| `hardwareId` | Long      | The ID of the hardware associated with this timer.             |
+| `level`      | Long      | The power level to set for the hardware. Refer to the `Hardware` entity.                 |
+| `cronString` | String    | The cron expression defining the schedule for the timer.                                 |
+| `hardwareId` | Long      | The ID of the hardware associated with this timer.                                       |
 
 ## Timer API Endpoints
 
@@ -74,11 +74,11 @@ To create a new timer, use the `POST /timer/` endpoint with the appropriate time
 
 ## Events
 
-| Event Name         | Trigger                      | Payload Description                              |
-|--------------------|------------------------------|--------------------------------------------------|
-| `TimerCreateEvent` | Creation of a timer entity.  | Contains the ID of the newly created timer.      |
-| `TimerUpdateEvent` | Update of a timer entity.    | Contains the ID and updated details of the timer.|
-| `TimerDeleteEvent` | Deletion of a timer entity.  | Contains the ID of the deleted timer.            |
+| Event Name         | Trigger                     | Payload Description                               |
+|--------------------|-----------------------------|---------------------------------------------------|
+| `TimerCreateEvent` | Creation of a timer entity. | Contains the ID of the newly created timer.       |
+| `TimerUpdateEvent` | Update of a timer entity.   | Contains the ID and updated details of the timer. |
+| `TimerDeleteEvent` | Deletion of a timer entity. | Contains the ID of the deleted timer.             |
 
 
 
@@ -367,3 +367,187 @@ public class AzureQueueSensorReadingRouterService implements SpecificSensorReadi
   }  
 }
 ```
+
+# Alert Entity
+
+## Overview
+Alerts in the system are designed to trigger actions based on specific conditions. Each alert comprises a list of conditions and a list of actions. Once all the specified conditions are met, the associated actions are executed.
+
+## Fields
+
+| Field Name     | Data Type            | Description                                             |
+|----------------|----------------------|---------------------------------------------------------|
+| `id`           | Long                 | The database ID of the alert.                           |
+| `name`         | String               | A user-defined name for the alert.                      |
+| `description`  | String               | A description of the alert's purpose.                   |
+| `conditions`   | AlertConditions      | The conditions under which the alert will trigger.      |
+| `alertActions` | List\<AlertAction\>  | The actions to perform when the alert triggers.         |
+
+## Alert API Endpoints
+
+| Endpoint Name         | Description                              | Query Parameters                           | Request Body       |
+|-----------------------|------------------------------------------|--------------------------------------------|--------------------|
+| `GET /alerts/{id}`    | Retrieves a specific alert by its ID.    | `id` - Path variable - the ID of the alert |                    |
+| `GET /alerts/`        | Fetches a list of all alerts.            |                                            |                    |
+| `DELETE /alerts/{id}` | Deletes a specific alert by its ID.      | `id` - Path variable - the ID of the alert |                    |
+| `PUT /alerts/{id}`    | Updates the details of a specific alert. | `id` - Path variable - the ID of the alert | Updated alert data |
+| `POST /alerts/`       | Creates a new alert.                     |                                            | Alert data         |
+
+## Creating Alerts
+To create a new alert, use the `POST /alerts/` endpoint with the alert data in the request body. This includes defining the conditions and actions for the alert.
+
+
+# Condition Entity
+
+## Overview
+Conditions in the system represent situations that can be either true or false. They are used as part of the alert system to determine when an alert should be triggered.
+
+## Fields
+
+| Field Name | Data Type | Description                                                 |
+|------------|-----------|-------------------------------------------------------------|
+| `id`       | Long      | The database ID of the condition.                           |
+| `alertId`  | Long      | The ID of the alert this condition is part of.              |
+| `type`     | String    | The type of condition. This determines the triggering logic |
+| `active`   | Boolean   | Indicates whether the condition is active.                  |
+
+## Condition Types
+
+Out of the box the following condition types are supported.
+
+| Name                  | Subfields                                                                       | Triggering Logic                                                               |
+|-----------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| Hardware State Change | `state` (String), `hardwareId` (Long)                                           | Triggered when the specified hardware enters the specified state.              |
+| Sensor Reading        | `sensorId` (Long), `threshold` (Numeric), `thresholdType` (String: ABOVE/BELOW) | Triggered when the sensor reading goes above or below the specified threshold. |
+
+## Condition API Endpoints
+
+| Endpoint Name                     | Description                               | Query Parameters              | Request Body   |
+|-----------------------------------|-------------------------------------------|-------------------------------|----------------|
+| `POST /condition/`                | Creates a new condition.                  |                               | Condition data |
+| `GET /condition/{conditionId}`    | Retrieves a specific condition by its ID. | `conditionId` - Path variable |                |
+| `DELETE /condition/{conditionId}` | Deletes a specific condition by its ID.   | `conditionId` - Path variable |                |
+
+## Creating Conditions
+To create a new condition, use the `POST /condition/` endpoint with the necessary condition data in the request body. Define the type of condition and its specific subfields as required.
+
+## Example Use Case
+- A "Sensor Reading" condition is set to monitor the moisture level sensor. If the moisture level falls below a certain threshold, the condition becomes true, potentially triggering an associated alert.
+
+# AlertAction Entity
+
+## Overview
+The `AlertAction` entity defines actions to be performed when an alert's conditions are met. Each action is associated with a specific alert and is executed upon the triggering of that alert.
+
+## Fields
+
+| Field Name | Data Type | Description                                      |
+|------------|-----------|--------------------------------------------------|
+| `id`       | Long      | The database ID of the action.                   |
+| `type`     | String    | The type of action.                              |
+| `alertId`  | Long      | The ID of the alert associated with this action. |
+
+## Subtypes of AlertAction
+
+### CancelNextScheduledHardwareAlertAction
+
+#### Fields
+
+| Field Name            | Data Type | Description                           |
+|-----------------------|-----------|---------------------------------------|
+| `scheduledHardwareId` | Long      | The ID of the scheduled hardware.     |
+
+#### Description
+This action will skip the next timer event for the specified hardware.
+
+#### Example Use Case
+- Used to skip a sprinkler timer when rain is expected.
+
+### HardwareStateChangeAlertAction
+
+#### Fields
+
+| Field Name   | Data Type | Description                             |
+|--------------|-----------|-----------------------------------------|
+| `hardwareId` | Long      | The ID of the target hardware.          |
+| `state`      | String    | The state to set the hardware to.       |
+| `level`      | Long      | The power level to set the hardware to. |
+
+#### Description
+This action sets the desired state and power level of the specified hardware.
+
+#### Example Use Case
+- If the temperature drops too far, this action can be used to turn on a heater.
+
+
+# System Flows
+
+# Scheduled Sensor Reading Flow
+
+## Overview
+The Scheduled Sensor Reading flow is triggered when a Scheduled Sensor Reading entity is created. This entity is associated with a schedule, which is executed according to a specified cron string. The flow consists of several steps to handle the sensor data effectively.
+
+## Flow Steps
+
+1. **Sensor Reading Request**:
+   - The system requests a sensor reading from the controller at the scheduled time defined by the cron string.
+
+2. **Saving to Database**:
+   - The sensor reading is saved to the local database. This data can then be utilized by event handlers that are set up to react to specific sensor readings.
+
+3. **Router Service Call**:
+   - After saving the sensor reading, the system calls the router service.
+
+4. **Executing Router Entities**:
+   - For each router associated with the scheduled sensor reading, the system executes the corresponding router service. This step typically involves passing the router entity for execution.
+   - The execution often results in sending the sensor data to a third-party data store or messaging system, as defined by the specific router entity.
+
+## Example Use Case
+- A scheduled sensor reading is set up to monitor soil moisture levels. The reading is scheduled to occur every morning at 6 AM.
+- Once the reading is taken, the data is stored in the local database and then routes the reading to an azure table queue.
+
+
+# Alert Flow
+
+## Overview
+An alert in the system is triggered when all of its conditions are met. A condition, once set to true, remains true until re-evaluated and set to false. Upon triggering, the alert executes all associated actions.
+
+## Condition Flow
+Each type of condition has its own triggering logic, but all are based on events.
+
+### Hardware State Change Condition
+- Triggered by the `HardwareStateChangeEvent`.
+- The evaluation and triggering flow begins when this event is raised.
+
+### Sensor Reading Condition
+- Relies on the `SensorReadingCreate` event.
+- Upon this event, the condition is evaluated against the set thresholds.
+
+For both types, a service retrieves conditions related to the specified entity and determines whether each condition is triggered, updating the `active` field accordingly. If `active` is updated, the associated alert is retrieved, and the condition is moved to either the active or inactive set. The alert's actions are triggered if all conditions move to the active set.
+
+## Action Flow
+- The action service retrieves all actions associated with the alert and executes each by calling the specific action service based on the action type.
+
+## Example Scenario
+
+### Alert Setup
+- **Conditions**:
+   1. Sensor reading condition: Temperature above 40 degrees.
+   2. Hardware state change condition: Fan is off.
+- **Action**:
+   - Hardware state change: Turn the fan on.
+
+### Triggering
+- The fan turns off.
+- Later, the temperature rises above 40 degrees.
+- Both conditions are now true, triggering the action to turn the fan on.
+
+### Additional Alert for Regulation
+- **Conditions**:
+   1. Temperature below 30 degrees.
+   2. Fan is on.
+- **Action**:
+   - Turn the fan off.
+
+This setup effectively regulates the temperature within a desired range.
+
