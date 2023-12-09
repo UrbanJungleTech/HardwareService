@@ -27,7 +27,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {})
+@SpringBootTest(properties = {"development.mqtt.client.enabled=false",
+        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareEndpointIT {
@@ -279,49 +280,7 @@ public class HardwareEndpointIT {
     }
 
 
-    /**
-     * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
-     * And a timer has been created for the hardware via /hardware/{hardwareId}/timer with:
-     * - port = 1
-     * And the timer has the on cron string "0/1 * * * * ?"
-     * And the timer has the off cron string "0/2 * * * * ?"
-     * Then after 2 seconds there should be at least 2 "on" states sent to the client over mqtt
-     * and at least 1 "off" state sent to the client over mqtt
-     */
-    @Test
-    public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
-        Hardware hardware = new Hardware();
-        hardware.setPort("1");
-        Timer timer1 = new Timer();
-        timer1.setLevel(100);
-        timer1.setCronString("0/3 * * * * ?");
-        hardware.getTimers().add(timer1);
-        Timer timer2 = new Timer();
-        timer2.setLevel(0);
-        timer2.setState("off");
-        timer2.setCronString("0/2 * * * * ?");
-        hardware.getTimers().add(timer2);
-        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
-        hardware = hardwareController.getHardware().get(0);
 
-        await().atMost(10000, TimeUnit.SECONDS).untilAsserted(() -> {
-            if (this.mqttCacheListener.getCache("StateChange").size() >= 3) {
-                List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange");
-                int onCount = 0;
-                int offCount = 0;
-                for (JsonRpcMessage deliveredState : deliveredStates) {
-                    HardwareState state = objectMapper.convertValue(deliveredState.getParams().get("desiredState"), HardwareState.class);
-                    if (state.getState().equals("on")) {
-                        onCount++;
-                    } else if (state.getState().equals("off")) {
-                        offCount++;
-                    }
-                }
-                assertTrue(onCount >= 2 && onCount <= 4);
-                assertTrue(offCount >= 1 && offCount <= 4);
-            }
-        });
-    }
 
     /**
      * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
@@ -343,18 +302,22 @@ public class HardwareEndpointIT {
         hardwareState.setLevel(10);
         String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
 
-        mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/currentstate")
+        String updateJsonResponse = mockMvc.perform(put("/hardware/" + createdHardware.getId() + "/currentstate")
                         .content(hardwareStateJson)
                         .contentType("application/json")
                         .content(hardwareStateJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.state").value(hardwareState.getState().toString()))
-                .andExpect(jsonPath("$.level").value(hardwareState.getLevel()));
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        mockMvc.perform(get("/hardware/" + createdHardware.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.currentState.state").value(hardwareState.getState().toString()))
-                .andExpect(jsonPath("$.currentState.level").value(hardwareState.getLevel()));
+        HardwareState responseHardwareState = objectMapper.readValue(updateJsonResponse, HardwareState.class);
+        assertEquals(hardwareState.getState(), responseHardwareState.getState());
+        assertEquals(hardwareState.getLevel(), responseHardwareState.getLevel());
+
+        String getHardwareJsonResponse = mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        Hardware responseHardware = objectMapper.readValue(getHardwareJsonResponse, Hardware.class);
+        assertEquals(hardwareState.getState(), responseHardware.getCurrentState().getState());
+        assertEquals(hardwareState.getLevel(), responseHardware.getCurrentState().getLevel());
     }
 
     /**

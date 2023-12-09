@@ -4,6 +4,7 @@ import io.moquette.broker.Server;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -16,6 +17,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Configuration
+@ConditionalOnProperty(value = "development.mqtt.server.enabled", havingValue = "true")
 public class MockMqttStarter implements ApplicationListener<ContextRefreshedEvent> {
     private Server mqttServer;
     private Properties mqttProperties;

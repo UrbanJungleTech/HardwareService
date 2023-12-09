@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +13,7 @@ import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
@@ -19,13 +21,15 @@ import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientLi
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest()
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class mqttIT {
@@ -35,6 +39,8 @@ public class mqttIT {
     private MockMvc mockMvc;
     @Autowired
     private MockMqttClientListener mqttCacheListener;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
@@ -103,5 +109,50 @@ public class mqttIT {
         }
         List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");
         assertEquals(0, results.size());
+    }
+
+    /**
+     * Given a hardware has been created as part of a hardware controller via /hardwarecontroller/
+     * And a timer has been created for the hardware via /hardware/{hardwareId}/timer with:
+     * - port = 1
+     * And the timer has the on cron string "0/1 * * * * ?"
+     * And the timer has the off cron string "0/2 * * * * ?"
+     * Then after 2 seconds there should be at least 2 "on" states sent to the client over mqtt
+     * and at least 1 "off" state sent to the client over mqtt
+     */
+    @Test
+    public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
+        Hardware hardware = new Hardware();
+        hardware.setOffState("off");
+        hardware.setPort("1");
+        Timer timer1 = new Timer();
+        timer1.setLevel(100);
+        timer1.setState("on");
+        timer1.setCronString("0/3 * * * * ?");
+        hardware.getTimers().add(timer1);
+        Timer timer2 = new Timer();
+        timer2.setLevel(0);
+        timer2.setState("off");
+        timer2.setCronString("0/2 * * * * ?");
+        hardware.getTimers().add(timer2);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController(List.of(hardware));
+        hardware = hardwareController.getHardware().get(0);
+
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertTrue(this.mqttCacheListener.getCache("StateChange").size() >= 3);
+            List<JsonRpcMessage> deliveredStates = this.mqttCacheListener.getCache("StateChange");
+            int onCount = 0;
+            int offCount = 0;
+            for (JsonRpcMessage deliveredState : deliveredStates) {
+                HardwareState state = objectMapper.convertValue(deliveredState.getParams().get("desiredState"), HardwareState.class);
+                if (state.getState().equals("on")) {
+                    onCount++;
+                } else if (state.getState().equals("off")) {
+                    offCount++;
+                }
+            }
+            assertTrue(onCount >= 2 && onCount <= 4);
+            assertTrue(offCount >= 1 && offCount <= 4);
+        });
     }
 }

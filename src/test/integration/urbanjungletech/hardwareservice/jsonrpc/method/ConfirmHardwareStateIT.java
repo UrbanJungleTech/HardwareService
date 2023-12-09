@@ -74,7 +74,6 @@ public class ConfirmHardwareStateIT {
 
         Hardware responseHardware = controller.getHardware().get(0);
 
-        //generate json payload for updating state
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage();
         jsonRpcMessage.setMethod("ConfirmHardwareState");
         Map<String, Object> params = new HashMap<>();

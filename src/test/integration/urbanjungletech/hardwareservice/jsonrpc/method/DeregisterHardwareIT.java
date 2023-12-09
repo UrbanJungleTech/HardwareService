@@ -64,7 +64,7 @@ public class DeregisterHardwareIT {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
         Hardware hardware = new Hardware();
         hardware.setPort("1");
-        hardware.getConfiguration().put("serialNumber", "1234");
+        hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);

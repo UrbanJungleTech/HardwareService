@@ -29,7 +29,7 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
             logger.info("Starting scheduled hardware with id {}", timerId);
             Timer timer = this.timerQueryService.getTimer(timerId);
             JobDataMap jobDataMap = new JobDataMap();
-            jobDataMap.put("scheduledHardwareId", timerId);
+            jobDataMap.put("timerId", timerId);
             JobDetail details = JobBuilder.newJob(ScheduledHardwareJob.class)
                     .withIdentity(String.valueOf(timerId))
                     .usingJobData(jobDataMap)
