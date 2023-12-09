@@ -41,7 +41,7 @@ public class HardwareControllerTestService {
     }
 
     public HardwareController createHardwareMqttController(){
-        HardwareController hardwareController = createBasicHardwareController();
+        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
         hardwareController.setType("mqtt");
         Map<String, String> configuration = hardwareController.getConfiguration();
         configuration.put("serialNumber", "1234");
@@ -51,30 +51,32 @@ public class HardwareControllerTestService {
         return hardwareController;
     }
 
-    public Hardware createHardware(String name){
+    public Hardware createDefaultHardware(String name){
         Hardware hardware = new Hardware();
         hardware.setName(name);
         hardware.setConfiguration(Map.of("testKey", "testValue"));
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardware.setOffState("off");
         return hardware;
     }
 
 
 
-    public HardwareController addBasicHardwareControllerWithSensors(List<Sensor> sensors) throws Exception{
-        HardwareController hardwareController = createBasicHardwareController();
+    public HardwareController createMqttHardwareControllerWithSensors(List<Sensor> sensors) throws Exception{
+        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
         hardwareController.setSensors(sensors);
         HardwareController result = this.postHardwareController(hardwareController);
         return result;
     }
 
-    public HardwareController addBasicHardwareControllerWithHardware(List<Hardware> hardware) throws Exception{
-        HardwareController hardwareController = createBasicHardwareController();
+    public HardwareController createMqttHardwareControllerWithHardware(List<Hardware> hardware) throws Exception{
+        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
         hardwareController.setHardware(hardware);
         HardwareController result = this.postHardwareController(hardwareController);
         return result;
     }
 
-    public HardwareController createBasicHardwareController() {
+    public HardwareController createMqttHardwareControllerWithHardware() {
         HardwareController hardwareController = new HardwareController();
         hardwareController.setType("mqtt");
         hardwareController.getConfiguration().put("serialNumber", "1234");
@@ -85,8 +87,26 @@ public class HardwareControllerTestService {
     }
 
     public HardwareController createMockHardwareController() {
-        HardwareController result = createBasicHardwareController();
+        HardwareController result = createMqttHardwareControllerWithHardware();
         result.setType("mock");
+        return result;
+    }
+
+    public HardwareController createMockHardwareControllerWithHardware(List<Hardware> hardware) {
+        HardwareController result = createMockHardwareController();
+        result.setHardware(hardware);
+        return result;
+    }
+
+    public HardwareController createMockHardwareControllerWithSensors(List<Sensor> sensors) {
+        HardwareController result = createMockHardwareController();
+        result.setSensors(sensors);
+        return result;
+    }
+
+    public HardwareController createMockHardwareControllerWithDefaultHardware() {
+        Hardware hardware = createDefaultHardware("hardware1");
+        HardwareController result = createMockHardwareControllerWithHardware(List.of(hardware));
         return result;
     }
 

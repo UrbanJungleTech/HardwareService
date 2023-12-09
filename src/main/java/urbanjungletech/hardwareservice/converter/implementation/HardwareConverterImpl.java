@@ -38,6 +38,8 @@ public class HardwareConverterImpl implements HardwareConverter {
         result.setTimers(this.timerConverter.toModels(hardwareEntity.getTimers()));
         result.setMetadata(hardwareEntity.getMetadata());
         result.setConfiguration(hardwareEntity.getConfiguration());
+        result.setPossibleStates(hardwareEntity.getPossibleStates());
+        result.setOffState(hardwareEntity.getOffState());
         return result;
     }
 
@@ -59,5 +61,7 @@ public class HardwareConverterImpl implements HardwareConverter {
         hardwareEntity.setHardwareCategory(hardware.getType());
         hardwareEntity.setId(hardware.getId());
         hardwareEntity.setName(hardware.getName());
+        hardwareEntity.setOffState(hardware.getOffState());
+        hardwareEntity.setPossibleStates(hardware.getPossibleStates());
     }
 }

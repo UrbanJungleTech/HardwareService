@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.services.http;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
@@ -17,32 +16,29 @@ public class HardwareTestService {
         this.hardwareControllerTestService = hardwareControllerTestService;
     }
 
-    public HardwareController createBasicHardware() throws Exception{
+    public HardwareController createMqttHardwareControllerWithDefaultHardware() throws Exception{
         Hardware hardware = new Hardware();
         hardware.setPort("1");
         hardware.setName("hardware1");
         hardware.setType("temperature");
-        HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardware.setOffState("off");
+        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
         return result;
     }
 
-    public HardwareController createBasicHardwareWithTimer() throws Exception {
+    public HardwareController createMqttHardwareControllerWithDefaultHardwareAndTimer() throws Exception {
         Hardware hardware = new Hardware();
         hardware.setPort("1");
         hardware.setName("hardware1");
         hardware.setType("temperature");
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardware.setOffState("off");
         Timer timer = new Timer();
         timer.setCronString("0 0 0 1 1 ? 2099");
         timer.setLevel(100);
         hardware.getTimers().add(timer);
-        HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
-        return result;
-    }
-
-    public HardwareController createBasicHardwareWithTimers(List<Timer> timers) throws Exception {
-        Hardware hardware = new Hardware();
-        hardware.setTimers(timers);
-        HardwareController result = this.hardwareControllerTestService.addBasicHardwareControllerWithHardware(List.of(hardware));
+        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
         return result;
     }
 }

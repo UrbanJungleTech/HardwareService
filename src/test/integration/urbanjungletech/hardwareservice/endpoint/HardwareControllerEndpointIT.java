@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 
@@ -66,6 +67,92 @@ public class HardwareControllerEndpointIT {
     }
 
     /**
+     * Given a Hardwarecontroller with a single hardware, which does not have a desired state set and has its off state set to "off"
+     * When a POST request is made to /hardwarecontroller/
+     * The returned HardwareController contains a Hardware with a desired state set to "off"
+     * The returned HardwareController contains a Hardware with a current state set to "off"
+     * The returned HardwareController contains a Hardware with a a list of states containing "on" and "off"
+     */
+
+    @Test
+    void createHardwareController_whenGivenAHardwareControllerWithAHardware_shouldReturnTheHardwareControllerWithTheHardware() throws Exception {
+        HardwareController hardwareController = new HardwareController();
+        hardwareController.getConfiguration().put("serialNumber", "1234");
+        hardwareController.setName("Test Hardware Controller");
+        Hardware hardware = new Hardware();
+        hardware.setPort("1");
+        hardware.setName("hardware1");
+        hardware.setType("temperature");
+        hardware.setOffState("off");
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardwareController.getHardware().add(hardware);
+        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
+        MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
+                        .content(hardwareControllerJson)
+                        .contentType("application/json")
+                        .content(hardwareControllerJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+        HardwareController createdHardwareController = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        assertEquals("off", createdHardware.getDesiredState().getState());
+        assertEquals("off", createdHardware.getCurrentState().getState());
+        assertEquals(List.of("on", "off"), createdHardware.getPossibleStates());
+    }
+
+    /**
+     * Given a Hardwarecontroller with a single hardware, which does not have a desired state set and has its off state set to "off"
+     * When a GET request is made to /hardware/{hardwareId}
+     * The returned Hardware contains a desired state set to "off"
+     * The returned Hardware contains a current state set to "off"
+     * The returned Hardware contains a list of states containing "on" and "off"
+     */
+    @Test
+    void getHardwareControllerHardware_whenGivenAHardwareControllerWithAHardware_shouldReturnTheHardware() throws Exception {
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        long hardwareId = createdHardware.getId();
+
+        //get the hardware controller
+        String responseJson = mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Hardware retrievedHardware = objectMapper.readValue(responseJson, Hardware.class);
+        assertEquals("off", retrievedHardware.getDesiredState().getState());
+        assertEquals("off", retrievedHardware.getCurrentState().getState());
+        assertEquals(List.of("on", "off"), retrievedHardware.getPossibleStates());
+    }
+
+    /**
+     * Given a Hardwarecontroller with a single hardware, which has a desired state set to on and has its off state set to "off"
+     * When a GET request is made to /hardware/{hardwareId}
+     * The returned Hardware contains a desired state set to "on"
+     * The returned Hardware contains a current state set to "off"
+     * The returned Hardware contains a list of states containing "on" and "off"
+     */
+    @Test
+    void getHardwareControllerHardware_whenGivenAHardwareControllerWithAHardwareWithADesiredState_shouldReturnTheHardware() throws Exception {
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState("on");
+        hardwareController.getHardware().get(0).setDesiredState(hardwareState);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        long hardwareId = createdHardware.getId();
+
+        //get the hardware controller
+        String responseJson = mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Hardware retrievedHardware = objectMapper.readValue(responseJson, Hardware.class);
+        assertEquals("on", retrievedHardware.getDesiredState().getState());
+        assertEquals("off", retrievedHardware.getCurrentState().getState());
+        assertEquals(List.of("on", "off"), retrievedHardware.getPossibleStates());
+    }
+
+
+    /**
      * Given a HardwareController is created via /hardwarecontroller/
      * When a DELETE request is made to /hardwarecontroller/{hardwareControllerId}
      * Then a 204 status code is returned
@@ -117,6 +204,45 @@ public class HardwareControllerEndpointIT {
         assertEquals(createdHardwareController.getName(), updatedHardwareController.getName());
         assertEquals(createdHardwareController.getId(), updatedHardwareController.getId());
         assertEquals(createdHardwareController.getConfiguration(), updatedHardwareController.getConfiguration());
+    }
+
+    /**
+     * Given a HardwareController with a single Hardware has been created via /hardwarecontroller/
+     * When a PUT request is made to /hardwarestate/{hardwareStateId} with a new state of "on"
+     * Then a 200 status code is returned
+     * And the HardwareState is returned
+     * And a call to /hardware/{hardwareId} returns a Hardware with a current state of "on"
+     */
+    @Test
+    void updateHardwareState_whenGivenAValidHardwareState_shouldReturnTheHardwareState() throws Exception {
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        long hardwareId = createdHardware.getId();
+
+        //update the hardware state
+        HardwareState hardwareState = new HardwareState();
+        hardwareState.setState("on");
+        long hardwareStateId = createdHardware.getDesiredState().getId();
+        String hardwareStateJson = objectMapper.writeValueAsString(hardwareState);
+        String responseJson = mockMvc.perform(put("/hardwarestate/" + hardwareStateId)
+                        .content(hardwareStateJson)
+                        .contentType("application/json")
+                        .content(hardwareStateJson))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        HardwareState updatedHardwareState = objectMapper.readValue(responseJson, HardwareState.class);
+
+        //check the values in the response
+        assertEquals(hardwareState.getState(), updatedHardwareState.getState());
+
+        //check the hardware state was updated
+        responseJson = mockMvc.perform(get("/hardware/" + hardwareId))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Hardware retrievedHardware = objectMapper.readValue(responseJson, Hardware.class);
+        assertEquals("on", retrievedHardware.getDesiredState().getState());
+        assertEquals("off", retrievedHardware.getCurrentState().getState());
     }
 
     /**
@@ -204,7 +330,7 @@ public class HardwareControllerEndpointIT {
     @Test
     void createHardwareController_whenGivenAValidHardwareControllerWithAHardware_shouldReturnTheHardwareController() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = this.hardwareControllerTestService.createHardware("light");
+        Hardware hardware = this.hardwareControllerTestService.createDefaultHardware("light");
         hardware.setOffState("off");
         hardwareController.getHardware().add(hardware);
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);

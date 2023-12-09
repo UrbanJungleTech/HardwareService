@@ -10,13 +10,17 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
+/**
+ * Listens for CRUD events related to the Hardware entity and calls the hardware communication service
+ * to execute appropriate actions based on the event.
+ */
 @Service
-public class HardwareEventListener {
-    private static final Logger logger = LoggerFactory.getLogger(HardwareEventListener.class);
+public class HardwareControllerHardwareEventListener {
+    private static final Logger logger = LoggerFactory.getLogger(HardwareControllerHardwareEventListener.class);
     private final ControllerCommunicationService controllerCommunicationService;
     private final HardwareQueryService hardwareQueryService;
 
-    public HardwareEventListener(ControllerCommunicationService controllerCommunicationService, HardwareQueryService hardwareQueryService){
+    public HardwareControllerHardwareEventListener(ControllerCommunicationService controllerCommunicationService, HardwareQueryService hardwareQueryService){
         this.controllerCommunicationService = controllerCommunicationService;
         this.hardwareQueryService = hardwareQueryService;
     }
@@ -24,7 +28,7 @@ public class HardwareEventListener {
     @Async
     @TransactionalEventListener
     public void handleHardwareCreateEvent(HardwareCreateEvent HardwareCreateEvent){
-        logger.debug("Sending hardware create event to hardware queue.");
+        logger.debug("Sending hardware create event to hardware controller.");
         Hardware hardware = this.hardwareQueryService.getHardware(HardwareCreateEvent.getHardwareId());
         this.controllerCommunicationService.registerHardware(hardware);
     }

@@ -48,7 +48,7 @@ public class HardwareStateEndpointIT {
      */
     @Test
     public void getHardwareStateById() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createBasicHardware();
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
 
         String responseJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
