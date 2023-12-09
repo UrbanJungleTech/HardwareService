@@ -530,6 +530,8 @@ For both types, a service retrieves conditions related to the specified entity a
 
 ## Example Scenario
 
+In this scenario the user has a garden, and would like to make sure they keep the temperature between 30 and 40 degrees. To achieve this they have a heater, a fan, and setup 2 alerts to automate the temperature management.
+
 ### Alert Setup
 - **Conditions**:
    1. Sensor reading condition: Temperature above 40 degrees.
