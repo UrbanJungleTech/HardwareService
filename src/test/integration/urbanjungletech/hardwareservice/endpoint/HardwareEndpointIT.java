@@ -155,51 +155,6 @@ public class HardwareEndpointIT {
         assertEquals(updatedHardware.getPort(), hardwareEntity.getPort());
     }
 
-    /**
-     * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
-     * When a PUT request is made to /hardware/{hardwareId} with a Hardware object and the desired state has been modified
-     * Then a 200 status code is returned
-     * And the Hardware is updated in the database
-     * And the Hardware has the new desired state
-     * And a StateChange message is sent to the MQTT broker
-     */
-    @Test
-    public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardwareAndSendAChangeStateMessage() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
-        Hardware createdHardware = createdHardwareController.getHardware().get(0);
-
-        HardwareState updatedState = createdHardware.getDesiredState();
-
-        createdHardware.getDesiredState().setLevel(10);
-        createdHardware.getDesiredState().setState("on");
-
-
-        String updatedHardwareJson = objectMapper.writeValueAsString(createdHardware);
-
-        mockMvc.perform(put("/hardware/" + createdHardware.getId())
-                        .content(updatedHardwareJson)
-                        .contentType("application/json")
-                        .content(updatedHardwareJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.desiredState.id").value(createdHardware.getDesiredState().getId()))
-                .andExpect(jsonPath("$.desiredState.level").value(updatedState.getLevel()))
-                .andExpect(jsonPath("$.desiredState.state").value(updatedState.getState().toString()));
-
-        boolean asserted = false;
-        long startTime = System.currentTimeMillis();
-
-        while (!asserted && System.currentTimeMillis() - startTime < 2000) {
-            if (this.mqttCacheListener.getCache("StateChange").size() >= 1) {
-                asserted = true;
-            }
-        }
-        List<JsonRpcMessage> results = this.mqttCacheListener.getCache("StateChange");
-        assertEquals(1, results.size());
-        JsonRpcMessage message = results.get(0);
-        HardwareState desiredState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
-        assertEquals(updatedState.getLevel(), desiredState.getLevel());
-        assertEquals(updatedState.getState(), desiredState.getState());
-    }
 
 
 

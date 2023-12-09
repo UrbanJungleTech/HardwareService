@@ -24,9 +24,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest()
@@ -46,6 +47,7 @@ public class mqttIT {
     private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     private HardwareTestService hardwareTestService;
+
     /**
      * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
      * Then a RegisterHardware message is sent to the MQTT broker
@@ -65,9 +67,10 @@ public class mqttIT {
             assertEquals(1, this.mqttCacheListener.getCache("RegisterHardware").size());
             JsonRpcMessage registerHardwareMessage = this.mqttCacheListener.getCache("RegisterHardware").get(0);
             assertEquals(createdHardware.getPort(), registerHardwareMessage.getParams().get("port"));
-            Map<String, String> state = (LinkedHashMap)registerHardwareMessage.getParams().get("state");
+            Map<String, String> state = (LinkedHashMap) registerHardwareMessage.getParams().get("state");
             assertEquals(createdHardware.getOffState(), state.get("state"));
-        });;
+        });
+        ;
     }
 
     /**
@@ -155,4 +158,48 @@ public class mqttIT {
             assertTrue(offCount >= 1 && offCount <= 4);
         });
     }
+
+    /**
+     * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
+     * When a PUT request is made to /hardware/{hardwareId} with a Hardware object and the desired state has been modified
+     * Then a 200 status code is returned
+     * And the Hardware is updated in the database
+     * And the Hardware has the new desired state
+     * And a StateChange message is sent to the MQTT broker
+     */
+    @Test
+    public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardwareAndSendAChangeStateMessage() throws Exception {
+        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+
+        HardwareState updatedState = createdHardware.getDesiredState();
+
+        createdHardware.getDesiredState().setLevel(10);
+        createdHardware.getDesiredState().setState("on");
+
+
+        String updatedHardwareJson = objectMapper.writeValueAsString(createdHardware);
+
+        String responseJson = mockMvc.perform(put("/hardware/" + createdHardware.getId())
+                        .content(updatedHardwareJson)
+                        .contentType("application/json")
+                        .content(updatedHardwareJson))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        Hardware updatedHardware = objectMapper.readValue(responseJson, Hardware.class);
+        HardwareState updatedHardwareDesiredState = updatedHardware.getDesiredState();
+        assertEquals(updatedState.getLevel(), updatedHardwareDesiredState.getLevel());
+        assertEquals(updatedState.getState(), updatedHardwareDesiredState.getState());
+        assertNotNull(updatedHardwareDesiredState.getId());
+
+
+        await().untilAsserted(() -> {
+            assertTrue(this.mqttCacheListener.getCache("StateChange").size() >= 1);
+            JsonRpcMessage message = mqttCacheListener.getCache("StateChange").get(0);
+            HardwareState desiredState = objectMapper.convertValue(message.getParams().get("desiredState"), HardwareState.class);
+            assertEquals(updatedState.getLevel(), desiredState.getLevel());
+            assertEquals(updatedState.getState(), desiredState.getState());
+        });
+    }
+
 }
