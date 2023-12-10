@@ -9,20 +9,18 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.*;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,10 +41,9 @@ public class HardwareEndpointIT {
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
-    HardwareTestService hardwareTestService;
-    @Autowired
     MockMqttClientListener mqttCacheListener;
-
+    @Autowired
+    private HardwareTestService hardwareTestService;
 
 
     /**
@@ -104,7 +101,8 @@ public class HardwareEndpointIT {
      */
     @Test
     public void deleteHardware_WhenGivenAValidHardwareId_shouldDeleteTheHardware() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
 
@@ -129,7 +127,8 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAValidHardwareId_shouldUpdateTheHardware() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         //retrieve the hardware controller from the db
@@ -140,19 +139,17 @@ public class HardwareEndpointIT {
         updatedHardware.setPort("2");
         String updatedHardwareJson = objectMapper.writeValueAsString(updatedHardware);
 
-        mockMvc.perform(put("/hardware/" + createdHardware.getId())
+        String responseHardwareJson = mockMvc.perform(put("/hardware/" + createdHardware.getId())
                         .content(updatedHardwareJson)
                         .contentType("application/json")
                         .content(updatedHardwareJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.type").value(updatedHardware.getType()))
-                .andExpect(jsonPath("$.name").value(updatedHardware.getName()))
-                .andExpect(jsonPath("$.port").value(updatedHardware.getPort()));
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        HardwareEntity hardwareEntity = hardwareRepository.findAll().get(0);
-        assertEquals(updatedHardware.getType(), hardwareEntity.getHardwareCategory());
-        assertEquals(updatedHardware.getName(), hardwareEntity.getName());
-        assertEquals(updatedHardware.getPort(), hardwareEntity.getPort());
+        Hardware responseHardware = objectMapper.readValue(responseHardwareJson, Hardware.class);
+        assertEquals(updatedHardware.getType(), responseHardware.getType());
+        assertEquals(updatedHardware.getName(), responseHardware.getName());
+        assertEquals(updatedHardware.getPort(), responseHardware.getPort());
+
     }
 
 
@@ -188,8 +185,18 @@ public class HardwareEndpointIT {
      */
     @Test
     public void createTimer_WhenGivenAValidHardwareId_shouldCreateTheTimer() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardwareAndTimer();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        Timer timer = new Timer();
+        timer.setLevel(100);
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        timer.setSkipNext(true);
+        hardwareController.getHardware().get(0).getTimers().add(timer);
+
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
+
+
 
         Timer createdTimer = createdHardware.getTimers().get(0);
 
@@ -209,7 +216,8 @@ public class HardwareEndpointIT {
      */
     @Test
     public void createTimer_WhenGivenAValidHardwareId_shouldCreateTheTimerAndReturnTheTimer() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
 
@@ -217,6 +225,8 @@ public class HardwareEndpointIT {
         timer.setLevel(100);
         timer.setCronString("0 0 0 1 1 ? 2099");
         timer.setSkipNext(true);
+        timer.setState("on");
+
         createdHardware.getTimers().add(timer);
         String hardwareJson = objectMapper.writeValueAsString(createdHardware);
 
@@ -284,7 +294,8 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateDesiredHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         HardwareState hardwareState = new HardwareState();

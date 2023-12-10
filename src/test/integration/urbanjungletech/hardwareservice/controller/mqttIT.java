@@ -10,14 +10,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.jsonrpc.method.RegisterHardware;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.*;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +47,10 @@ public class mqttIT {
     private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     private HardwareTestService hardwareTestService;
+    @Autowired
+    private SensorTestService sensorTestService;
+    @Autowired
+    private MockMqttClientListener mockMqttClientListener;
 
     /**
      * Given a Hardware has been created as part of a HardwareController via /hardwarecontroller/
@@ -200,6 +204,26 @@ public class mqttIT {
             assertEquals(updatedState.getLevel(), desiredState.getLevel());
             assertEquals(updatedState.getState(), desiredState.getState());
         });
+    }
+
+    /**
+     * Given a HardwareController with a sensor has been created via /hardwarecontroller/
+     * A RegisterSensor message should have been sent to the microcontroller via mqtt
+     */
+    @Test
+    void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+
+        Sensor createdSensor = hardwareController.getSensors().get(0);
+
+        await()
+                .atMost(Duration.of(3, ChronoUnit.SECONDS))
+                .until(() -> this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1);
+
+        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort()));
+        assertEquals(1, results.size());
+        JsonRpcMessage message = results.get(0);
+        assertEquals(createdSensor.getPort(), (String)message.getParams().get("port"));
     }
 
 }

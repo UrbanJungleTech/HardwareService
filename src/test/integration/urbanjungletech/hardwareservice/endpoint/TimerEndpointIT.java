@@ -55,6 +55,7 @@ public class TimerEndpointIT {
         hardware = hardwareController.getHardware().get(0);
         Timer timer = new Timer();
         timer.setLevel(100);
+        timer.setState("on");
         timer.setCronString("0 0 0 1 1 ? 2099");
         hardware.getTimers().add(timer);
         String timerJson = objectMapper.writeValueAsString(timer);
@@ -65,8 +66,15 @@ public class TimerEndpointIT {
                 .andReturn();
         Timer createdTimer = objectMapper.readValue(timerResult.getResponse().getContentAsString(), Timer.class);
         long timerId = createdTimer.getId();
-        this.mockMvc.perform(get("/timer/" + timerId))
-                .andExpect(status().isOk());
+        String timerJsonResponse = this.mockMvc.perform(get("/timer/" + timerId))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        Timer responseTimer = objectMapper.readValue(timerJsonResponse, Timer.class);
+        assertEquals(createdTimer.getId(), responseTimer.getId());
+        assertEquals(createdTimer.getHardwareId(), responseTimer.getHardwareId());
+        assertEquals(createdTimer.getCronString(), responseTimer.getCronString());
+        assertEquals(createdTimer.getLevel(), responseTimer.getLevel());
+        assertEquals(createdTimer.getState(), responseTimer.getState());
+
     }
 
     /**
