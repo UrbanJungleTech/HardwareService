@@ -16,6 +16,7 @@ public class SensorReadingConverterImpl implements SensorReadingConverter {
         result.setId(sensorReadingEntity.getId());
         result.setReading(sensorReadingEntity.getReading());
         result.setReadingTime(sensorReadingEntity.getReadingTime());
+        result.setSensorId(sensorReadingEntity.getSensorId());
         return result;
     }
 
@@ -28,5 +29,6 @@ public class SensorReadingConverterImpl implements SensorReadingConverter {
     public void fillEntity(SensorReadingEntity sensorReadingEntity, SensorReading sensorReading) {
         sensorReadingEntity.setReading(sensorReading.getReading());
         sensorReadingEntity.setReadingTime(sensorReading.getReadingTime());
+        sensorReadingEntity.setSensorId(sensorReading.getSensorId());
     }
 }

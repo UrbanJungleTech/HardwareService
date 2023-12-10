@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.model.alert.condition;
 
 public class SensorReadingAlertCondition extends AlertCondition {
     private Long sensorId;
-    private Long threshold;
+    private Double threshold;
     private ThresholdType thresholdType;
 
     public SensorReadingAlertCondition() {
@@ -17,13 +17,6 @@ public class SensorReadingAlertCondition extends AlertCondition {
         this.sensorId = sensorId;
     }
 
-    public Long getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Long threshold) {
-        this.threshold = threshold;
-    }
 
     public ThresholdType getThresholdType() {
         return thresholdType;
@@ -31,5 +24,13 @@ public class SensorReadingAlertCondition extends AlertCondition {
 
     public void setThresholdType(ThresholdType thresholdType) {
         this.thresholdType = thresholdType;
+    }
+
+    public Double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Double threshold) {
+        this.threshold = threshold;
     }
 }

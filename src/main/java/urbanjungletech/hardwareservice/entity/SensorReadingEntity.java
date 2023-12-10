@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
+import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ public class SensorReadingEntity {
     private Long id;
     private double reading;
     private LocalDateTime readingTime;
+    private Long sensorId;
 
     public double getReading() {
         return reading;
@@ -35,5 +37,13 @@ public class SensorReadingEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getSensorId() {
+        return sensorId;
+    }
+
+    public void setSensorId(Long sensorId) {
+        this.sensorId = sensorId;
     }
 }
