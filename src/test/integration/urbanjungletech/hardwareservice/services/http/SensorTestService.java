@@ -41,6 +41,7 @@ public class SensorTestService {
         sensor.setName(UUID.randomUUID().toString());
         sensor.setSensorType("temperature");
         HardwareController result = this.hardwareControllerTestService.createMockHardwareController();
+        result.getSensors().add(sensor);
         return result;
     }
 
