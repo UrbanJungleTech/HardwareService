@@ -429,7 +429,7 @@ public class AlertEndpointIT {
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
-        scheduledReading.setCronString("0/2 * * * * ?");
+        scheduledReading.setCronString("0/1 * * * * ?");
         scheduledReading.setSensorId(createdHardwareController.getSensors().get(0).getId());
         this.mockMvc.perform(post("/sensor/" + createdHardwareController.getSensors().get(0).getId() + "/scheduledreading")
                         .contentType("application/json")
@@ -439,7 +439,7 @@ public class AlertEndpointIT {
         Alert alert = new Alert();
         SensorReadingAlertCondition sensorReadingAlertCondition = new SensorReadingAlertCondition();
         sensorReadingAlertCondition.setSensorId(createdHardwareController.getSensors().get(0).getId());
-        sensorReadingAlertCondition.setThreshold(1.5);
+        sensorReadingAlertCondition.setThreshold(0.5);
         sensorReadingAlertCondition.setThresholdType(ThresholdType.BELOW);
         sensorReadingAlertCondition.setActive(true);
 
