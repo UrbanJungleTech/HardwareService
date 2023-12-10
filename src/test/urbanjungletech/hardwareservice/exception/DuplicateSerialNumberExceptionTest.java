@@ -13,7 +13,7 @@ class DuplicateSerialNumberExceptionTest {
         DuplicateSerialNumberException duplicateSerialNumberException = new DuplicateSerialNumberException();
         String message = duplicateSerialNumberException.getMessage();
         HttpStatus expectedStatus = HttpStatus.CONFLICT;
-        assertEquals(expectedStatus, duplicateSerialNumberException.getStatus());
+        assertEquals(expectedStatus, duplicateSerialNumberException.getHttpStatus());
         assertEquals(message, duplicateSerialNumberException.getMessage());
     }
 }

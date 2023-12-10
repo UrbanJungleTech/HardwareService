@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
+import urbanjungletech.hardwareservice.exception.exception.StandardErrorException;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
@@ -21,7 +23,6 @@ import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
 import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
-import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -33,14 +34,15 @@ import java.util.List;
 import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
-        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
+        "development.mqtt.server.enabled=false", "development.mqtt.client.enabled=false",
+        "mqtt.server.enabled=false",
+        "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SensorEndpointIT {
@@ -75,14 +77,20 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldReturnTheSensor() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
-        Sensor retrievedSensor = hardwareController.getSensors().get(0);
 
-        mockMvc.perform(get("/sensor/" + retrievedSensor.getId()))
+        Sensor retrievedSensor = createdHardwareController.getSensors().get(0);
+
+        String retrievedSensorJson = mockMvc.perform(get("/sensor/" + retrievedSensor.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(retrievedSensor.getId()))
-                .andExpect(jsonPath("$.sensorType").value(retrievedSensor.getSensorType()));
+                .andReturn().getResponse().getContentAsString();
+
+        Sensor responseSensor = this.objectMapper.readValue(retrievedSensorJson, Sensor.class);
+        assertEquals(retrievedSensor.getId(), responseSensor.getId());
+        assertEquals(retrievedSensor.getName(), responseSensor.getName());
+        assertEquals(retrievedSensor.getSensorType(), responseSensor.getSensorType());
     }
 
 
@@ -151,8 +159,9 @@ public class SensorEndpointIT {
      */
     @Test
     void updateSensor_whenGivenAValidSensor_shouldUpdateTheSensor() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
         Sensor updatedSensor = new Sensor();
         Map<String, String> metadata = new HashMap<>();
         metadata.put("test", "test value");
@@ -191,13 +200,14 @@ public class SensorEndpointIT {
     void updateSensor_whenGivenAnInvalidSensorId_shouldReturn404() throws Exception {
         Sensor sensor = new Sensor();
         String sensorJson = objectMapper.writeValueAsString(sensor);
-        mockMvc.perform(put("/sensor/1")
+        String responseJson = mockMvc.perform(put("/sensor/1")
                         .content(sensorJson)
                         .contentType("application/json")
                         .content(sensorJson))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.httpStatus").value(404))
-                .andExpect(jsonPath("$.message").value("Sensor not found with id of 1"));
+                .andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();
+
+        NotFoundException notFoundException = this.objectMapper.readValue(responseJson, NotFoundException.class);
+        assertEquals(notFoundException.getMessage(), "Sensor not found with id of 1");
     }
 
     /**
@@ -208,14 +218,17 @@ public class SensorEndpointIT {
      */
     @Test
     void deleteSensor_whenGivenAValidSensorId_shouldDeleteTheSensor() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
         mockMvc.perform(delete("/sensor/" + createdSensor.getId()))
                 .andExpect(status().isNoContent());
-        mockMvc.perform(get("/sensor/" + createdSensor.getId()))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.httpStatus").value(404))
-                .andExpect(jsonPath("$.message").value("Sensor not found with id of " + createdSensor.getId()));
+        String exceptionJson = mockMvc.perform(get("/sensor/" + createdSensor.getId()))
+                .andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();
+
+        NotFoundException notFoundException = this.objectMapper.readValue(exceptionJson, NotFoundException.class);
+        assertEquals("Sensor not found with id of " + createdSensor.getId(), notFoundException.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND.value(), notFoundException.getHttpStatus());
     }
 
     /**
@@ -226,8 +239,10 @@ public class SensorEndpointIT {
      */
     @Test
     void deleteSensor_whenGivenAValidSensorId_shouldSendDeregisterSensorMessage() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
         mockMvc.perform(delete("/sensor/" + createdSensor.getId()))
                 .andExpect(status().isNoContent());
 
@@ -235,7 +250,7 @@ public class SensorEndpointIT {
                 .atMost(Duration.of(3, java.time.temporal.ChronoUnit.SECONDS))
                 .with()
                 .untilAsserted(() -> {
-                    String responseJson = mockMvc.perform(get("/hardwarecontroller/" + hardwareController.getId()))
+                    String responseJson = mockMvc.perform(get("/hardwarecontroller/" + createdHardwareController.getId()))
                             .andExpect(status().isOk())
                             .andReturn().getResponse().getContentAsString();
                     HardwareController updatedHardwareController = objectMapper.readValue(responseJson, HardwareController.class);

@@ -3,8 +3,7 @@ package urbanjungletech.hardwareservice.model.alert.action;
 public class CancelNextScheduledHardwareAlertAction extends AlertAction{
     private Long scheduledHardwareId;
 
-    public CancelNextScheduledHardwareAlertAction(String type) {
-        super();
+    public CancelNextScheduledHardwareAlertAction() {
     }
 
     public Long getScheduledHardwareId() {

@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.exception.exception;
 
 public class WebRequestException {
     private String message;
-    private int httpStatus;
+    private Integer httpStatus;
 
     public String getMessage() {
         return message;
@@ -13,11 +13,11 @@ public class WebRequestException {
         this.message = message;
     }
 
-    public int getHttpStatus() {
+    public Integer getHttpStatus() {
         return httpStatus;
     }
 
-    public void setHttpStatus(int httpStatus) {
+    public void setHttpStatus(Integer httpStatus) {
         this.httpStatus = httpStatus;
     }
 }

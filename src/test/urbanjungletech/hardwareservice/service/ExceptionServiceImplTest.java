@@ -34,7 +34,7 @@ class ExceptionServiceImplTest {
 
         NotFoundException result = this.exceptionService.createNotFoundException(Object.class, expectedId);
 
-        assertEquals(expectedStatus, result.getStatus());
+        assertEquals(expectedStatus, result.getHttpStatus());
         assertEquals(expectedMessage, result.getMessage());
     }
 

@@ -19,7 +19,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
-        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
+        "development.mqtt.server.enabled=false", "development.mqtt.client.enabled=false",
+        "mqtt.server.enabled=false",
+        "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareControllerGroupEndpointIT {

@@ -29,7 +29,7 @@ public class CancelNextScheduledHardwareAlertActionConverterTest {
     @Test
     public void testFillEntity() {
         CancelNextScheduledHardwareAlertActionEntity entity = new CancelNextScheduledHardwareAlertActionEntity();
-        CancelNextScheduledHardwareAlertAction action = new CancelNextScheduledHardwareAlertAction("cancelNextScheduledHardware");
+        CancelNextScheduledHardwareAlertAction action = new CancelNextScheduledHardwareAlertAction();
         action.setScheduledHardwareId(123L);
 
         converter.fillEntity(entity, action);
@@ -39,7 +39,7 @@ public class CancelNextScheduledHardwareAlertActionConverterTest {
 
     @Test
     public void testCreateEntity() {
-        CancelNextScheduledHardwareAlertAction action = new CancelNextScheduledHardwareAlertAction("cancelNextScheduledHardware");
+        CancelNextScheduledHardwareAlertAction action = new CancelNextScheduledHardwareAlertAction();
 
         CancelNextScheduledHardwareAlertActionEntity result = converter.createEntity(action);
 

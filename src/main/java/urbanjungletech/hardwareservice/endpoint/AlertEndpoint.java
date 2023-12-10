@@ -52,7 +52,7 @@ public class AlertEndpoint {
     @PostMapping("/")
     public ResponseEntity<Alert> create(@RequestBody Alert alert){
         Alert response = this.alertAdditionService.create(alert);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(201).body(response);
     }
 
 }
