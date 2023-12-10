@@ -54,8 +54,6 @@ public class SensorEndpointIT {
     @Autowired
     private SensorTestService sensorTestService;
     @Autowired
-    MockMqttClientListener mockMqttClientListener;
-    @Autowired
     SensorRepository sensorRepository;
     @Autowired
     ScheduledSensorReadingRepository scheduledSensorReadingRepository;
@@ -117,7 +115,8 @@ public class SensorEndpointIT {
     @Test
     void getSensorReading_whenGivenAValidSensorId_shouldReturnTheSensorReading() throws Exception {
         HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
         mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/reading"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.reading").value(1))

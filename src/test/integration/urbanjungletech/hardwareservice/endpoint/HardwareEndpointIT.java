@@ -40,10 +40,6 @@ public class HardwareEndpointIT {
     private HardwareRepository hardwareRepository;
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
-    @Autowired
-    MockMqttClientListener mqttCacheListener;
-    @Autowired
-    private HardwareTestService hardwareTestService;
 
 
     /**
