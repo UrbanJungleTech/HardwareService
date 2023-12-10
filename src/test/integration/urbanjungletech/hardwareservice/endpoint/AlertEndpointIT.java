@@ -92,7 +92,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
@@ -110,7 +110,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
@@ -134,7 +134,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         this.mockMvc.perform(delete("/alert/" + responseAlert.getId()))
@@ -173,7 +173,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
@@ -202,7 +202,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
@@ -237,7 +237,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
 
@@ -283,7 +283,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
         assertNotNull(responseAlert.getId());
@@ -328,7 +328,7 @@ public class AlertEndpointIT {
         String response = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         Alert responseAlert = this.objectMapper.readValue(response, Alert.class);
 
@@ -406,7 +406,7 @@ public class AlertEndpointIT {
         String responseAlertJson = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
 
@@ -459,7 +459,7 @@ public class AlertEndpointIT {
         String responseAlertJson = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
 
@@ -511,7 +511,7 @@ public class AlertEndpointIT {
         String responseAlertJson = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
 
@@ -572,7 +572,7 @@ public class AlertEndpointIT {
         String responseAlertJson = this.mockMvc.perform(post("/alert/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(alert)))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
 
