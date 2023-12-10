@@ -30,7 +30,8 @@ public class SensorReadingConditionTriggerService implements SpecificConditionTr
         SensorReading sensorReading = this.sensorReadingQueryService.findSensorReadingBySensorId(sensorReadingId);
         List<SensorReadingAlertCondition> conditions = this.sensorReadingAlertConditionQueryService.findSensorReadingAlertConditionBySensorId(sensorReading.getSensorId());
         conditions.forEach(condition -> {
-            condition.setActive(condition.getThresholdType() == ThresholdType.ABOVE && sensorReading.getReading() > condition.getThreshold());
+            condition.setActive(condition.getThresholdType() == ThresholdType.ABOVE && sensorReading.getReading() > condition.getThreshold()
+            || condition.getThresholdType() == ThresholdType.BELOW && sensorReading.getReading() < condition.getThreshold());
             this.alertConditionAdditionService.update(condition.getId(), condition);
         });
     }

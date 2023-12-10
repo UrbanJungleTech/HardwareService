@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
 @Entity
 public class SensorReadingAlertConditionEntity extends AlertConditionEntity{
     private Long sensorId;
-    private Long threshold;
+    private Double threshold;
     private ThresholdType thresholdType;
 
     public Long getSensorId() {
@@ -18,19 +18,19 @@ public class SensorReadingAlertConditionEntity extends AlertConditionEntity{
         this.sensorId = sensorId;
     }
 
-    public Long getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Long threshold) {
-        this.threshold = threshold;
-    }
-
     public ThresholdType getThresholdType() {
         return thresholdType;
     }
 
     public void setThresholdType(ThresholdType thresholdType) {
         this.thresholdType = thresholdType;
+    }
+
+    public Double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Double threshold) {
+        this.threshold = threshold;
     }
 }

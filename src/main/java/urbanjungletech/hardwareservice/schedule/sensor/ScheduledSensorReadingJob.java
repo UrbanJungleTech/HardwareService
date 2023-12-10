@@ -33,6 +33,7 @@ public class ScheduledSensorReadingJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         try {
+            System.out.println("ScheduledSensorReadingJob.execute");
             ScheduledSensorReading scheduledSensorReading = this.scheduledSensorReadingQueryService.getScheduledSensorReading(this.scheduledSensorReadingId);
             SensorReading result = this.sensorQueryService.readSensor(scheduledSensorReading.getSensorId());
             this.sensorReadingAdditionService.create(result);

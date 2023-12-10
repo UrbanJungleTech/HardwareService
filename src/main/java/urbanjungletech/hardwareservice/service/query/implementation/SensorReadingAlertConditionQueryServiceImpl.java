@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class SensorReadingAlertConditionQueryServiceImpl implements SensorReadingAlertConditionQueryService {
     private final SensorReadingAlertConditionRepository sensorReadingAlertConditionRepository;
-    private final SensorReadingAlertConditionConverter sensorReadingAlertConditionConverter;
+    private final AlertConditionConverter sensorReadingAlertConditionConverter;
     public SensorReadingAlertConditionQueryServiceImpl(SensorReadingAlertConditionRepository sensorReadingAlertConditionRepository,
-                                                       SensorReadingAlertConditionConverter sensorReadingAlertConditionConverter) {
+                                                       AlertConditionConverter sensorReadingAlertConditionConverter) {
         this.sensorReadingAlertConditionRepository = sensorReadingAlertConditionRepository;
         this.sensorReadingAlertConditionConverter = sensorReadingAlertConditionConverter;
     }
@@ -26,6 +26,6 @@ public class SensorReadingAlertConditionQueryServiceImpl implements SensorReadin
     @Override
     public List<SensorReadingAlertCondition> findSensorReadingAlertConditionBySensorId(Long sensorId) {
         List<SensorReadingAlertConditionEntity> entities = this.sensorReadingAlertConditionRepository.findBySensorId(sensorId);
-        return entities.stream().map(entity -> this.sensorReadingAlertConditionConverter.toModel(entity)).collect(Collectors.toList());
+        return entities.stream().map(entity -> (SensorReadingAlertCondition)this.sensorReadingAlertConditionConverter.toModel(entity)).collect(Collectors.toList());
     }
 }
