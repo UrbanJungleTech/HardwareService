@@ -20,8 +20,8 @@ public class ErrorHandler {
     public ResponseEntity<WebRequestException> handleError(StandardErrorException exception){
         WebRequestException error = new WebRequestException();
         error.setMessage(exception.getMessage());
-        error.setHttpStatus(exception.getStatus().value());
-        return ResponseEntity.status(exception.getStatus()).body(error);
+        error.setHttpStatus(exception.getHttpStatus().intValue());
+        return ResponseEntity.status(exception.getHttpStatus()).body(error);
     }
 
     @ExceptionHandler(value=RuntimeException.class)

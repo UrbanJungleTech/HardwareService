@@ -7,11 +7,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.services.http.ScheduledSensorReadingTestService;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
 
@@ -22,7 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
-        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
+        "development.mqtt.server.enabled=false", "development.mqtt.client.enabled=false",
+        "mqtt.server.enabled=false",
+        "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ScheduledReadingEndpointIT {
@@ -39,6 +43,8 @@ public class ScheduledReadingEndpointIT {
 
     @Autowired
     SensorTestService sensorTestService;
+    @Autowired
+    HardwareControllerTestService hardwareControllerTestService;
 
 
     /**
@@ -52,7 +58,9 @@ public class ScheduledReadingEndpointIT {
      */
     @Test
     void createScheduledReading() throws Exception {
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor sensor = createdHardwareController.getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0 0 0 1 1 ? 2099");
@@ -99,11 +107,14 @@ public class ScheduledReadingEndpointIT {
     void getScheduledReadingById() throws Exception {
         ScheduledSensorReading scheduledReading = this.scheduledSensorReadingTestService.createBasicScheduledReading();
 
-        this.mockmvc.perform(get("/scheduledreading/" + scheduledReading.getId()))
+        String retrievedScheduledReadingJson = this.mockmvc.perform(get("/scheduledreading/" + scheduledReading.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(scheduledReading.getId()))
-                .andExpect(jsonPath("$.sensorId").value(scheduledReading.getSensorId()))
-                .andExpect(jsonPath("$.cronString").value(scheduledReading.getCronString()));
+                .andReturn().getResponse().getContentAsString();
+
+        ScheduledSensorReading retrievedScheduledReading = objectMapper.readValue(retrievedScheduledReadingJson, ScheduledSensorReading.class);
+        assertEquals(retrievedScheduledReading.getId(), scheduledReading.getId());
+        assertEquals(retrievedScheduledReading.getSensorId(), scheduledReading.getSensorId());
+        assertEquals(retrievedScheduledReading.getCronString(), scheduledReading.getCronString());
     }
 
     /**

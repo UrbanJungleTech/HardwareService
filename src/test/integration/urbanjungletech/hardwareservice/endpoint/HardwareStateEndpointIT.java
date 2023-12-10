@@ -24,7 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
-        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
+        "development.mqtt.server.enabled=false", "development.mqtt.client.enabled=false",
+        "mqtt.server.enabled=false",
+        "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HardwareStateEndpointIT {
@@ -49,7 +51,8 @@ public class HardwareStateEndpointIT {
      */
     @Test
     public void getHardwareStateById() throws Exception {
-        HardwareController createdHardwareController = this.hardwareTestService.createMqttHardwareControllerWithDefaultHardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         HardwareState desiredState = createdHardwareController.getHardware().get(0).getDesiredState();
 
         String responseJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
@@ -91,21 +94,25 @@ public class HardwareStateEndpointIT {
         desiredState.setState("on");
         desiredState.setLevel(50);
 
-        this.mockMvc.perform(put("/hardwarestate/" + desiredState.getId())
+        String updatedHardwareStateJson = this.mockMvc.perform(put("/hardwarestate/" + desiredState.getId())
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(desiredState)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(desiredState.getId()))
-                .andExpect(jsonPath("$.hardwareId").value(desiredState.getHardwareId()))
-                .andExpect(jsonPath("$.state").value(desiredState.getState().toString()))
-                .andExpect(jsonPath("$.level").value(desiredState.getLevel()));
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
+        HardwareState updatedHardwareState = objectMapper.readValue(updatedHardwareStateJson, HardwareState.class);
+        assertEquals(desiredState.getLevel(), updatedHardwareState.getLevel());
+        assertEquals(desiredState.getState(), updatedHardwareState.getState());
+        assertEquals(desiredState.getHardwareId(), updatedHardwareState.getHardwareId());
+        assertEquals(desiredState.getId(), updatedHardwareState.getId());
+
+        String hardwareStateResponseJson = this.mockMvc.perform(get("/hardwarestate/" + desiredState.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(desiredState.getId()))
-                .andExpect(jsonPath("$.hardwareId").value(desiredState.getHardwareId()))
-                .andExpect(jsonPath("$.state").value(desiredState.getState().toString()))
-                .andExpect(jsonPath("$.level").value(desiredState.getLevel()));
+                .andReturn().getResponse().getContentAsString();
+        HardwareState hardwareStateResponse = objectMapper.readValue(hardwareStateResponseJson, HardwareState.class);
+        assertEquals(desiredState.getLevel(), hardwareStateResponse.getLevel());
+        assertEquals(desiredState.getState(), hardwareStateResponse.getState());
+        assertEquals(desiredState.getHardwareId(), hardwareStateResponse.getHardwareId());
+        assertEquals(desiredState.getId(), hardwareStateResponse.getId());
 
         await()
                 .atMost(Duration.of(3, ChronoUnit.SECONDS))

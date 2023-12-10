@@ -9,17 +9,17 @@ public class StandardErrorException extends RuntimeException{
         this.metadata = metadata;
     }
 
-    protected HttpStatus status;
+    public Integer getHttpStatus() {
+        return httpStatus;
+    }
+
+    public void setHttpStatus(Integer httpStatus) {
+        this.httpStatus = httpStatus;
+    }
+
+    protected Integer httpStatus;
     protected String message;
     protected Map<String, String> metadata;
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
 
     @Override
     public String getMessage() {

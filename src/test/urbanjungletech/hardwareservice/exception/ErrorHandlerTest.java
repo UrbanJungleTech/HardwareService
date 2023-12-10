@@ -22,7 +22,7 @@ class ErrorHandlerTest {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         String message = "error message";
         StandardErrorException standardErrorException = new StandardErrorException();
-        standardErrorException.setStatus(httpStatus);
+        standardErrorException.setHttpStatus(httpStatus.value());
         standardErrorException.setMessage(message);
 
         ResponseEntity<WebRequestException> response = this.errorHandler.handleError(standardErrorException);

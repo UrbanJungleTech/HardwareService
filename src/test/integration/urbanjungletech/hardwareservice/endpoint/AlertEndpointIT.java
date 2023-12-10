@@ -13,8 +13,11 @@ import urbanjungletech.hardwareservice.mock.action.MockActionService;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
+import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
+import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
+import urbanjungletech.hardwareservice.model.alert.action.CancelNextScheduledHardwareAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
@@ -33,7 +36,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
-        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
+        "development.mqtt.server.enabled=false", "development.mqtt.client.enabled=false",
+        "mqtt.server.enabled=false",
+        "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc()
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AlertEndpointIT {
@@ -519,6 +524,146 @@ public class AlertEndpointIT {
             assertEquals(0, getResponseAlert.getConditions().getInactiveConditions().size());
             assertEquals(1, getResponseAlert.getConditions().getActiveConditions().size());
             assertEquals(1L, mockActionService.getCounter());
+        });
+    }
+
+    /**
+     * Given an Alert object has been created, with a single Condition of type SensorReadingAlertCondition and a single Action of type HardwareStateChangeAlertAction
+     * When the sensor reading associated with the SensorReadingAlertCondition is above the threshold
+     * Then the action is executed
+     * And the state of the hardware associated with the HardwareStateChangeAlertAction is updated
+     */
+    @Test
+    void sensorReadingAlertConditionActionExecutionBelowThresholdHardwareStateChangeActionExecution() throws Exception {
+        //create a hardware controller with a hardware.
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        Hardware hardware = new Hardware();
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        scheduledReading.setCronString("0/1 * * * * ?");
+        scheduledReading.setSensorId(createdHardwareController.getSensors().get(0).getId());
+        this.mockMvc.perform(post("/sensor/" + createdHardwareController.getSensors().get(0).getId() + "/scheduledreading")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(scheduledReading)))
+                .andExpect(status().isCreated());
+
+        Alert alert = new Alert();
+        SensorReadingAlertCondition sensorReadingAlertCondition = new SensorReadingAlertCondition();
+        sensorReadingAlertCondition.setSensorId(createdHardwareController.getSensors().get(0).getId());
+        sensorReadingAlertCondition.setThreshold(1.5);
+        sensorReadingAlertCondition.setThresholdType(ThresholdType.BELOW);
+
+        HardwareStateChangeAlertAction hardwareStateChangeAlertAction = new HardwareStateChangeAlertAction();
+        hardwareStateChangeAlertAction.setHardwareId(createdHardware.getId());
+        hardwareStateChangeAlertAction.setState("on");
+        hardwareStateChangeAlertAction.setLevel(100L);
+
+        alert.getActions().add(hardwareStateChangeAlertAction);
+
+        AlertConditions alertConditions = new AlertConditions();
+        alertConditions.getConditions().add(sensorReadingAlertCondition);
+
+        alert.setConditions(alertConditions);
+
+        String responseAlertJson = this.mockMvc.perform(post("/alert/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(alert)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
+
+        //check that the actions was performed and that the alerts were updated in the alert conditions
+        await().atMost(50, TimeUnit.SECONDS).untilAsserted(() -> {
+            String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Alert getResponseAlert = this.objectMapper.readValue(getResponse, Alert.class);
+            assertEquals(0, getResponseAlert.getConditions().getInactiveConditions().size());
+            assertEquals(1, getResponseAlert.getConditions().getActiveConditions().size());
+            String hardwareResponseJson = this.mockMvc.perform(get("/hardware/" + createdHardware.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Hardware hardwareResponse = this.objectMapper.readValue(hardwareResponseJson, Hardware.class);
+            assertEquals("on", hardwareResponse.getDesiredState().getState());
+        });
+    }
+
+    /**
+     * Given an Alert object has been created, with a single Condition of type SensorReadingAlertCondition and a single Action of type CancelNextScheduledHardwareAlertAction
+     * When the sensor reading associated with the SensorReadingAlertCondition is above the threshold
+     * Then the action is executed
+     * And the timer now has its skipNextExecution flag set to true
+     */
+    @Test
+    void sensorReadingAlertConditionActionExecutionBelowThresholdCancelNextScheduledHardwareAlertActionExecution() throws Exception {
+        //create a hardware controller with a hardware.
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        Hardware hardware = new Hardware();
+        hardware.setPort("1");
+        hardwareController.getHardware().add(hardware);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Hardware createdHardware = createdHardwareController.getHardware().get(0);
+        Timer timer = new Timer();
+        timer.setCronString("0/1 1 1 1 1 ?");
+        timer.setHardwareId(createdHardware.getId());
+        createdHardware.getTimers().add(timer);
+        String updatedHardwareJson = this.mockMvc.perform(put("/hardware/" + createdHardwareController.getHardware().get(0).getId())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(createdHardware)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        Hardware updatedHardware = this.objectMapper.readValue(updatedHardwareJson, Hardware.class);
+        Timer createdTimer = updatedHardware.getTimers().get(0);
+
+
+        ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        scheduledReading.setCronString("0/1 * * * * ?");
+        scheduledReading.setSensorId(createdHardwareController.getSensors().get(0).getId());
+        this.mockMvc.perform(post("/sensor/" + createdHardwareController.getSensors().get(0).getId() + "/scheduledreading")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(scheduledReading)))
+                .andExpect(status().isCreated());
+
+        Alert alert = new Alert();
+        SensorReadingAlertCondition sensorReadingAlertCondition = new SensorReadingAlertCondition();
+        sensorReadingAlertCondition.setSensorId(createdHardwareController.getSensors().get(0).getId());
+        sensorReadingAlertCondition.setThreshold(1.5);
+        sensorReadingAlertCondition.setThresholdType(ThresholdType.BELOW);
+
+        CancelNextScheduledHardwareAlertAction cancelNextScheduledHardwareAlertAction = new CancelNextScheduledHardwareAlertAction();
+        cancelNextScheduledHardwareAlertAction.setScheduledHardwareId(createdTimer.getId());
+
+        alert.getActions().add(cancelNextScheduledHardwareAlertAction);
+
+        AlertConditions alertConditions = new AlertConditions();
+        alertConditions.getConditions().add(sensorReadingAlertCondition);
+
+        alert.setConditions(alertConditions);
+
+        String responseAlertJson = this.mockMvc.perform(post("/alert/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(alert)))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+
+        Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
+
+        //check that the actions was performed and that the alerts were updated in the alert conditions
+        await().atMost(50, TimeUnit.SECONDS).untilAsserted(() -> {
+            String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Alert getResponseAlert = this.objectMapper.readValue(getResponse, Alert.class);
+            assertEquals(0, getResponseAlert.getConditions().getInactiveConditions().size());
+            assertEquals(1, getResponseAlert.getConditions().getActiveConditions().size());
+            String hardwareResponseJson = this.mockMvc.perform(get("/timer/" + createdTimer.getId()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+            Timer timerResponse = this.objectMapper.readValue(hardwareResponseJson, Timer.class);
+            assertEquals(true, timerResponse.isSkipNext());
         });
     }
 }

@@ -9,7 +9,7 @@ import urbanjungletech.hardwareservice.model.alert.action.CancelNextScheduledHar
 public class CancelNextScheduledHardwareAlertActionConverter implements SpecificAlertActionConverter<CancelNextScheduledHardwareAlertAction, CancelNextScheduledHardwareAlertActionEntity> {
     @Override
     public CancelNextScheduledHardwareAlertAction toModel(CancelNextScheduledHardwareAlertActionEntity actionEntity) {
-        CancelNextScheduledHardwareAlertAction result = new CancelNextScheduledHardwareAlertAction("cancelNextScheduledHardware");
+        CancelNextScheduledHardwareAlertAction result = new CancelNextScheduledHardwareAlertAction();
         result.setScheduledHardwareId(actionEntity.getScheduledHardwareId());
         return result;
     }
