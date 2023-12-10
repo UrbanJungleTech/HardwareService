@@ -16,6 +16,7 @@ public class TimerEntity {
 
     private boolean skipNext;
     private long level;
+    private String state;
 
     public TimerEntity() {
         this.skipNext = false;
@@ -60,5 +61,13 @@ public class TimerEntity {
 
     public void setLevel(long level) {
         this.level = level;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

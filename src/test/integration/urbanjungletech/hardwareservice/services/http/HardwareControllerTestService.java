@@ -41,7 +41,7 @@ public class HardwareControllerTestService {
     }
 
     public HardwareController createHardwareMqttController(){
-        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
+        HardwareController hardwareController = createMqttHardwareController();
         hardwareController.setType("mqtt");
         Map<String, String> configuration = hardwareController.getConfiguration();
         configuration.put("serialNumber", "1234");
@@ -63,20 +63,20 @@ public class HardwareControllerTestService {
 
 
     public HardwareController createMqttHardwareControllerWithSensors(List<Sensor> sensors) throws Exception{
-        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
+        HardwareController hardwareController = createMqttHardwareController();
         hardwareController.setSensors(sensors);
         HardwareController result = this.postHardwareController(hardwareController);
         return result;
     }
 
-    public HardwareController createMqttHardwareControllerWithHardware(List<Hardware> hardware) throws Exception{
-        HardwareController hardwareController = createMqttHardwareControllerWithHardware();
+    public HardwareController createMqttHardwareController(List<Hardware> hardware) throws Exception{
+        HardwareController hardwareController = createMqttHardwareController();
         hardwareController.setHardware(hardware);
         HardwareController result = this.postHardwareController(hardwareController);
         return result;
     }
 
-    public HardwareController createMqttHardwareControllerWithHardware() {
+    public HardwareController createMqttHardwareController() {
         HardwareController hardwareController = new HardwareController();
         hardwareController.setType("mqtt");
         hardwareController.getConfiguration().put("serialNumber", "1234");
@@ -87,7 +87,7 @@ public class HardwareControllerTestService {
     }
 
     public HardwareController createMockHardwareController() {
-        HardwareController result = createMqttHardwareControllerWithHardware();
+        HardwareController result = new HardwareController();
         result.setType("mock");
         return result;
     }

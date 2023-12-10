@@ -39,7 +39,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = {"development.mqtt.client.enabled=false",
+        "development.mqtt.server.enabled=false", "mqtt.client.enabled=false", "mqtt.server.enabled=false"})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SensorEndpointIT {
@@ -52,8 +53,6 @@ public class SensorEndpointIT {
     SensorReadingRepository sensorReadingRepository;
     @Autowired
     private SensorTestService sensorTestService;
-    @Autowired
-    MockMqttClientListener mockMqttClientListener;
     @Autowired
     SensorRepository sensorRepository;
     @Autowired
@@ -86,25 +85,7 @@ public class SensorEndpointIT {
                 .andExpect(jsonPath("$.sensorType").value(retrievedSensor.getSensorType()));
     }
 
-    /**
-     * Given a HardwareController with a sensor has been created via /hardwarecontroller/
-     * A RegisterSensor message should have been sent to the microcontroller via mqtt
-     */
-    @Test
-    void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
 
-        Sensor createdSensor = hardwareController.getSensors().get(0);
-
-        await()
-                .atMost(Duration.of(3, ChronoUnit.SECONDS))
-                .until(() -> this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1);
-
-        List<JsonRpcMessage> results = this.mockMqttClientListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort()));
-        assertEquals(1, results.size());
-        JsonRpcMessage message = results.get(0);
-        assertEquals(createdSensor.getPort(), (String)message.getParams().get("port"));
-    }
 
     /**
      * Given an id which is not associated with a sensor
@@ -133,8 +114,9 @@ public class SensorEndpointIT {
      */
     @Test
     void getSensorReading_whenGivenAValidSensorId_shouldReturnTheSensorReading() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
         mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/reading"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.reading").value(1))

@@ -23,7 +23,7 @@ public class HardwareTestService {
         hardware.setType("temperature");
         hardware.setPossibleStates(List.of("on", "off"));
         hardware.setOffState("off");
-        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
+        HardwareController result = this.hardwareControllerTestService.createMqttHardwareController(List.of(hardware));
         return result;
     }
 
@@ -38,7 +38,7 @@ public class HardwareTestService {
         timer.setCronString("0 0 0 1 1 ? 2099");
         timer.setLevel(100);
         hardware.getTimers().add(timer);
-        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithHardware(List.of(hardware));
+        HardwareController result = this.hardwareControllerTestService.createMqttHardwareController(List.of(hardware));
         return result;
     }
 }

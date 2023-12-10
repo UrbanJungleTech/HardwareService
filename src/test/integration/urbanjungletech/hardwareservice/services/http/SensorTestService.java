@@ -35,5 +35,15 @@ public class SensorTestService {
         return result;
     }
 
+    public HardwareController createBasicMockSensor() throws Exception{
+        Sensor sensor = new Sensor();
+        sensor.setPort(String.valueOf(this.portCounter.getAndIncrement()));
+        sensor.setName(UUID.randomUUID().toString());
+        sensor.setSensorType("temperature");
+        HardwareController result = this.hardwareControllerTestService.createMockHardwareController();
+        result.getSensors().add(sensor);
+        return result;
+    }
+
 
 }
