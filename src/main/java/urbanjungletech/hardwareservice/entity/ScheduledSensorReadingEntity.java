@@ -14,7 +14,7 @@ import java.util.Map;
 @Table(name = "ScheduledSensorReading")
 public class ScheduledSensorReadingEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String cronString;
     @ManyToOne(cascade = CascadeType.ALL)

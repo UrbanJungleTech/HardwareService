@@ -42,6 +42,18 @@ public class SensorReadingRouterDAOImpl implements SensorReadingRouterDAO {
 
     @Override
     public SensorReadingRouterEntity update(SensorReadingRouter sensorReadingRouter) {
-        return null;
+        SensorReadingRouterEntity result = this.sensorReadingRouterRepository
+                .findById(sensorReadingRouter.getId()).orElseThrow(
+                        () -> this.exceptionService.createNotFoundException(SensorReadingRouterEntity.class, sensorReadingRouter.getId())
+                );
+        this.sensorReadingRouterConverter.fillEntity(result, sensorReadingRouter);
+        return this.sensorReadingRouterRepository.save(result);
+    }
+
+    @Override
+    public SensorReadingRouterEntity getById(Long id) {
+        return this.sensorReadingRouterRepository.findById(id).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(SensorReadingRouterEntity.class, id)
+        );
     }
 }

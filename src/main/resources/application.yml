@@ -6,15 +6,19 @@ spring:
     driverClassName: ${DATABASE_DRIVER}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+
   cloud:
     azure:
       keyvault:
         secret:
           endpoint: ${AZURE_KEYVAULT_URI}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 logging:
   level:
-    root: ${ROOT_LOG_LEVEL:INFO}
-    urbanjungletech: ${ROOT_LOG_LEVEL:INFO}
+    root: ${ROOT_LOG_LEVEL:DEBUG}
+    urbanjungletech: ${ROOT_LOG_LEVEL:DEBUG}
     org.hibernate.SQL: ${SQL_LOG_LEVEL:INFO}
   mqtt:
     level: ${MQTT_LOG_LEVEL:INFO}

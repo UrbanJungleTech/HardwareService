@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.dao.AlertConditionDAO;
@@ -43,17 +42,10 @@ public class AlertConditionDAOImpl implements AlertConditionDAO {
                 () -> this.exceptionService.createNotFoundException(AlertConditionsEntity.class, alertEntity.getConditions().getId())
         );
         alertConditionEntity.setAlert(alertEntity);
+        alertEntity.setConditions(alertConditionsEntity);
         AlertConditionEntity result = this.alertConditionRepository.save(alertConditionEntity);
 
-        alertEntity.getConditions().getConditions().add(result);
-        this.alertRepository.save(alertEntity);
-
-        if(alertCondition.getActive() == null || alertCondition.getActive() == false){
-            alertConditionsEntity.getInactiveConditions().add(result);
-        }
-        else {
-            alertConditionsEntity.getActiveConditions().add(result);
-        }
+        alertEntity.getConditions().getAllConditions().add(result);
         this.alertConditionsRepository.save(alertConditionsEntity);
         return result;
     }
@@ -68,14 +60,6 @@ public class AlertConditionDAOImpl implements AlertConditionDAO {
         AlertConditionsEntity alertConditionsEntity = this.alertConditionsRepository.findById(alertConditionEntity.getAlert().getConditions().getId()).orElseThrow(
                 () -> this.exceptionService.createNotFoundException(AlertConditionsEntity.class, alertConditionEntity.getAlert().getConditions().getId())
         );
-        if(alertConditionEntity.getActive() == null || alertConditionEntity.getActive() == false){
-            alertConditionsEntity.getActiveConditions().remove(alertConditionEntity);
-            alertConditionsEntity.getInactiveConditions().add(alertConditionEntity);
-        }
-        else {
-            alertConditionsEntity.getInactiveConditions().remove(alertConditionEntity);
-            alertConditionsEntity.getActiveConditions().add(alertConditionEntity);
-        }
         this.alertConditionsRepository.save(alertConditionsEntity);
         return result;
     }

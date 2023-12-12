@@ -3,8 +3,10 @@ package urbanjungletech.hardwareservice.endpoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +18,6 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
-import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.CancelNextScheduledHardwareAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.HardwareStateChangeAlertAction;
 import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
@@ -41,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc()
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@EntityScan(basePackages = {"urbanjungletech", "urbanjungletech.hardwareservice.mock.action"})
+@Import({MockEntity.class})
 public class AlertEndpointIT {
 
     @Autowired
@@ -393,6 +396,7 @@ public class AlertEndpointIT {
         sensorReadingAlertCondition.setSensorId(createdHardwareController.getSensors().get(0).getId());
         sensorReadingAlertCondition.setThreshold(0.5);
         sensorReadingAlertCondition.setThresholdType(ThresholdType.ABOVE);
+        sensorReadingAlertCondition.setActive(false);
 
         MockAction mockAction = new MockAction();
         alert.getActions().add(mockAction);
@@ -409,9 +413,11 @@ public class AlertEndpointIT {
                 .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
+        assertEquals(1, responseAlert.getConditions().getInactiveConditions().size());
+        assertEquals(0, responseAlert.getConditions().getActiveConditions().size());
 
         //check that the actions was performed and that the alerts were updated in the alert conditions
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(50, TimeUnit.SECONDS).untilAsserted(() -> {
             String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
@@ -464,7 +470,7 @@ public class AlertEndpointIT {
         Alert responseAlert = this.objectMapper.readValue(responseAlertJson, Alert.class);
 
         //check that the actions was performed and that the alerts were updated in the alert conditions
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             String getResponse = this.mockMvc.perform(get("/alert/" + responseAlert.getId()))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();

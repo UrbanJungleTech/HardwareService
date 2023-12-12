@@ -14,22 +14,20 @@ public class AlertCondition {
     protected Long id;
     protected Long alertId;
     protected String type;
-    protected Boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    protected boolean active;
 
     public AlertCondition() {
         this.active = false;
     }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-
-
     public AlertCondition(String type) {
         this.type = type;
     }

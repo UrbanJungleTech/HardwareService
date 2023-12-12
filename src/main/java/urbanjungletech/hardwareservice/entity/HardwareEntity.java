@@ -23,7 +23,6 @@ public class HardwareEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> possibleStates;
     @ManyToOne
-//    @Transient
     private HardwareEntity backup;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumn(name = "desired_hardwarestate_id")

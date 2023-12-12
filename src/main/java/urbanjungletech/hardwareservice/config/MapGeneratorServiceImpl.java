@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MapGeneratorServiceImpl implements MapGeneratorService{
@@ -14,7 +12,12 @@ public class MapGeneratorServiceImpl implements MapGeneratorService{
     public <ModelClass, ServiceClass> Map<ModelClass, ServiceClass> generateMap(List<ServiceClass> serviceClasses, Class serviceClass) {
         Map<ModelClass, ServiceClass> result = new HashMap<>();
         for(ServiceClass service : serviceClasses){
-            for(Type type :  service.getClass().getGenericInterfaces()){
+            List<Type> possibleTypes = new LinkedList<>();
+            possibleTypes.addAll(Arrays.stream(service.getClass().getGenericInterfaces()).toList());
+            if(service.getClass().getGenericSuperclass() != null){
+                Arrays.stream(service.getClass().getSuperclass().getGenericInterfaces()).toList().forEach(possibleTypes::add);
+            }
+            for(Type type :  possibleTypes){
                 if(type instanceof ParameterizedType p && p.getRawType() == serviceClass){
                     result.put((ModelClass)p.getActualTypeArguments()[0], service);
                     break;

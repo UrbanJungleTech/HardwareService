@@ -16,6 +16,7 @@ import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -68,7 +69,8 @@ public class DeregisterSensorIT {
         this.mqttTestService.sendMessage(rpcMessage);
 
 
-        await().untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
             Sensor responseSensor = this.hardwareControllerTestService.findSensor(sensorId);
             assertNull(responseSensor);
         });

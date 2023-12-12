@@ -59,7 +59,7 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     @Transactional
     @Override
     public void delete(long sensorId) {
-        //this.sensorEventPublisher.publishSensorDeleteEvent(sensorId);
+//        this.sensorEventPublisher.publishSensorDeleteEvent(sensorId);
         this.sensorDAO.delete(sensorId);
     }
 
