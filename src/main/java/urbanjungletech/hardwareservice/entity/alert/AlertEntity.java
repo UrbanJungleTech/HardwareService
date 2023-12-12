@@ -21,6 +21,7 @@ public class AlertEntity {
 
     public AlertEntity() {
         this.actions = new ArrayList<>();
+        this.conditions = new AlertConditionsEntity();
     }
 
     private Double threshold;

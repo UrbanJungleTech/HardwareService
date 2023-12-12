@@ -3,6 +3,7 @@ package urbanjungletech.hardwareservice.service.alert.condition.handler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import urbanjungletech.hardwareservice.event.sensorreading.SensorReadingCreateEvent;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
@@ -21,8 +22,7 @@ public class SensorReadingConditionEventHandler {
         this.sensorReadingConditionTriggerService = sensorReadingConditionTriggerService;
     }
     @Async
-    @TransactionalEventListener
-    @Transactional
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleSensorReadingEvent(SensorReadingCreateEvent sensorReadingCreateEvent) {
         this.sensorReadingConditionTriggerService.trigger(sensorReadingCreateEvent.getSensorId());
     }

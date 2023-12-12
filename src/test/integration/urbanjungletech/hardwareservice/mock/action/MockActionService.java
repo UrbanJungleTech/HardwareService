@@ -16,6 +16,7 @@ public class MockActionService implements SpecificActionExecutionService<MockAct
 
     @Override
     public void execute(MockAction action) {
+
         this.counter.incrementAndGet();
     }
 }

@@ -29,7 +29,6 @@ public class SensorReadingDAOImpl implements SensorReadingDAO {
     }
 
     @Override
-    @Transactional
     public SensorReadingEntity createAndSave(SensorReading sensorReading) {
         SensorReadingEntity sensorReadingEntity = new SensorReadingEntity();
         this.sensorReadingConverter.fillEntity(sensorReadingEntity, sensorReading);

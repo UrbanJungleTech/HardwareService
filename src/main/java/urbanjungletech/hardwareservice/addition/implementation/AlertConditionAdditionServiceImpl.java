@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.dao.AlertConditionDAO;
@@ -39,6 +40,7 @@ public class AlertConditionAdditionServiceImpl implements AlertConditionAddition
         this.alertConditionQueryService = alertConditionQueryService;
     }
     @Override
+    @Transactional
     public AlertCondition create(AlertCondition alertCondition) {
         AlertConditionEntity alertConditionEntity = this.alertConditionDAO.create(alertCondition);
         AlertCondition result = this.alertConditionConverter.toModel(alertConditionEntity);
@@ -48,15 +50,17 @@ public class AlertConditionAdditionServiceImpl implements AlertConditionAddition
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         this.alertConditionDAO.delete(id);
     }
 
     @Override
+    @Transactional
     public AlertCondition update(long id, AlertCondition condition) {
         condition.setId(id);
         AlertCondition existingCondition = this.alertConditionQueryService.getAlertCondition(id);
-        if(existingCondition.getActive() != condition.getActive()){
+        if(existingCondition.isActive() != condition.isActive()){
             conditionEventPublisher.publishConditionActiveEvent(condition.getId());
         }
         AlertConditionEntity alertConditionEntity = this.alertConditionDAO.update(condition);
@@ -65,6 +69,7 @@ public class AlertConditionAdditionServiceImpl implements AlertConditionAddition
     }
 
     @Override
+    @Transactional
     public List<AlertCondition> updateList(List<AlertCondition> models) {
         return models.stream().map(model -> {
                     if (model.getId() == null) {

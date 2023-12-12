@@ -6,10 +6,9 @@ import urbanjungletech.hardwareservice.model.Sensor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="SensorReading")
 public class SensorReadingEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private double reading;
     private LocalDateTime readingTime;

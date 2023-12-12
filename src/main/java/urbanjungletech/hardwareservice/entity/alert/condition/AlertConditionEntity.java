@@ -12,7 +12,12 @@ public class AlertConditionEntity {
     @ManyToOne()
     private AlertEntity alert;
     private String type;
-    private Boolean isActive;
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    private boolean isActive;
 
 
     public AlertConditionEntity() {
@@ -42,11 +47,7 @@ public class AlertConditionEntity {
         this.type = type;
     }
 
-    public Boolean getActive() {
+    public boolean isActive() {
         return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
     }
 }

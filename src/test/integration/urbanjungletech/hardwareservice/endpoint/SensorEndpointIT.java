@@ -354,7 +354,6 @@ public class SensorEndpointIT {
 
         await().atMost(Duration.of(3, ChronoUnit.SECONDS)).until(
                 () -> {
-
                     String endTime = LocalDateTime.now().format(formatter);
                     String responseJson = mockMvc.perform(get("/sensor/" + createdSensor.getId() + "/readings").queryParam("startDate", startTime).queryParam("endDate", endTime))
                             .andExpect(status().isOk())

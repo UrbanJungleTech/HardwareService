@@ -6,4 +6,6 @@ import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRo
 public interface SensorReadingRouterDAO {
     SensorReadingRouterEntity create(SensorReadingRouter sensorReadingRouter);
     SensorReadingRouterEntity update(SensorReadingRouter sensorReadingRouter);
+
+    SensorReadingRouterEntity getById(Long id);
 }

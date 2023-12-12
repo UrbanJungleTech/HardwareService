@@ -12,7 +12,7 @@ import java.util.Map;
 @Table(name="Sensor")
 public class SensorEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "hardware_id")

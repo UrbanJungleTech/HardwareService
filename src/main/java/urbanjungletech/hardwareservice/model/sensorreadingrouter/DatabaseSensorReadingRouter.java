@@ -1,12 +1,13 @@
 package urbanjungletech.hardwareservice.model.sensorreadingrouter;
 
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 
 public class DatabaseSensorReadingRouter extends SensorReadingRouter{
     private String tableName;
     private String timestampColumn;
     private String valueColumn;
-    private Credentials credentials;
+    private DatabaseCredentials credentials;
 
     public DatabaseSensorReadingRouter() {
         super("databaseSensorReadingRouter");
@@ -36,11 +37,11 @@ public class DatabaseSensorReadingRouter extends SensorReadingRouter{
         this.valueColumn = valueColumn;
     }
 
-    public Credentials getCredentials() {
+    public DatabaseCredentials getCredentials() {
         return credentials;
     }
 
-    public void setCredentials(Credentials credentials) {
+    public void setCredentials(DatabaseCredentials credentials) {
         this.credentials = credentials;
     }
 }

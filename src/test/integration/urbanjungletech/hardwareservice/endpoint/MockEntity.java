@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.mock.action;
+package urbanjungletech.hardwareservice.endpoint;
 
 import jakarta.persistence.Entity;
 import urbanjungletech.hardwareservice.entity.alert.action.AlertActionEntity;

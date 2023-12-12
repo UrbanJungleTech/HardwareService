@@ -7,26 +7,38 @@ import com.azure.storage.queue.models.QueueMessageItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.dao.DatabaseRouterDAO;
+import urbanjungletech.hardwareservice.model.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
+import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
 import urbanjungletech.hardwareservice.services.config.AzureProperties;
+import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.services.router.DatabaseRouterHelperService;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -50,6 +62,16 @@ public class SensorReadingRouterIT {
     private SensorTestService sensorTestService;
     @Autowired
     private AzureProperties azureProperties;
+    @Autowired
+    private DatabaseRouterHelperService databaseRouterHelperService;
+    @Autowired
+    private DatasourceClientGenerator datasourceClientGenerator;
+    @Autowired
+    private DatabaseRouterDAO databaseRouterDAO;
+    @Autowired
+    private HardwareControllerTestService hardwareControllerTestService;
+    @Autowired
+    private HardwareTestService hardwareTestService;
 
 
     /**
@@ -62,48 +84,46 @@ public class SensorReadingRouterIT {
     @Test
     void createScheduledReadingWithDatabaseSensorReadingRouter() throws Exception {
 
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
-
-        DatabaseSensorReadingRouter databaseSensorReadingRouter = new DatabaseSensorReadingRouter();
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials();
-        credentials.setUsername("testUsername");
-        credentials.setPassword("testPassword");
-
-        //create the datasource now to test later
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:h2:mem:testdb");
-        config.setUsername(credentials.getUsername());
-        config.setPassword(credentials.getPassword());
-        DataSource datasource = new HikariDataSource(config);
-
-
-        databaseSensorReadingRouter.setCredentials(credentials);
-        databaseSensorReadingRouter.setTableName("testTable");
-        databaseSensorReadingRouter.setValueColumn("testValueColumn");
-        databaseSensorReadingRouter.setTimestampColumn("testTimestampColumn");
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor sensor = hardwareController.getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
+        DatabaseSensorReadingRouter databaseSensorReadingRouter = databaseRouterHelperService.getDatabaseRouter();
         scheduledReading.getRouters().add(databaseSensorReadingRouter);
+
+        DataSource dataSource = DataSourceBuilder.create()
+                .url(databaseSensorReadingRouter.getCredentials().getHost())
+                .username(databaseSensorReadingRouter.getCredentials().getUsername())
+                .password(databaseSensorReadingRouter.getCredentials().getPassword())
+                .driverClassName(databaseSensorReadingRouter.getCredentials().getDriver())
+                .build();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        //create the table in the database
+        jdbcTemplate.execute("CREATE TABLE " + databaseSensorReadingRouter.getTableName() + " (" +
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
+                "READING DOUBLE, " +
+                "READINGTIME TIMESTAMP," +
+                "SENSORID BIGINT)");
+
+
+
         scheduledReading.setCronString("0/1 * * * * ?");
 
-        String scheduledReadingResponseString = this.mockMvc.perform(post("/sensor/" + sensor.getId() + "/scheduledreading")
+        this.mockMvc.perform(post("/sensor/" + sensor.getId() + "/scheduledreading")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(scheduledReading)))
-                .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
-
-        ScheduledSensorReading scheduledReadingResponse = objectMapper.readValue(scheduledReadingResponseString, ScheduledSensorReading.class);
-        DatabaseSensorReadingRouter databaseSensorReadingRouterResponse = (DatabaseSensorReadingRouter) scheduledReadingResponse.getRouters().get(0);
-
-        assertSame(databaseSensorReadingRouter.getClass(), DatabaseSensorReadingRouter.class);
-        assertEquals(databaseSensorReadingRouter.getType(), databaseSensorReadingRouterResponse.getType());
-        assertEquals(scheduledReadingResponse.getId(), databaseSensorReadingRouterResponse.getScheduledSensorReadingId());
+                .andExpect(status().isCreated());
 
 
-        assertEquals(databaseSensorReadingRouter.getTableName(), databaseSensorReadingRouterResponse.getTableName());
-        assertEquals(databaseSensorReadingRouter.getValueColumn(), databaseSensorReadingRouterResponse.getValueColumn());
-        assertEquals(databaseSensorReadingRouter.getTimestampColumn(), databaseSensorReadingRouterResponse.getTimestampColumn());
-
+        await().atMost(50, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<SensorReading> sensorReadings = jdbcTemplate.query("SELECT * FROM " + databaseSensorReadingRouter.getTableName(),
+                    (resultSet, i) -> {
+                        SensorReading sensorReading = new SensorReading();
+                        return sensorReading;
+                    });
+            assertNotEquals(0, sensorReadings.size());
+        });
     }
 
     /**

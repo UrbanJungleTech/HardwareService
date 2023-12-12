@@ -13,43 +13,22 @@ public class AlertConditionsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "alert_id", referencedColumnName = "id")
     private AlertEntity alert;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<AlertConditionEntity> activeConditions;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<AlertConditionEntity> inactiveConditions;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<AlertConditionEntity> conditions;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<AlertConditionEntity> allConditions;
 
     public AlertConditionsEntity() {
-        this.activeConditions = new HashSet<>();
-        this.inactiveConditions = new HashSet<>();
-        this.conditions = new ArrayList<>();
+        this.allConditions = new ArrayList<>();
     }
 
-    public List<AlertConditionEntity> getConditions() {
-        return conditions;
+    public List<AlertConditionEntity> getAllConditions() {
+        return allConditions;
     }
 
-    public void setConditions(List<AlertConditionEntity> conditions) {
-        this.conditions = conditions;
-    }
-
-    public Set<AlertConditionEntity> getInactiveConditions() {
-        return inactiveConditions;
-    }
-
-    public void setInactiveConditions(Set<AlertConditionEntity> inactiveConditions) {
-        this.inactiveConditions = inactiveConditions;
-    }
-
-    public Set<AlertConditionEntity> getActiveConditions() {
-        return activeConditions;
-    }
-
-    public void setActiveConditions(Set<AlertConditionEntity> activeConditions) {
-        this.activeConditions = activeConditions;
+    public void setAllConditions(List<AlertConditionEntity> conditions) {
+        this.allConditions = conditions;
     }
 
     public Long getId() {

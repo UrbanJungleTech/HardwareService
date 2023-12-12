@@ -2,7 +2,7 @@ package urbanjungletech.hardwareservice.service.alert.condition.handler;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import urbanjungletech.hardwareservice.event.condition.ConditionActiveEvent;
 import urbanjungletech.hardwareservice.model.alert.Alert;
@@ -25,8 +25,7 @@ public class ConditionActiveChangeEventHandler {
         this.alertConditionQueryService = alertConditionQueryService;
     }
     @Async
-    @TransactionalEventListener
-    @Transactional
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void handleConditionActiveChangeEvent(ConditionActiveEvent conditionActiveEvent){
         AlertCondition alertCondition = this.alertConditionQueryService.getAlertCondition(conditionActiveEvent.getConditionId());
         Alert alert = this.alertQueryService.getSensorReadingAlert(alertCondition.getAlertId());

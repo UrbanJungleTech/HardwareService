@@ -45,6 +45,7 @@ public class AlertAdditionServiceImpl implements AlertAdditionService {
             });
         });
         alert.getConditions().setAlertId(result.getId());
+        alert.getConditions().setAlertId(result.getId());
         this.alertsConditionsAdditionService.create(alert.getConditions());
         return this.alertConverter.toModel(result);
     }
