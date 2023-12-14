@@ -28,7 +28,7 @@ logging:
     level: ${MQTT_LOG_LEVEL:INFO}
 entity:
   names:
-    urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
+    urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity: Hardware Controller
     urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
     urbanjungletech.hardwareservice.entity.HardwareEntity: Hardware
     urbanjungletech.hardwareservice.entity.TimerEntity: Timer

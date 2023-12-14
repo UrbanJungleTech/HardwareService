@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverter;
 import urbanjungletech.hardwareservice.dao.CredentialsDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
@@ -26,7 +26,7 @@ public class CredentialsDAOImpl implements CredentialsDAO {
     @Override
     public CredentialsEntity createCredentials(Credentials credentials) {
         CredentialsEntity result = this.credentialsConverter.createEntity(credentials);
-        this.credentialsRepository.save(result);
+        result = this.credentialsRepository.save(result);
         return result;
     }
 

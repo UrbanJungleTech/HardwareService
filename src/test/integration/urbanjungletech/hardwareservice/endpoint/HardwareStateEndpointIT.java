@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

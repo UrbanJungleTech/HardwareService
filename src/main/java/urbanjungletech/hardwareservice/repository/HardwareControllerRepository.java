@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 
 import java.util.Optional;
 

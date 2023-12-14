@@ -6,7 +6,7 @@ import urbanjungletech.hardwareservice.addition.HardwareControllerGroupAdditionS
 import urbanjungletech.hardwareservice.converter.HardwareControllerGroupConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerGroupDAO;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareControllerGroup;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 

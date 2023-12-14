@@ -7,11 +7,11 @@ import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 

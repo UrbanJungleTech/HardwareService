@@ -8,16 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.mqtt.SystemMqttClientProperties;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationServiceImplementation;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.HardwareControllerCommunicationService;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 
 import java.util.Map;
 import java.util.UUID;
 
 @Service
-@HardwareControllerCommunicationService(type = "mqtt", custom = false)
-public class MqttControllerConfigurationService implements ControllerConfigurationServiceImplementation {
+public class MqttControllerConfigurationService implements ControllerConfigurationService<MqttHardwareController> {
 
     private final Logger logger = LoggerFactory.getLogger(MqttControllerConfigurationService.class);
     private final Map<Long, IMqttClient> mqttClients;
@@ -30,7 +29,7 @@ public class MqttControllerConfigurationService implements ControllerConfigurati
     }
 
     @Override
-    public void configureController(HardwareController hardwareController){
+    public void configureController(HardwareController hardwareController) {
         try {
             logger.info("Configuring MQTT controller {}", hardwareController.getId());
             String server = hardwareController.getConfiguration().get("server");

@@ -10,11 +10,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
 import java.util.Map;
 

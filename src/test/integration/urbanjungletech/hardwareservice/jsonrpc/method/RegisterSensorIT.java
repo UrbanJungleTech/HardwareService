@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,12 +10,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterSensorMessage;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
-import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.Hardware;

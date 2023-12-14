@@ -19,7 +19,6 @@ public class CredentialsConverterProxy implements CredentialsConverter {
 
     @Override
     public Credentials toModel(CredentialsEntity credentialsEntity) {
-
         SpecificCredentialsConverter specificCredentialsConverter = this.specificCredentialsConverterMap.get(credentialsEntity.getClass());
         Credentials result = specificCredentialsConverter.toModel(credentialsEntity);
         result.setType(credentialsEntity.getType());

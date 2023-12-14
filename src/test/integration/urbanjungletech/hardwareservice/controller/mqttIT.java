@@ -9,10 +9,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.*;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
-import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

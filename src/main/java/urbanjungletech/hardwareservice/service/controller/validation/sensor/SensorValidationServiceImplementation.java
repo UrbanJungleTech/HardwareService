@@ -1,4 +1,0 @@
-package urbanjungletech.hardwareservice.service.controller.validation.sensor;
-
-public interface SensorValidationServiceImplementation extends SensorValidationService{
-}

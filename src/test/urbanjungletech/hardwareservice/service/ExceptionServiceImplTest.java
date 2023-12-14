@@ -26,7 +26,7 @@ class ExceptionServiceImplTest {
     @Test
     void createNotFoundException_shouldReturnAStandardNotFoundExceptionWhenClassIsRegistered() {
         long expectedId = 1L;
-        HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
+        int expectedStatus = 404;
         String expectedName = "Object";
         String expectedMessage = "Object not found with id of 1";
 

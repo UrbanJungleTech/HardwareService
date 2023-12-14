@@ -31,8 +31,8 @@ public class AzureQueueSensorReadingRouterConverter implements urbanjungletech.h
 
     public AzureQueueSensorReadingRouterEntity createEntity(AzureQueueSensorReadingRouter azureQueueSensorReadingRouter) {
         AzureQueueSensorReadingRouterEntity result = new AzureQueueSensorReadingRouterEntity();
-        CredentialsEntity credentialsEntity = this.credentialsDAO.findById(azureQueueSensorReadingRouter.getCredentials().getId());
-        result.setCredentials(credentialsEntity);
+        CredentialsEntity credentials = this.credentialsConverter.createEntity(azureQueueSensorReadingRouter.getCredentials());
+        result.setCredentials(credentials);
         return result;
     }
 

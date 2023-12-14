@@ -3,11 +3,11 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerGroupRepository;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 
@@ -33,7 +33,7 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
 
     @Override
     public HardwareControllerEntity createHardwareController(HardwareController hardwareController) {
-        HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
+        HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerConverter.createEntity(hardwareController);
         this.hardwareControllerConverter.fillEntity(hardwareControllerEntity, hardwareController);
         hardwareControllerEntity = this.hardwareControllerRepository.save(hardwareControllerEntity);
         return hardwareControllerEntity;

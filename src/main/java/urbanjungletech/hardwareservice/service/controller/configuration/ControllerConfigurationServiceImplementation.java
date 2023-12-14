@@ -1,4 +1,0 @@
-package urbanjungletech.hardwareservice.service.controller.configuration;
-
-public interface ControllerConfigurationServiceImplementation extends ControllerConfigurationService {
-}

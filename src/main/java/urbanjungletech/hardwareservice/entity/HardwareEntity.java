@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,15 +1,12 @@
 package urbanjungletech.hardwareservice.addition.implementation.sensorrouting;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.CredentialsAdditionService;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 
-import java.util.List;
-
 @Service
-public class AzureQueueSensorRoutingAdditionService implements SpecificSensorRouterAdditionService<AzureQueueSensorReadingRouter> {
+public class AzureQueueSensorRoutingAdditionService implements SpecificAdditionService<AzureQueueSensorReadingRouter> {
 
     private final CredentialsAdditionService credentialsAdditionService;
 
@@ -18,19 +15,19 @@ public class AzureQueueSensorRoutingAdditionService implements SpecificSensorRou
     }
 
     @Override
-    public AzureQueueSensorReadingRouter create(AzureQueueSensorReadingRouter azureQueueSensorReadingRouter) {
+    public void create(AzureQueueSensorReadingRouter azureQueueSensorReadingRouter) {
         Credentials credentials = this.credentialsAdditionService.create(azureQueueSensorReadingRouter.getCredentials());
         azureQueueSensorReadingRouter.setCredentials(credentials);
-        return azureQueueSensorReadingRouter;
     }
 
     @Override
     public void delete(long id) {
-
+        this.credentialsAdditionService.delete(id);
     }
 
     @Override
-    public AzureQueueSensorReadingRouter update(long id, AzureQueueSensorReadingRouter azureQueueSensorReadingRouter) {
-        return null;
+    public void update(long id, AzureQueueSensorReadingRouter azureQueueSensorReadingRouter) {
+        Credentials credentials = this.credentialsAdditionService.update(azureQueueSensorReadingRouter.getId(), azureQueueSensorReadingRouter.getCredentials());
+        azureQueueSensorReadingRouter.setCredentials(credentials);
     }
 }

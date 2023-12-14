@@ -10,11 +10,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void createHardwareController_whenGivenAValidHardwareController_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
@@ -79,7 +80,7 @@ public class HardwareControllerEndpointIT {
 
     @Test
     void createHardwareController_whenGivenAHardwareControllerWithAHardware_shouldReturnTheHardwareControllerWithTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
@@ -393,7 +394,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void getHardwareController_whenGivenAHardwareControllerWith2Hardware_shouldReturnTheHardwareController() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
@@ -436,7 +437,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void getHardwareControllerHardware_whenGivenAHardwareControllerWith2Hardware_shouldReturnTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Hardware hardware = new Hardware();
@@ -482,7 +483,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void createHardwareControllerHardware_whenGivenAValidHardware_shouldReturnTheHardware() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
@@ -533,7 +534,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void createHardwareControllerSensor_whenGivenAValidSensor_shouldReturnTheSensor() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
@@ -583,7 +584,7 @@ public class HardwareControllerEndpointIT {
      */
     @Test
     void getHardwareControllerSensors_whenGivenAValidHardwareControllerId_shouldReturnTheSensors() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "123456789");
         hardwareController.setName("Test Hardware Controller");
         Sensor sensor = new Sensor();

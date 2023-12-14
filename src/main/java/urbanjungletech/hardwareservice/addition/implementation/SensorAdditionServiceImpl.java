@@ -11,8 +11,8 @@ import urbanjungletech.hardwareservice.event.sensor.SensorEventPublisher;
 import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.service.controller.validation.sensor.implementation.SensorValidationError;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.implementation.SensorValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,10 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     @Transactional
     @Override
     public Sensor create(Sensor sensor) {
+        SensorValidationError validationError = this.sensorValidationService.validateSensorType(sensor);
+        if(validationError.getMessages().size() > 0){
+            throw new InvalidSensorConfigurationException(validationError);
+        }
         SensorEntity result = this.sensorDAO.addSensor(sensor);
         Optional.ofNullable(sensor.getScheduledSensorReadings())
                 .ifPresent(readings -> readings
@@ -49,10 +53,6 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
                                 -> scheduledSensorReading.setSensorId(result.getId())));
         this.scheduledSensorReadingAdditionService.updateList(sensor.getScheduledSensorReadings());
         this.sensorEventPublisher.publishSensorCreateEvent(result.getId());
-        SensorValidationError validationError = this.sensorValidationService.validateSensorType(sensor);
-        if(validationError.getMessages().size() > 0){
-            throw new InvalidSensorConfigurationException(validationError);
-        }
         return this.sensorConverter.toModel(result);
     }
 

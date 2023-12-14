@@ -12,8 +12,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
-import urbanjungletech.hardwareservice.exception.exception.StandardErrorException;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
@@ -21,8 +21,8 @@ import urbanjungletech.hardwareservice.model.sensorreadingrouter.BasicDatabaseSe
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -267,7 +267,7 @@ public class SensorEndpointIT {
      */
     @Test
     void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.getConfiguration().put("serialNumber", "1234");
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");

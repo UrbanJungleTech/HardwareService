@@ -22,7 +22,7 @@ public class CancelNextScheduledHardwareAlertActionConverterTest {
 
         CancelNextScheduledHardwareAlertAction result = converter.toModel(actionEntity);
 
-        assertEquals("cancelNextScheduledHardware", result.getType());
+        assertEquals(CancelNextScheduledHardwareAlertAction.class, result.getClass());
         assertEquals(actionEntity.getScheduledHardwareId(), result.getScheduledHardwareId());
     }
 

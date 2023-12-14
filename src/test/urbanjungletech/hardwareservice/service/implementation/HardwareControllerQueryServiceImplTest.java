@@ -11,11 +11,12 @@ import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.query.implementation.HardwareControllerQueryServiceImpl;
 
@@ -108,7 +109,7 @@ class HardwareControllerQueryServiceImplTest {
     @Test
     void getHardwareController_whenHardwareControllerIdIsAssociatedWithAHardwareControllerEntity_shouldReturnHardwareController() {
         long hardwareControllerId = 1l;
-        HardwareController expected = new HardwareController();
+        HardwareController expected = new MockHardwareController();
         HardwareControllerEntity savedHardwareController = new HardwareControllerEntity();
 
         when(this.hardwareControllerDAO.getHardwareController(same(hardwareControllerId))).thenReturn(savedHardwareController);
@@ -129,7 +130,7 @@ class HardwareControllerQueryServiceImplTest {
     @Test
     void getAllHardwareControllers_whenHardwareControllerHasBeenSaved_shouldReturnHardwareController() {
         List<HardwareControllerEntity> savedHardwareControllers = List.of(new HardwareControllerEntity());
-        List<HardwareController> expected = List.of(new HardwareController());
+        List<HardwareController> expected = List.of(new MockHardwareController());
 
         when(this.hardwareControllerDAO.getAllHardwareControllers()).thenReturn(savedHardwareControllers);
         when(this.hardwareControllerConverter.toModels(same(savedHardwareControllers))).thenReturn(expected);

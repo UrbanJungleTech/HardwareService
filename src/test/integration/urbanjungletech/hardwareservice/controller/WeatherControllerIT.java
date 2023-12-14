@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.services.config.WeatherProperties;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.helpers.services.config.WeatherProperties;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,8 +43,7 @@ public class WeatherControllerIT {
      */
     @Test
     public void getSensorReading_temperatureSensor_returnsDoubleGreaterThanZero() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setType("weather");
+        WeatherHardwareController hardwareController = new WeatherHardwareController();
         TokenCredentials tokenCredentials = new TokenCredentials();
         tokenCredentials.setTokenValue(weatherProperties.getApikey());
         tokenCredentials.setUrl(weatherProperties.getUrl());
