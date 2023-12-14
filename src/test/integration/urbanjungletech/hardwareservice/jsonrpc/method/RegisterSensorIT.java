@@ -61,7 +61,7 @@ public class RegisterSensorIT {
      */
     @Test
     public void testRegisterSensor() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
         Sensor sensor = hardwareController.getSensors().get(0);
 
         RegisterSensorMessage registerSensorMessage = new RegisterSensorMessage(sensor);

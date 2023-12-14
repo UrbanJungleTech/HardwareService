@@ -34,7 +34,6 @@ public class HardwareControllerDAOImpl implements HardwareControllerDAO {
     @Override
     public HardwareControllerEntity createHardwareController(HardwareController hardwareController) {
         HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerConverter.createEntity(hardwareController);
-        this.hardwareControllerConverter.fillEntity(hardwareControllerEntity, hardwareController);
         hardwareControllerEntity = this.hardwareControllerRepository.save(hardwareControllerEntity);
         return hardwareControllerEntity;
     }

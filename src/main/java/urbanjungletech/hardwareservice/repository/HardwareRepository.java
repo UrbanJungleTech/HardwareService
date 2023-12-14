@@ -9,10 +9,9 @@ import java.util.Optional;
 
 public interface HardwareRepository extends JpaRepository<HardwareEntity, Long> {
     @Query(value="SELECT hardware FROM HardwareEntity hardware "
-            + "JOIN hardware.hardwareController.configuration config "
+            + "JOIN hardware.hardwareController "
             + "WHERE hardware.port = :port "
-            + "AND KEY(config) = 'serialNumber' "
-            + "AND VALUE(config) = :serialNumber")
+            + "AND hardware.hardwareController.serialNumber = :serialNumber")
     Optional<HardwareEntity> findHardwareBySerialNumberAndPort(@Param("serialNumber") String serialNumber, @Param("port") String port);
 
     @Query(value="SELECT hardware FROM HardwareEntity hardware WHERE hardware.port = :port and hardware.hardwareController.id = :hardwareControllerId")

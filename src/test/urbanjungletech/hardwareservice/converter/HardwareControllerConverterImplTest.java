@@ -44,7 +44,6 @@ class HardwareControllerConverterImplTest {
         when(hardwareConverter.toModels(any())).thenReturn(hardwares);
         HardwareController result = this.hardwareControllerConverter.toModel(hardwareControllerEntity);
         assertEquals("test", result.getName());
-        assertEquals("1234", result.getConfiguration().get("serialNumber"));
         assertEquals(1L, result.getId());
         assertSame(sensors, result.getSensors());
         assertSame(hardwares, result.getHardware());

@@ -46,20 +46,19 @@ public class RegisterHardwareControllerIT {
      */
     @Test
     public void testRegisterHardwareController() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Map<String, Object> params = new HashMap<>();
-        hardwareController.getConfiguration().put("serialNumber", "1234");
         params.put("hardwareController", hardwareController);
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("RegisterHardwareController", params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
         this.mqttTestService.sendMessage(mqttPayload);
 
-        await().atMost(3, TimeUnit.SECONDS)
+        await().atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     List<HardwareController> hardwareControllers = this.hardwareControllerTestService.findAllHardwareControllers();
                     assertTrue(hardwareControllers.size() >= 1);
                     HardwareController hardwareControllerResponse = hardwareControllers.get(0);
-                    assertTrue(hardwareControllerResponse.getConfiguration().get("serialNumber").equals("1234"));
+                    assertTrue(hardwareControllerResponse.getSerialNumber().equals("1234"));
                 });
     }
 

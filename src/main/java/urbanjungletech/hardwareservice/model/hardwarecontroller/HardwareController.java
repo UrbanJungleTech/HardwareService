@@ -19,13 +19,12 @@ public abstract class HardwareController {
     private List<Hardware> hardware;
     private List<Sensor> sensors;
     private Long hardwareControllerGroupId;
-    private Map<String, String> configuration;
+    private String serialNumber;
 
     public HardwareController(){
         this.type = this.getClass().getName();
         this.sensors = new ArrayList<>();
         this.hardware = new ArrayList<>();
-        this.configuration = new HashMap<>();
     }
 
     public List<Hardware> getHardware() {
@@ -82,12 +81,11 @@ public abstract class HardwareController {
         this.hardwareControllerGroupId = hardwareControllerGroupId;
     }
 
-    public Map<String, String> getConfiguration() {
-        return configuration;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setConfiguration(Map<String, String> configuration) {
-        this.configuration = configuration;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
-
 }

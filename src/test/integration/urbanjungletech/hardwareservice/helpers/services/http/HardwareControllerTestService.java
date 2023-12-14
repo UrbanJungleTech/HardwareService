@@ -42,21 +42,9 @@ public class HardwareControllerTestService {
         return hardwareControllerResponse;
     }
 
-    public HardwareController createHardwareMqttController(){
-        HardwareController hardwareController = createMqttHardwareController();
-        hardwareController.setType("mqtt");
-        Map<String, String> configuration = hardwareController.getConfiguration();
-        configuration.put("serialNumber", "1234");
-        configuration.put("server", "tcp://localhost:1883");
-        configuration.put("responseQueue", "HardwareServer");
-        configuration.put("requestQueue", "1234ToMicro");
-        return hardwareController;
-    }
-
     public Hardware createDefaultHardware(String name){
         Hardware hardware = new Hardware();
         hardware.setName(name);
-        hardware.setConfiguration(Map.of("testKey", "testValue"));
         hardware.setPossibleStates(List.of("on", "off"));
         hardware.setOffState("off");
         return hardware;
@@ -78,18 +66,18 @@ public class HardwareControllerTestService {
         return result;
     }
 
-    public HardwareController createMqttHardwareController() {
-        HardwareController hardwareController = new MqttHardwareController();
-        hardwareController.setType("mqtt");
-        hardwareController.getConfiguration().put("serialNumber", "1234");
-        hardwareController.getConfiguration().put("server", "tcp://localhost:1883");
-        hardwareController.getConfiguration().put("responseQueue", "HardwareServer");
-        hardwareController.getConfiguration().put("requestQueue", "1234ToMicro");
+    public MqttHardwareController createMqttHardwareController() {
+        MqttHardwareController hardwareController = new MqttHardwareController();
+        hardwareController.setBrokerUrl("tcp://localhost:1883");
+        hardwareController.setResponseTopic("HardwareServer");
+        hardwareController.setRequestTopic("1234ToMicro");
+        hardwareController.setSerialNumber("1234");
         return hardwareController;
     }
 
     public HardwareController createMockHardwareController() {
         HardwareController result = new MockHardwareController();
+        result.setSerialNumber("1234");
         return result;
     }
 

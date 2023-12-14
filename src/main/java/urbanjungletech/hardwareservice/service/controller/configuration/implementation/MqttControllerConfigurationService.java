@@ -29,15 +29,15 @@ public class MqttControllerConfigurationService implements ControllerConfigurati
     }
 
     @Override
-    public void configureController(HardwareController hardwareController) {
+    public void configureController(MqttHardwareController hardwareController) {
         try {
             logger.info("Configuring MQTT controller {}", hardwareController.getId());
-            String server = hardwareController.getConfiguration().get("server");
+            String server = hardwareController.getBrokerUrl();
             String clientId = UUID.randomUUID().toString();
             IMqttClient client = new MqttClient(server, clientId);
             mqttClients.put(hardwareController.getId(), client);
 
-            String responseQueue = hardwareController.getConfiguration().get("responseQueue");
+            String responseQueue = hardwareController.getResponseTopic();
 
             SystemMqttClientProperties serverMqttClientProperties = new SystemMqttClientProperties(server, responseQueue);
             if(serverMqttClients.containsKey(serverMqttClientProperties) == false){

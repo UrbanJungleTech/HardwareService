@@ -66,14 +66,9 @@ public class SensorDAOImpl implements SensorDAO {
 
     @Override
     public SensorEntity getSensorByPort(String serialNumber, String port) {
-        HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findBySerialNumber(serialNumber);
-        Optional<SensorEntity> result = hardwareControllerEntity.getSensors().stream().filter((sensorEntity -> {
-            if(sensorEntity.getPort().equals(port)){
-                return true;
-            }
-            return false;
-        })).findFirst();
-        SensorEntity sensorEntity = result.get();
+        SensorEntity sensorEntity = this.sensorRepository.findByHardwareControllerSerialNumberAndPort(serialNumber, port).orElseThrow(() -> {
+            throw this.exceptionService.createNotFoundException(SensorEntity.class, port);
+        });
         return sensorEntity;
     }
 

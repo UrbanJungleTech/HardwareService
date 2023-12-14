@@ -21,6 +21,7 @@ public class HardwareControllerEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String serialNumber;
     private String type;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "hardwareController", cascade = CascadeType.REMOVE)
@@ -112,5 +113,13 @@ public class HardwareControllerEntity {
 
     public void setConfiguration(Map<String, String> configuration) {
         this.configuration = configuration;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

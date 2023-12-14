@@ -26,7 +26,7 @@ public class SensorTestService {
      *
      * @return the created hardwarecontroller which contains the sensor
      */
-    public HardwareController createBasicSensor() throws Exception{
+    public HardwareController createMqttSensor() throws Exception{
         Sensor sensor = new Sensor();
         sensor.setPort(String.valueOf(this.portCounter.getAndIncrement()));
         sensor.setName(UUID.randomUUID().toString());

@@ -13,10 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.dao.DatabaseRouterDAO;
 import urbanjungletech.hardwareservice.helpers.services.config.AzureProperties;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.helpers.services.router.DatabaseRouterHelperService;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
@@ -27,7 +25,6 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
-import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -121,7 +118,7 @@ public class SensorReadingRouterIT {
     @Test
     void createScheduledReadingWithKafkaSensorReadingRouter() throws Exception {
 
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
+        Sensor sensor = this.sensorTestService.createMqttSensor().getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0 0 0 1 1 ? 2099");
@@ -161,7 +158,7 @@ public class SensorReadingRouterIT {
                 .buildClient();
         queueClient.clearMessages();
 
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
+        Sensor sensor = this.sensorTestService.createMqttSensor().getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0/1 * * * * ?");

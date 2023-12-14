@@ -55,17 +55,16 @@ public class DeregisterHardwareIT {
      */
     @Test
     public void testDeregisterHardware() throws Exception{
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Hardware hardware = new Hardware();
         hardware.setPort("1");
-        hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", createdHardwareController.getConfiguration().get("serialNumber"));
         params.put("port", createdHardware.getPort());
+        params.put("serialNumber", createdHardwareController.getSerialNumber());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterHardware", params);
 
         String rpcMessage = objectMapper.writeValueAsString(jsonRpcMessage);

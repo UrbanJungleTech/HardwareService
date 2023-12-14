@@ -8,36 +8,22 @@ import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControl
 import java.util.Optional;
 
 public interface HardwareControllerRepository extends JpaRepository<HardwareControllerEntity, Long> {// Query to find by serial number
-    @Query("SELECT h FROM HardwareControllerEntity h " +
-            "JOIN h.configuration config " +
-            "WHERE KEY(config) = 'serialNumber' " +
-            "AND VALUE(config) = :serialNumber")
     HardwareControllerEntity findBySerialNumber(@Param("serialNumber") String serialNumber);
 
     // Query to find the ID by serial number
     @Query("SELECT h.id FROM HardwareControllerEntity h " +
-            "JOIN h.configuration config " +
-            "WHERE KEY(config) = 'serialNumber' " +
-            "AND VALUE(config) = :serialNumber")
+            "WHERE h.serialNumber = :serialNumber")
     long findIdBySerialNumber(@Param("serialNumber") String serialNumber);
 
     // Query to check if an entity exists by serial number
-    @Query("SELECT COUNT(h) > 0 FROM HardwareControllerEntity h " +
-            "JOIN h.configuration config " +
-            "WHERE KEY(config) = 'serialNumber' " +
-            "AND VALUE(config) = :serialNumber")
     boolean existsBySerialNumber(@Param("serialNumber") String serialNumber);
 
-    @Query("SELECT VALUE(config) FROM HardwareControllerEntity h " +
-            "JOIN h.configuration config " +
-            "WHERE h.id = :hardwareControllerId " +
-            "AND KEY(config) = 'serialNumber'")
+    @Query("SELECT 'serialNumber' as s FROM HardwareControllerEntity h " +
+            "WHERE h.id = :hardwareControllerId")
     String getSerialNumberById(@Param("hardwareControllerId") long hardwareControllerId);
 
-    @Query("SELECT VALUE(config) FROM HardwareControllerEntity h " +
-            "JOIN h.configuration config " +
-            "WHERE VALUE(config) = :serialNumber " +
-            "AND KEY(config) = 'type'")
+    @Query("SELECT 'type' as t FROM HardwareControllerEntity h " +
+            "WHERE h.serialNumber = :serialNumber")
     Optional<String> getControllerType(@Param("serialNumber") String serialNumber);
 
 }

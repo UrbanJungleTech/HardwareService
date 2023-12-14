@@ -55,7 +55,7 @@ public class mqttIT {
     @Test
     void readHardware_whenGivenAValidHardwareId_shouldSendARegisterHardwareMessage() throws Exception {
 
-        HardwareController hardwareController = this.hardwareControllerTestService.createHardwareMqttController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Hardware hardware = new Hardware();
         hardware.setPort("1");
         hardware.setOffState("off");
@@ -208,7 +208,7 @@ public class mqttIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
 
         Sensor createdSensor = hardwareController.getSensors().get(0);
 

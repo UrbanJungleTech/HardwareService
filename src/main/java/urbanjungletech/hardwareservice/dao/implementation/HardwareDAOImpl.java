@@ -65,7 +65,6 @@ public class HardwareDAOImpl implements HardwareDAO {
 
     @Override
     public HardwareEntity getHardware(String serialNumber, String port) {
-        HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findBySerialNumber(serialNumber);
         HardwareEntity hardwareEntity = this.hardwareRepository.findHardwareBySerialNumberAndPort(serialNumber, port).orElseThrow(() -> {
             throw this.exceptionService.createNotFoundException(HardwareEntity.class, port);
         });

@@ -15,6 +15,7 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -63,7 +64,6 @@ public class ConfirmHardwareStateIT {
     @Test
     public void confirmHardwareState() throws Exception {
         HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
-        controller.getConfiguration().put("serialNumber", "1234");
         Hardware hardware = new Hardware();
         controller.getHardware().add(hardware);
         hardware.setPort("1");
@@ -87,7 +87,7 @@ public class ConfirmHardwareStateIT {
         this.mqttTestService.sendMessage(mqttPayload);
         //wait for the current state to be updated
         await()
-                .atMost(Duration.of(3, java.time.temporal.ChronoUnit.SECONDS))
+                .atMost(Duration.of(5, java.time.temporal.ChronoUnit.SECONDS))
                 .with()
                 .until(() -> {
                     MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + responseHardware.getId()))

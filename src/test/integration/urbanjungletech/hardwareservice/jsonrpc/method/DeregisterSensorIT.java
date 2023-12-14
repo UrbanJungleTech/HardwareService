@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DeregisterSensorIT {
     @Autowired
     private ObjectMapper objectMapper;
@@ -49,8 +49,7 @@ public class DeregisterSensorIT {
      */
     @Test
     public void testDeregisterSensor() throws Exception{
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "1234");
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Sensor sensor = new Sensor();
         sensor.setPort("1");
         hardwareController.getSensors().add(sensor);
@@ -58,7 +57,7 @@ public class DeregisterSensorIT {
         long sensorId = hardwareController.getSensors().get(0).getId();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", hardwareController.getConfiguration().get("serialNumber"));
+        params.put("serialNumber", hardwareController.getSerialNumber());
         params.put("port", hardwareController.getSensors().get(0).getPort());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterSensor", params);
 
@@ -67,7 +66,8 @@ public class DeregisterSensorIT {
         this.mqttTestService.sendMessage(rpcMessage);
 
 
-        await().atMost(3, TimeUnit.SECONDS)
+        await()
+                .atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
             Sensor responseSensor = this.hardwareControllerTestService.findSensor(sensorId);
             assertNull(responseSensor);

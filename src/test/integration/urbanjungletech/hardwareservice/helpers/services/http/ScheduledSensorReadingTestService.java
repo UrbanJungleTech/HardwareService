@@ -30,7 +30,7 @@ public class ScheduledSensorReadingTestService {
         return result;
     }
     public ScheduledSensorReading createBasicScheduledReading(Alert...alerts) throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
         Sensor sensor = hardwareController.getSensors().get(0);
         ScheduledSensorReading scheduledSensorReading = this.generateBasicScheduledSensorReading();
         sensor.getScheduledSensorReadings().add(scheduledSensorReading);
