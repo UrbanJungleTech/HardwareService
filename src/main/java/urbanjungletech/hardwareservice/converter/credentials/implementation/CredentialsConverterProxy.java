@@ -7,6 +7,7 @@ import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CredentialsConverterProxy implements CredentialsConverter {

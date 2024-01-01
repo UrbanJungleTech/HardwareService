@@ -5,6 +5,8 @@ import com.azure.storage.queue.QueueClient;
 import com.azure.storage.queue.QueueClientBuilder;
 import com.azure.storage.queue.models.QueueMessageItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.helpers.services.config.AzureProperties;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
@@ -22,6 +25,7 @@ import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
@@ -54,7 +58,6 @@ public class SensorReadingRouterIT {
     private DatabaseRouterHelperService databaseRouterHelperService;
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
-
 
     /**
      * Given a valid ScheduledSensorReading with a DatabaseSensorReadingRouter in its list of routers

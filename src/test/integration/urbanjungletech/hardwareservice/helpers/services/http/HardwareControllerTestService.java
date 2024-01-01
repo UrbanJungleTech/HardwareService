@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.helpers.services.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -9,6 +10,7 @@ import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardw
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareMqttClient;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.util.List;
@@ -33,8 +35,7 @@ public class HardwareControllerTestService {
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")
                         .content(hardwareControllerJson)
-                        .contentType("application/json")
-                        .content(hardwareControllerJson))
+                        .contentType("application/json"))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -68,9 +69,11 @@ public class HardwareControllerTestService {
 
     public MqttHardwareController createMqttHardwareController() {
         MqttHardwareController hardwareController = new MqttHardwareController();
-        hardwareController.setBrokerUrl("tcp://localhost:1883");
-        hardwareController.setResponseTopic("HardwareServer");
-        hardwareController.setRequestTopic("1234ToMicro");
+        HardwareMqttClient hardwareMqttClient = new HardwareMqttClient();
+        hardwareMqttClient.setBrokerUrl("tcp://localhost:1883");
+        hardwareMqttClient.setRequestTopic("1234ToMicro");
+        hardwareMqttClient.setResponseTopic("HardwareServer");
+        hardwareController.setHardwareMqttClient(hardwareMqttClient);
         hardwareController.setSerialNumber("1234");
         return hardwareController;
     }

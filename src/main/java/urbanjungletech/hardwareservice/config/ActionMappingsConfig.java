@@ -16,6 +16,7 @@ import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRo
 import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 import urbanjungletech.hardwareservice.service.alert.condition.service.SpecificConditionTriggerService;
 import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
+import urbanjungletech.hardwareservice.service.controller.configuration.implementation.SpecificMqttCredentialsConfigurationService;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SpecificSensorValidationService;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
@@ -34,6 +35,12 @@ public class ActionMappingsConfig {
     public Map<Class <? extends AlertAction>, SpecificActionExecutionService>
     actionMappings(List<SpecificActionExecutionService> actionExecutionServices, MapGeneratorService mapGeneratorService){
         Map<Class <? extends AlertAction>, SpecificActionExecutionService> result = mapGeneratorService.generateMap(actionExecutionServices, SpecificActionExecutionService.class);
+        return result;
+    }
+
+    @Bean
+    public Map<Class <? extends Credentials>, SpecificMqttCredentialsConfigurationService> credentialsConfigurationServices(List<SpecificMqttCredentialsConfigurationService> credentialsConfigurationServices, MapGeneratorService mapGeneratorService){
+        Map<Class <? extends Credentials>, SpecificMqttCredentialsConfigurationService> result = mapGeneratorService.generateMap(credentialsConfigurationServices, SpecificMqttCredentialsConfigurationService.class);
         return result;
     }
 

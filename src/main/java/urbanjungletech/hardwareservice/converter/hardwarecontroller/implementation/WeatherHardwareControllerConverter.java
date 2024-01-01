@@ -10,6 +10,8 @@ import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
 
+import java.util.Optional;
+
 @Service
 public class WeatherHardwareControllerConverter implements SpecificHardwareControllerConverter<WeatherHardwareController, WeatherHardwareControllerEntity> {
 
@@ -23,15 +25,19 @@ public class WeatherHardwareControllerConverter implements SpecificHardwareContr
 
     @Override
     public void fillEntity(WeatherHardwareControllerEntity hardwareControllerEntity, WeatherHardwareController hardwareController) {
-        CredentialsEntity credentials = this.credentialsDAO.findById(hardwareController.getCredentials().getId());
-        hardwareControllerEntity.setCredentials(credentials);
+        Optional.ofNullable(hardwareController.getCredentials().getId()).ifPresent(credentialsId -> {
+            CredentialsEntity credentialsEntity = this.credentialsDAO.findById(credentialsId);
+            hardwareControllerEntity.setCredentials(credentialsEntity);
+        });
     }
 
     @Override
     public WeatherHardwareController toModel(WeatherHardwareControllerEntity hardwareControllerEntity) {
         WeatherHardwareController result = new WeatherHardwareController();
-        Credentials credentials = this.credentialsConverter.toModel(hardwareControllerEntity.getCredentials());
-        result.setCredentials(credentials);
+        Optional.ofNullable(hardwareControllerEntity.getCredentials()).ifPresent(credentialsEntity -> {
+            Credentials credentials = this.credentialsConverter.toModel(credentialsEntity);
+            result.setCredentials(credentials);
+        });
         return result;
     }
 

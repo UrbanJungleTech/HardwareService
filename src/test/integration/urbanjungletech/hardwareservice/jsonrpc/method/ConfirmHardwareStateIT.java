@@ -15,7 +15,6 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.time.Duration;
 import java.util.HashMap;

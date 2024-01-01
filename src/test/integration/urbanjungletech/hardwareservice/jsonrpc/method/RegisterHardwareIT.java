@@ -7,12 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;

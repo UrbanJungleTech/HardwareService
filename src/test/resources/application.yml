@@ -67,9 +67,6 @@ development:
       port: ${DEV_MQTT_SERVER_PORT:1883}
       host: ${DEV_MQTT_SERVER_HOST:localhost}
       logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
-  weather:
-    apikey: ${DEV_WEATHER_API_KEY}
-    url: ${DEV_WEATHER_API_URL}
   azure:
     storageQueue:
       key: ${DEV_AZURE_STORAGE_QUEUE_KEY}
@@ -79,11 +76,13 @@ development:
       key: ${DEV_AZURE_KAFKA_KEY}
 
 weather:
-  api:
-    uri: ${WEATHER_API_URI}
-    apiKeyParamName: ${WEATHER_API_KEY_PARAM_NAME}
-    targetFieldParamName: ${WEATHER_API_TARGET_FIELD_PARAM_NAME}
-    locationParamName: ${WEATHER_API_LOCATION_PARAM_NAME}
-    enabled: ${WEATHER_API_ENABLED:true}
-
-
+  apiKeyParamName: ${WEATHER_API_KEY_PARAM_NAME}
+  targetFieldParamName: ${WEATHER_API_TARGET_FIELD_PARAM_NAME}
+  locationParamName: ${WEATHER_API_LOCATION_PARAM_NAME}
+  enabled: ${WEATHER_API_ENABLED:true}
+  apikey: ${DEV_WEATHER_API_KEY}
+  baseUrl: ${WEATHER_API_URL}
+  development:
+    enabled: ${DEV_WEATHER_API_ENABLED:true}
+    apikey: ${DEV_WEATHER_API_KEY}
+    url: ${WEATHER_API_URL}

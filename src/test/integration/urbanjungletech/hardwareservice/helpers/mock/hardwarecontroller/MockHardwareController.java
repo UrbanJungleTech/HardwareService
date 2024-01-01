@@ -4,6 +4,6 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 
 public class MockHardwareController extends HardwareController {
     public MockHardwareController() {
-        super();
+
     }
 }

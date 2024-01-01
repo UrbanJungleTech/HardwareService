@@ -3,14 +3,12 @@ package urbanjungletech.hardwareservice.model.hardwarecontroller;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.Sensor;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @JsonTypeInfo(
-        use = JsonTypeInfo.Id.CLASS,
+        use = JsonTypeInfo.Id.NAME,
         property = "type")
 public abstract class HardwareController {
     private Long id;
@@ -22,7 +20,7 @@ public abstract class HardwareController {
     private String serialNumber;
 
     public HardwareController(){
-        this.type = this.getClass().getName();
+        this.type = this.getClass().getSimpleName();
         this.sensors = new ArrayList<>();
         this.hardware = new ArrayList<>();
     }

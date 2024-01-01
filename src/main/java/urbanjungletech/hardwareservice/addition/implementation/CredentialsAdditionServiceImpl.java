@@ -35,7 +35,6 @@ public class CredentialsAdditionServiceImpl implements CredentialsAdditionServic
 
     @Override
     public void delete(long id) {
-
     }
 
     @Override

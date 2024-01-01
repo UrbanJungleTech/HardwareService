@@ -2,6 +2,8 @@ package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,7 +43,6 @@ public class HardwareControllerEndpointIT {
     private MockMvc mockMvc;
     @Autowired
     HardwareControllerTestService hardwareControllerTestService;
-
 
     /**
      * Given a valid HardwareController with no child entities
@@ -507,7 +508,9 @@ public class HardwareControllerEndpointIT {
     @Test
     void getHardwareControllerHardware_whenGivenAnInvalidHardwareControllerId_shouldReturn404() throws Exception {
         //get the hardware controller
-        mockMvc.perform(get("/hardwarecontroller/1/hardware"))
+        mockMvc.perform(get("/hardwarecontroller/1/hardware")
+                        .contentType("application/json")
+                        .accept("application/json"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Hardware Controller not found with id of 1"))
                 .andExpect(jsonPath("$.httpStatus").value("404"));

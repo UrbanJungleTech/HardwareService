@@ -1,0 +1,123 @@
+### Create a hardware controller and retrieve the id
+POST http://4.156.161.23:8081/hardwarecontroller/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "garden 1",
+  "description": "garden 1",
+  "type": "urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController",
+  "brokerUrl": "tcp://hardware-mqtt:1883",
+  "requestTopic": "12356ToMicro",
+  "responseTopic": "HardwareServer"
+}
+
+> {%
+    client.test("Status code is 201", function() {
+        client.assert(response.status === 201, "Response status is not 201")
+    });
+    client.global.set("hardwareControllerId", response.body.id);
+%}
+
+
+### create the right fan on port 21
+POST http://4.156.161.23:8081/hardwarecontroller/{{hardwareControllerId}}/hardware HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "left fan",
+  "port": "21",
+  "desiredState": {
+    "state": "OFF",
+    "level": "100"
+  },
+  "possibleStates": [
+    "ON",
+    "OFF"
+  ],
+  "configuration": {
+    "levelable": true
+  },
+  "offState": "OFF"
+}
+
+> {%
+    client.global.set("rightFanId", response.body.id);
+%}
+
+
+### create the center fan on port 22
+POST http://4.156.161.23:8081/hardwarecontroller/{{hardwareControllerId}}/hardware HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "center fan",
+  "port": "22",
+  "desiredState": {
+    "state": "OFF",
+    "level": "100"
+  },
+  "possibleStates": [
+    "ON",
+    "OFF"
+  ],
+  "configuration": {
+    "levelable": true
+  },
+  "offState": "OFF"
+}
+
+> {%
+    client.global.set("rightFanId", response.body.id);
+%}
+
+
+### create the left fan on port 23
+POST http://4.156.161.23:8081/hardwarecontroller/{{hardwareControllerId}}/hardware HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "right fan",
+  "port": "23",
+  "desiredState": {
+    "state": "OFF",
+    "level": "100"
+  },
+  "possibleStates": [
+    "ON",
+    "OFF"
+  ],
+  "configuration": {
+    "levelable": true
+  },
+  "offState": "OFF"
+}
+
+> {%
+    client.global.set("rightFanId", response.body.id);
+%}
+
+
+### Update the fan on port 21 to be off
+PUT http://4.156.161.23:8081/hardware/{{leftFanId}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "left side fan",
+  "port": "22",
+  "desiredState": {
+    "state": "ON",
+    "level": "100"
+  },
+  "possibleStates": [
+    "ON",
+    "OFF"
+  ],
+  "offState": "OFF"
+}
+
+

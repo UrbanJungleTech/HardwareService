@@ -55,8 +55,6 @@ public class AlertEndpointIT {
     @Autowired
     private MockActionService mockActionService;
     @Autowired
-    private HardwareTestService hardwareTestService;
-    @Autowired
     SensorTestService sensorTestService;
 
 

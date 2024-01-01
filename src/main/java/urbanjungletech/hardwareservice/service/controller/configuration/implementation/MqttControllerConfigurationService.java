@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.mqtt.SystemMqttClientProperties;
+import urbanjungletech.hardwareservice.exception.MqttClientConfigurationException;
+import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
@@ -21,25 +23,31 @@ public class MqttControllerConfigurationService implements ControllerConfigurati
     private final Logger logger = LoggerFactory.getLogger(MqttControllerConfigurationService.class);
     private final Map<Long, IMqttClient> mqttClients;
     private final Map<SystemMqttClientProperties, IMqttClient> serverMqttClients;
+    private final MqttCredentialsConfigurationService mqttCredentialsConfigurationService;
+
 
     public MqttControllerConfigurationService(@Qualifier("MqttClients") Map<Long, IMqttClient> mqttClients,
-                                              @Qualifier("serverMqttClients") Map<SystemMqttClientProperties, IMqttClient> serverMqttClients) {
+                                              @Qualifier("serverMqttClients") Map<SystemMqttClientProperties, IMqttClient> serverMqttClients,
+                                              MqttCredentialsConfigurationService mqttCredentialsConfigurationService) {
         this.mqttClients = mqttClients;
         this.serverMqttClients = serverMqttClients;
+        this.mqttCredentialsConfigurationService = mqttCredentialsConfigurationService;
     }
 
     @Override
     public void configureController(MqttHardwareController hardwareController) {
         try {
+            //setup the client to send messages to the request queue.
             logger.info("Configuring MQTT controller {}", hardwareController.getId());
-            String server = hardwareController.getBrokerUrl();
+            String server = hardwareController.getHardwareMqttClient().getBrokerUrl();
             String clientId = UUID.randomUUID().toString();
             IMqttClient client = new MqttClient(server, clientId);
             mqttClients.put(hardwareController.getId(), client);
 
-            String responseQueue = hardwareController.getResponseTopic();
-
+            //setup the client to listen to the response queue if one doesn't already exist.
+            String responseQueue = hardwareController.getHardwareMqttClient().getResponseTopic();
             SystemMqttClientProperties serverMqttClientProperties = new SystemMqttClientProperties(server, responseQueue);
+
             if(serverMqttClients.containsKey(serverMqttClientProperties) == false){
                 IMqttClient serverClient = new MqttClient(server, UUID.randomUUID().toString());
                 serverMqttClients.put(serverMqttClientProperties, serverClient);
@@ -47,7 +55,7 @@ public class MqttControllerConfigurationService implements ControllerConfigurati
             }
         }
         catch (MqttException e) {
-            throw new RuntimeException(e);
+            throw new MqttClientConfigurationException(e);
         }
     }
 }

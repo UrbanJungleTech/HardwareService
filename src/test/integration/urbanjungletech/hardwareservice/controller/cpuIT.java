@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +14,7 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.util.List;
 import java.util.Map;

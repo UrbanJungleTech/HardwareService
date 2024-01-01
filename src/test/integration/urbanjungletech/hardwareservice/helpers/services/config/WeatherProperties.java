@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "development.weather")
+@ConfigurationProperties(prefix = "weather.development")
 public class WeatherProperties {
     private String apikey;
     private String url;

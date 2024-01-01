@@ -1,27 +1,36 @@
 package urbanjungletech.hardwareservice.converter.hardwarecontroller.implementation;
 
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.converter.hardwarecontroller.HardwareMqttClientConverter;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.MqttHardwareControllerEntity;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareMqttClient;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+
+import java.util.Optional;
 
 @Service
 public class MqttHardwareControllerConverterImpl implements SpecificHardwareControllerConverter<MqttHardwareController, MqttHardwareControllerEntity> {
 
+    private final HardwareMqttClientConverter hardwareMqttClientConverter;
+
+    private MqttHardwareControllerConverterImpl(HardwareMqttClientConverter hardwareMqttClientConverter) {
+        this.hardwareMqttClientConverter = hardwareMqttClientConverter;
+    }
+
     @Override
     public void fillEntity(MqttHardwareControllerEntity hardwareControllerEntity, MqttHardwareController hardwareController) {
-        hardwareControllerEntity.setBrokerUrl(hardwareController.getBrokerUrl());
-        hardwareControllerEntity.setResponseTopic(hardwareController.getResponseTopic());
-        hardwareControllerEntity.setRequestTopic(hardwareController.getRequestTopic());
         hardwareControllerEntity.setSerialNumber(hardwareController.getSerialNumber());
     }
 
     @Override
     public MqttHardwareController toModel(MqttHardwareControllerEntity hardwareControllerEntity) {
         MqttHardwareController result = new MqttHardwareController();
-        result.setBrokerUrl(hardwareControllerEntity.getBrokerUrl());
-        result.setResponseTopic(hardwareControllerEntity.getResponseTopic());
-        result.setRequestTopic(hardwareControllerEntity.getRequestTopic());
+        Optional.ofNullable(hardwareControllerEntity.getHardwareMqttClient()).ifPresent((hardwareMqttClientEntity) -> {
+            HardwareMqttClient hardwareMqttClient = hardwareMqttClientConverter.toModel(hardwareControllerEntity.getHardwareMqttClient());
+            result.setHardwareMqttClient(hardwareMqttClient);
+        });
+
         result.setSerialNumber(hardwareControllerEntity.getSerialNumber());
         return result;
     }

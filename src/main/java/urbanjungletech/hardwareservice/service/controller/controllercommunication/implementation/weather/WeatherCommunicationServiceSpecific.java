@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.service.controller.controllercommunicati
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;

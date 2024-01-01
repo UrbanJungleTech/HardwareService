@@ -12,12 +12,10 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
-import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class HardwareControllerAdditionServiceImpl implements HardwareControllerAdditionService {
@@ -51,10 +49,6 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     @Override
     public HardwareController create(HardwareController hardwareController) {
         this.objectLoggerService.logInfo("Adding new hardware controller", hardwareController);
-        SpecificAdditionService specificHardwareControllerAdditionService = this.specificHardwareControllerAdditionServiceMap.get(hardwareController.getClass());
-        if(specificHardwareControllerAdditionService != null){
-            specificHardwareControllerAdditionService.create(hardwareController);
-        }
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);
         Long hardwareControllerId = result.getId();
         hardwareController.getHardware().forEach((Hardware hardware) -> {
@@ -65,10 +59,15 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
             sensor.setHardwareControllerId(hardwareControllerId);
         });
         this.sensorAdditionService.updateList(hardwareController.getSensors());
+        SpecificAdditionService specificHardwareControllerAdditionService = this.specificHardwareControllerAdditionServiceMap.get(hardwareController.getClass());
+        if(specificHardwareControllerAdditionService != null){
+            hardwareController.setId(hardwareControllerId);
+            specificHardwareControllerAdditionService.create(hardwareController);
+            this.hardwareControllerDAO.updateHardwareController(hardwareController);
+        }
         result = hardwareControllerDAO.getHardwareController(hardwareControllerId);
         hardwareController = this.hardwareControllerConverter.toModel(result);
         this.hardwareControllerEventPublisher.publishHardwareControllerCreateEvent(hardwareControllerId);
-
         return hardwareController;
     }
 
