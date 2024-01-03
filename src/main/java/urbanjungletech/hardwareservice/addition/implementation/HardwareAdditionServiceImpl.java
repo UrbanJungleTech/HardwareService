@@ -17,6 +17,7 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
+import urbanjungletech.hardwareservice.service.query.implementation.HardwareQueryServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     private final HardwareStateConverter hardwareStateConverter;
     private final HardwareEventPublisher hardwareEventPublisher;
     private final HardwareStateAdditionService hardwareStateAdditionService;
+    private final HardwareQueryServiceImpl hardwareQueryService;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
@@ -41,7 +43,8 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
                                        ObjectLoggerService objectLoggerService,
                                        HardwareStateConverter hardwareStateConverter,
                                        HardwareEventPublisher hardwareEventPublisher,
-                                       HardwareStateAdditionService hardwareStateAdditionService) {
+                                       HardwareStateAdditionService hardwareStateAdditionService,
+                                       HardwareQueryServiceImpl hardwareQueryService) {
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
         this.hardwareConverter = hardwareConverter;
@@ -49,6 +52,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
         this.hardwareStateConverter = hardwareStateConverter;
         this.hardwareEventPublisher = hardwareEventPublisher;
         this.hardwareStateAdditionService = hardwareStateAdditionService;
+        this.hardwareQueryService = hardwareQueryService;
     }
 
     @Transactional
@@ -102,6 +106,10 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     @Transactional
     @Override
     public void delete(long hardwareId) {
+        Hardware hardware = this.hardwareQueryService.getHardware(hardwareId);
+        hardware.getTimers().forEach((Timer timer) -> {
+            this.timerAdditionService.delete(timer.getId());
+        });
         this.hardwareEventPublisher.publishDeleteHardwareEvent(hardwareId);
         this.hardwareDAO.delete(hardwareId);
     }

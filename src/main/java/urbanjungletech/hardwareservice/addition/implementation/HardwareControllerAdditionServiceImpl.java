@@ -12,6 +12,7 @@ import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
+import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     private final ObjectLoggerService objectLoggerService;
     private final HardwareControllerEventPublisher hardwareControllerEventPublisher;
     private final Map<Class, SpecificAdditionService> specificHardwareControllerAdditionServiceMap;
+    private final HardwareControllerQueryService hardwareControllerQueryService;
 
 
     public HardwareControllerAdditionServiceImpl(HardwareControllerDAO hardwareControllerDAO,
@@ -35,7 +37,8 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
                                                  HardwareControllerConverter hardwareControllerConverter,
                                                  ObjectLoggerService objectLoggerService,
                                                  HardwareControllerEventPublisher hardwareControllerEventPublisher,
-                                                 Map<Class, SpecificAdditionService> specificHardwareControllerAdditionServiceMap){
+                                                 Map<Class, SpecificAdditionService> specificHardwareControllerAdditionServiceMap,
+                                                 HardwareControllerQueryService hardwareControllerQueryService){
         this.hardwareControllerDAO = hardwareControllerDAO;
         this.hardwareAdditionService = hardwareAdditionService;
         this.sensorAdditionService = sensorAdditionService;
@@ -43,6 +46,7 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
         this.objectLoggerService = objectLoggerService;
         this.hardwareControllerEventPublisher = hardwareControllerEventPublisher;
         this.specificHardwareControllerAdditionServiceMap = specificHardwareControllerAdditionServiceMap;
+        this.hardwareControllerQueryService = hardwareControllerQueryService;
     }
 
     @Transactional
@@ -74,6 +78,13 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
     @Override
     @Transactional
     public void delete(long hardwareControllerId) {
+        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
+        hardwareController.getHardware().forEach((Hardware hardware) -> {
+            this.hardwareAdditionService.delete(hardware.getId());
+        });
+        hardwareController.getSensors().forEach((Sensor sensor) -> {
+            this.sensorAdditionService.delete(sensor.getId());
+        });
         this.hardwareControllerDAO.delete(hardwareControllerId);
     }
 

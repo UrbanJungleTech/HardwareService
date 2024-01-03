@@ -25,7 +25,7 @@ public class ScheduledHardwareJobFactory extends SimpleJobFactory {
     }
 
     @Override
-    public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler){
+    public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler){
         Long timerId = (Long) bundle.getJobDetail().getJobDataMap().get("timerId");
         ScheduledHardwareJob result = new ScheduledHardwareJob(timerId,
                 hardwareStateAdditionService,

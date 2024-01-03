@@ -2,7 +2,10 @@ package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.quartz.Scheduler;
+import org.quartz.TriggerKey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -15,6 +18,11 @@ import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
+import java.sql.Date;
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +47,9 @@ public class TimerEndpointIT {
     @Autowired
     HardwareControllerRepository hardwareControllerRepository;
 
-
+    @Autowired
+    @Qualifier("HardwareScheduler")
+    private Scheduler scheduler;
 
     /**
      * Given a HardwareController has been created via the endpoint /hardwarecontroller with a single hardware
@@ -96,7 +106,7 @@ public class TimerEndpointIT {
      * Then the timer can no longer be retrieved via a GET request to /timer/{timerId}
      */
     @Test
-    public void testDeleteTimer() throws Exception {
+    public void testDeleteTimerShouldDeleteTheTimerEntity() throws Exception {
         HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
         Hardware hardware = new Hardware();
         hardware.setOffState("off");
@@ -122,7 +132,7 @@ public class TimerEndpointIT {
      * Then a 404 is returned
      */
     @Test
-    public void testDeleteTimerNotFound() throws Exception {
+    public void testDeleteTimerNotFoundShouldReturn404() throws Exception {
         this.mockMvc.perform(delete("/timer/1"))
                 .andExpect(status().isNotFound());
     }
@@ -216,4 +226,76 @@ public class TimerEndpointIT {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Given a Hardware has been created with a timer
+     * When the timer is updated
+     * Then the schedule exists with the key represented by the timer id
+     * and the schedule is updated with the new cron string
+     */
+    @Test
+    public void testSchedulerIsUpdatedWithUpdatedCronExpression () throws Exception {
+        HardwareController createdHardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        Hardware hardware = createdHardwareController.getHardware().get(0);
+        Timer timer = new Timer();
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        hardware.getTimers().add(timer);
+        createdHardwareController = this.hardwareControllerTestService.postHardwareController(createdHardwareController);
+        Timer createdTimer = createdHardwareController.getHardware().get(0).getTimers().get(0);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(this.scheduler.checkExists(new TriggerKey(String.valueOf(createdTimer.getId())))).isTrue();
+        });
+        String updatedCronString = "0 0 0 1 1 ? 2098";
+        createdTimer.setCronString(updatedCronString);
+        this.hardwareControllerTestService.putHardwareController(createdHardwareController);
+        await().atMost(15, TimeUnit.SECONDS).untilAsserted(() -> {
+            TriggerKey triggerKey = new TriggerKey(String.valueOf(createdTimer.getId()));
+            assertThat(this.scheduler.checkExists(triggerKey)).isTrue();
+            //create a Date to represent the next expected fire date
+            Date nextExpectedFireDate = Date.valueOf("2098-01-01");
+            assertEquals(nextExpectedFireDate, this.scheduler.getTrigger(triggerKey).getNextFireTime());
+        });
+
+    }
+
+    /**
+     * Given a Hardware has been created with a timer
+     * When the hardware is deleted
+     * Then the timer is deleted
+     * and the schedular stops the job
+     */
+    @Test
+    public void testDeleteHardwareDeletesTheAssociatedSchedule() throws Exception {
+        HardwareController createdHardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        Hardware hardware = createdHardwareController.getHardware().get(0);
+        Timer timer = new Timer();
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        hardware.getTimers().add(timer);
+        createdHardwareController = this.hardwareControllerTestService.postHardwareController(createdHardwareController);
+        Timer createdTimer = createdHardwareController.getHardware().get(0).getTimers().get(0);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(this.scheduler.checkExists(new TriggerKey(String.valueOf(createdTimer.getId())))).isTrue();
+        });
+        this.hardwareControllerTestService.deleteHardwareController(createdHardwareController.getId());
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(this.scheduler.checkExists(new TriggerKey(String.valueOf(createdTimer.getId())))).isFalse();
+        });
+    }
+
+    /**
+     * Given a Hardware has been created with a timer
+     * Then the schedule exists with the key represented by the timer id
+     */
+    @Test
+    public void testCreateHardwareCreatesTheAssociatedSchedule() throws Exception {
+        HardwareController createdHardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
+        Hardware hardware = createdHardwareController.getHardware().get(0);
+        Timer timer = new Timer();
+        timer.setCronString("0 0 0 1 1 ? 2099");
+        hardware.getTimers().add(timer);
+        createdHardwareController = this.hardwareControllerTestService.postHardwareController(createdHardwareController);
+        Timer createdTimer = createdHardwareController.getHardware().get(0).getTimers().get(0);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(this.scheduler.checkExists(new TriggerKey(String.valueOf(createdTimer.getId())))).isTrue();
+        });
+    }
 }

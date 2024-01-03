@@ -6,14 +6,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SensorReadingAlertCondition.class, name = "sensorReadingAlertCondition"),
-        @JsonSubTypes.Type(value = HardwareStateChangeAlertCondition.class, name = "hardwareStateChangeAlertCondition")
-})
-public class AlertCondition {
+public abstract class AlertCondition {
     protected Long id;
     protected Long alertId;
     protected String type;
+
 
     public boolean isActive() {
         return active;
@@ -26,10 +23,8 @@ public class AlertCondition {
     protected boolean active;
 
     public AlertCondition() {
+        this.type = this.getClass().getSimpleName();
         this.active = false;
-    }
-    public AlertCondition(String type) {
-        this.type = type;
     }
 
     public Long getId() {

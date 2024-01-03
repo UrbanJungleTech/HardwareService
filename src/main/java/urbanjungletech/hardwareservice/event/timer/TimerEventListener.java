@@ -1,5 +1,7 @@
 package urbanjungletech.hardwareservice.event.timer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import urbanjungletech.hardwareservice.schedule.hardware.ScheduledHardwareSchedu
 @Service
 public class TimerEventListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(TimerEventListener.class);
     private ScheduledHardwareScheduleService scheduledHardwareScheduleService;
     private TimerDAO timerDAO;
     public TimerEventListener(ScheduledHardwareScheduleService scheduledHardwareScheduleService,
@@ -25,14 +28,15 @@ public class TimerEventListener {
     }
 
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void onTimerDeleteEvent(TimerDeleteEvent timerDeleteEvent) {
-        this.scheduledHardwareScheduleService.start(timerDeleteEvent.getTimerId());
+        this.scheduledHardwareScheduleService.deleteSchedule(timerDeleteEvent.getTimerId());
     }
 
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void onTimerUpdateEvent(TimerUpdateEvent timerUpdateEvent) {
+        logger.info("Timer update event received");
         this.scheduledHardwareScheduleService.restartSchedule(timerUpdateEvent.getTimerId());
     }
 }

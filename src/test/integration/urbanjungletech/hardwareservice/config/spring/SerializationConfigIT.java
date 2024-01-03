@@ -14,6 +14,10 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Integration tests for the serialization configuration, intended to ensure that each of the HardwareController
+ * implementations can be deserialized from JSON based on their type field.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -32,7 +36,7 @@ public class SerializationConfigIT {
     @Test
     public void testDeserializationMqttController() throws JsonProcessingException {
         String json = "{\"type\":\"MqttHardwareController\"}";
-        HardwareController controller = objectMapper.readValue(json, MqttHardwareController.class);
+        HardwareController controller = objectMapper.readValue(json, HardwareController.class);
         assertEquals(MqttHardwareController.class, controller.getClass());
     }
 

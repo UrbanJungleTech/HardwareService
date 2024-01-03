@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.config.spring;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
@@ -25,10 +27,15 @@ public class SerializationConfig {
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")))
                 .build();
-        Reflections reflections = new Reflections("urbanjungletech");
-        Set<Class<? extends HardwareController>> subTypes = reflections.getSubTypesOf(HardwareController.class);
-        subTypes.stream().forEach(subType -> {
-            result.registerSubtypes(new NamedType(subType, subType.getSimpleName()));
+
+        Reflections superTypesReflection = new Reflections("urbanjungletech");
+        Set<Class<?>> superTypes = superTypesReflection.getTypesAnnotatedWith(JsonTypeInfo.class);
+        superTypes.stream().forEach(superType -> {
+            Reflections subTypesReflection = new Reflections("urbanjungletech");
+            var subTypes = subTypesReflection.getSubTypesOf(superType);
+            subTypes.stream().forEach(subType -> {
+                result.registerSubtypes(new NamedType(subType, subType.getSimpleName()));
+            });
         });
         return result;
     }

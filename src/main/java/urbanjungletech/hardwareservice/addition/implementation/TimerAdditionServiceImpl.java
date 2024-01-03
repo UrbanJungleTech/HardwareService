@@ -46,6 +46,7 @@ public class TimerAdditionServiceImpl implements TimerAdditionService {
     public Timer update(long timerId, Timer timer) {
         timer.setId(timerId);
         TimerEntity timerEntity = this.timerDAO.updateTimer(timer);
+        this.timerEventPublisher.publishUpdateTimerEvent(timerId);
         return this.timerConverter.toModel(timerEntity);
     }
 

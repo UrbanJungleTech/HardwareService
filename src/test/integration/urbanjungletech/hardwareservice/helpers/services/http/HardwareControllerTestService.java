@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.helpers.services.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
@@ -16,8 +17,7 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareCont
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Service
@@ -41,6 +41,22 @@ public class HardwareControllerTestService {
 
         HardwareController hardwareControllerResponse = objectMapper.readValue(result.getResponse().getContentAsString(), HardwareController.class);
         return hardwareControllerResponse;
+    }
+
+    public HardwareController putHardwareController(HardwareController hardwareController) throws Exception {
+        String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
+        MvcResult hardwareControllerResponse = mockMvc.perform(put("/hardwarecontroller/" + hardwareController.getId())
+                        .content(hardwareControllerJson)
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+        HardwareController result = objectMapper.readValue(hardwareControllerResponse.getResponse().getContentAsString(), HardwareController.class);
+        return result;
+    }
+
+    public void deleteHardwareController(long hardwareControllerId) throws Exception{
+        mockMvc.perform(delete("/hardwarecontroller/" + hardwareControllerId))
+                .andReturn();
     }
 
     public Hardware createDefaultHardware(String name){

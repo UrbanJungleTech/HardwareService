@@ -6,7 +6,7 @@ public class SensorReadingAlertCondition extends AlertCondition {
     private ThresholdType thresholdType;
 
     public SensorReadingAlertCondition() {
-        super("sensorReadingAlertCondition");
+        super();
     }
 
     public Long getSensorId() {
