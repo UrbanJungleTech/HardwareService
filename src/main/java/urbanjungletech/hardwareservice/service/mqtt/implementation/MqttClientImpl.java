@@ -6,7 +6,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
@@ -25,8 +26,8 @@ public class MqttClientImpl implements MqttClient {
     @Transactional
     @Override
     public void publish(long hardwareControllerId, MqttMessage message) throws MqttException {
-        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
-        this.clients.get(hardwareControllerId).publish(hardwareController.getConfiguration().get("requestQueue"), message);
+        MqttHardwareController hardwareController = (MqttHardwareController) this.hardwareControllerQueryService.getHardwareController(hardwareControllerId);
+        this.clients.get(hardwareControllerId).publish(hardwareController.getHardwareMqttClient().getRequestTopic(), message);
     }
 
     @Override

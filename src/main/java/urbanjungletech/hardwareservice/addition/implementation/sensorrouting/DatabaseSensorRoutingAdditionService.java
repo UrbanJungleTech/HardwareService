@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class DatabaseSensorRoutingAdditionService implements SpecificSensorRouterAdditionService<DatabaseSensorReadingRouter> {
+public class DatabaseSensorRoutingAdditionService implements SpecificAdditionService<DatabaseSensorReadingRouter> {
 
     private final CredentialsAdditionService credentialsAdditionService;
     private final DatabaseRouterDAO databaseRouterDAO;
@@ -31,19 +31,18 @@ public class DatabaseSensorRoutingAdditionService implements SpecificSensorRoute
         this.targetDataSources = targetDataSources;
     }
     @Override
-    public DatabaseSensorReadingRouter create(DatabaseSensorReadingRouter databaseSensorReadingRouter) {
+    public void create(DatabaseSensorReadingRouter databaseSensorReadingRouter) {
         DatabaseCredentials credentials = (DatabaseCredentials)this.credentialsAdditionService.create(databaseSensorReadingRouter.getCredentials());
         databaseSensorReadingRouter.setCredentials(credentials);
-        return databaseSensorReadingRouter;
     }
 
     @Override
     public void delete(long id) {
-
+        this.credentialsAdditionService.delete(id);
     }
 
     @Override
-    public DatabaseSensorReadingRouter update(long id, DatabaseSensorReadingRouter databaseSensorReadingRouter) {
-        return null;
+    public void update(long id, DatabaseSensorReadingRouter databaseSensorReadingRouter) {
+        this.credentialsAdditionService.update(id, databaseSensorReadingRouter.getCredentials());
     }
 }

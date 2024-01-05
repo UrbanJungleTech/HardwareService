@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 
 import java.util.ArrayList;
 import java.util.List;

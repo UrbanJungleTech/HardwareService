@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.mock.action.MockAction;
-import urbanjungletech.hardwareservice.mock.action.MockActionService;
+import urbanjungletech.hardwareservice.helpers.mock.action.MockAction;
+import urbanjungletech.hardwareservice.helpers.mock.action.MockActionService;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.model.alert.Alert;
@@ -24,9 +24,9 @@ import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 
 import java.util.concurrent.TimeUnit;
 
@@ -54,8 +54,6 @@ public class AlertEndpointIT {
     private HardwareControllerTestService hardwareControllerTestService;
     @Autowired
     private MockActionService mockActionService;
-    @Autowired
-    private HardwareTestService hardwareTestService;
     @Autowired
     SensorTestService sensorTestService;
 

@@ -1,20 +1,26 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareControllerEntity;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
 import java.util.Map;
 
@@ -28,7 +34,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "mqtt.server.enabled=false",
         "mqtt-rpc.enabled=false"})
 @AutoConfigureMockMvc
+@ComponentScan(basePackages = {"urbanjungletech.hardwareservice"})
+@EntityScan(basePackages = {"urbanjungletech", "urbanjungletech.hardwareservice.mock.hardwarecontroller"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Import(MockHardwareController.class)
 public class HardwareEndpointIT {
 
     @Autowired

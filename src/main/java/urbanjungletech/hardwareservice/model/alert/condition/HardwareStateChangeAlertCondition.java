@@ -4,7 +4,7 @@ public class HardwareStateChangeAlertCondition extends AlertCondition{
     private String state;
     private Long hardwareId;
     public HardwareStateChangeAlertCondition() {
-        super("hardwareStateChangeAlertCondition");
+        super();
     }
 
     public Long getHardwareId() {

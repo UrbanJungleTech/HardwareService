@@ -1,15 +1,20 @@
 package urbanjungletech.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +43,7 @@ public class cpuIT {
      */
     @Test
     public void getSensorReading_temperatureSensor_returnsDoubleGreaterThanZero() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new CpuHardwareController();
         hardwareController.setType("cpu");
         Sensor sensor = new Sensor();
         sensor.setName("Temperature Sensor");
@@ -70,7 +75,7 @@ public class cpuIT {
      */
     @Test
     public void getSensorReading_clockSpeedSensor_returnsDoubleGreaterThanZero() throws Exception {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.setType("cpu");
         Sensor sensor = new Sensor();
         sensor.setName("Clock Speed Sensor");
@@ -100,8 +105,7 @@ public class cpuIT {
      */
     @Test
     public void getSensorReading_invalidSensorType_returns400() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.setType("cpu");
+        HardwareController hardwareController = new CpuHardwareController();
         Sensor sensor = new Sensor();
         sensor.setName("Invalid Sensor");
         Map<String, String> configuration = Map.of("sensorType", "INVALID");

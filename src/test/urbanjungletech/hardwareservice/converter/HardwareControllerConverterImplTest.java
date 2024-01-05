@@ -5,15 +5,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import urbanjungletech.hardwareservice.converter.implementation.HardwareControllerConverterImpl;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
+import urbanjungletech.hardwareservice.converter.hardwarecontroller.implementation.HardwareControllerConverterImpl;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareControllerConverter;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -28,6 +32,10 @@ class HardwareControllerConverterImplTest {
 
     @Mock
     private SensorConverter sensorConverter;
+    @Mock
+    private Map<Class, SpecificHardwareControllerConverter> specificHardwareControllerConverters;
+    @Mock
+    private SpecificHardwareControllerConverter specificHardwareControllerConverter;
 
     @InjectMocks
     private HardwareControllerConverterImpl hardwareControllerConverter;
@@ -42,9 +50,10 @@ class HardwareControllerConverterImplTest {
         List<Hardware> hardwares = new ArrayList<>();
         when(sensorConverter.toModels(any())).thenReturn(sensors);
         when(hardwareConverter.toModels(any())).thenReturn(hardwares);
+        when(specificHardwareControllerConverters.get(any())).thenReturn(specificHardwareControllerConverter);
+        when(specificHardwareControllerConverter.toModel(any())).thenReturn(new MockHardwareController());
         HardwareController result = this.hardwareControllerConverter.toModel(hardwareControllerEntity);
         assertEquals("test", result.getName());
-        assertEquals("1234", result.getConfiguration().get("serialNumber"));
         assertEquals(1L, result.getId());
         assertSame(sensors, result.getSensors());
         assertSame(hardwares, result.getHardware());
@@ -53,7 +62,8 @@ class HardwareControllerConverterImplTest {
     @Test
     public void testToModelCallsSensorToModels(){
         HardwareControllerEntity hardwareController = new HardwareControllerEntity();
-        this.hardwareControllerConverter.toModel(hardwareController);
+        when(specificHardwareControllerConverters.get(any())).thenReturn(specificHardwareControllerConverter);
+        when(specificHardwareControllerConverter.toModel(any())).thenReturn(new MockHardwareController());
         List sensors = new ArrayList();
         hardwareController.setSensors(sensors);
         List<Sensor> sensorResult = new ArrayList<>();
@@ -69,6 +79,8 @@ class HardwareControllerConverterImplTest {
         List<Hardware> hardwareResult = new ArrayList<>();
         when(hardwareConverter.toModels(hardwareEntities)).thenReturn(hardwareResult);
         hardwareControllerEntity.setHardware(hardwareEntities);
+        when(specificHardwareControllerConverters.get(any())).thenReturn(specificHardwareControllerConverter);
+        when(specificHardwareControllerConverter.toModel(any())).thenReturn(new MockHardwareController());
         HardwareController result = this.hardwareControllerConverter.toModel(hardwareControllerEntity);
         assertSame(hardwareResult, result.getHardware());
     }

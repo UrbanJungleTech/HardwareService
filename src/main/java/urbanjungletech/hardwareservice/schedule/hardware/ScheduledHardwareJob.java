@@ -35,6 +35,6 @@ public class ScheduledHardwareJob implements Job {
         Hardware hardware = this.hardwareQueryService.getHardware(timer.getHardwareId());
         hardware.getDesiredState().setState(timer.getState());
         hardware.getDesiredState().setLevel(timer.getLevel());
-        this.hardwareStateAdditionService.update(hardware.getId(), hardware.getDesiredState());
+        this.hardwareStateAdditionService.update(hardware.getDesiredState().getId(), hardware.getDesiredState());
     }
 }

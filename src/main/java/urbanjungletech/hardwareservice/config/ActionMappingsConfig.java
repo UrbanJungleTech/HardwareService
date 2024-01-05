@@ -2,17 +2,23 @@ package urbanjungletech.hardwareservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificSensorRouterAdditionService;
+import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
 import urbanjungletech.hardwareservice.converter.credentials.SpecificCredentialsConverter;
+import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 import urbanjungletech.hardwareservice.service.alert.condition.service.SpecificConditionTriggerService;
+import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
+import urbanjungletech.hardwareservice.service.controller.configuration.implementation.SpecificMqttCredentialsConfigurationService;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.SpecificSensorValidationService;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
@@ -25,12 +31,23 @@ import java.util.Map;
 @Configuration
 public class ActionMappingsConfig {
 
-
-
     @Bean
     public Map<Class <? extends AlertAction>, SpecificActionExecutionService>
     actionMappings(List<SpecificActionExecutionService> actionExecutionServices, MapGeneratorService mapGeneratorService){
         Map<Class <? extends AlertAction>, SpecificActionExecutionService> result = mapGeneratorService.generateMap(actionExecutionServices, SpecificActionExecutionService.class);
+        return result;
+    }
+
+    @Bean
+    public Map<Class <? extends Credentials>, SpecificMqttCredentialsConfigurationService> credentialsConfigurationServices(List<SpecificMqttCredentialsConfigurationService> credentialsConfigurationServices, MapGeneratorService mapGeneratorService){
+        Map<Class <? extends Credentials>, SpecificMqttCredentialsConfigurationService> result = mapGeneratorService.generateMap(credentialsConfigurationServices, SpecificMqttCredentialsConfigurationService.class);
+        return result;
+    }
+
+    @Bean
+    public Map<Class <? extends HardwareController>, SpecificControllerCommunicationService>
+    controllerCommunicationServiceMap(List<SpecificControllerCommunicationService> controllerCommunicationServices, MapGeneratorService mapGeneratorService){
+        Map<Class <? extends HardwareController>, SpecificControllerCommunicationService> result = mapGeneratorService.generateMap(controllerCommunicationServices, SpecificControllerCommunicationService.class);
         return result;
     }
 
@@ -46,24 +63,39 @@ public class ActionMappingsConfig {
     public Map<Class <? extends AlertCondition>, SpecificConditionTriggerService>
             conditionTriggerServiceMap(List<SpecificConditionTriggerService> routerServices,
                                 MapGeneratorService mapGeneratorService){
-        Map<Class <? extends AlertCondition>, SpecificConditionTriggerService> result = mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
-        return result;
+        return mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
     }
 
     @Bean
-    public Map<Class <? extends SensorReadingRouter>, SpecificSensorRouterAdditionService>
-    specificSensorRouterAdditionServices(List<SpecificSensorRouterAdditionService> additionServices,
+    public Map<Class, SpecificAdditionService>
+    specificSensorRouterAdditionServices(List<SpecificAdditionService> additionServices,
                                 MapGeneratorService mapGeneratorService){
         mapGeneratorService.generateMap(additionServices, SensorReadingRouter.class);
-        Map<Class <? extends SensorReadingRouter>, SpecificSensorRouterAdditionService> result = mapGeneratorService.generateMap(additionServices, SpecificSensorRouterAdditionService.class);
-        return result;
+        return mapGeneratorService.generateMap(additionServices, SpecificAdditionService.class);
     }
+
 
     @Bean
     public Map<Class <? extends Credentials>, SpecificCredentialRetrievalService>
     credentialRetrievalServiceMap(List<SpecificCredentialRetrievalService> retrievalServices,
                                   MapGeneratorService mapGeneratorService){
-        Map<Class <? extends Credentials>, SpecificCredentialRetrievalService> result = mapGeneratorService.generateMap(retrievalServices, SpecificCredentialRetrievalService.class);
+        return mapGeneratorService.generateMap(retrievalServices, SpecificCredentialRetrievalService.class);
+    }
+    @Bean
+    public Map<Class<? extends HardwareController>, ControllerConfigurationService>
+    controllerConfigurationServiceMap(List<ControllerConfigurationService> controllerConfigurationServices,
+                                      MapGeneratorService mapGeneratorService){
+        return mapGeneratorService.generateMap(controllerConfigurationServices, ControllerConfigurationService.class);
+    }
+
+    /**
+     * Hashmap of the validation services for sensors based on their controller type.
+     */
+    @Bean
+    public Map<Class<? extends HardwareController>, SpecificSensorValidationService>
+    sensorValidationServiceMap(List<SpecificSensorValidationService> sensorValidationServices,
+                               MapGeneratorService mapGeneratorService){
+        Map<Class<? extends HardwareController>, SpecificSensorValidationService> result = mapGeneratorService.generateMap(sensorValidationServices, SpecificSensorValidationService.class);
         return result;
     }
 
@@ -84,6 +116,24 @@ public class ActionMappingsConfig {
         for(SpecificAlertActionConverter currentActionConverter : actionConverters){
             for(Type type :  currentActionConverter.getClass().getGenericInterfaces()){
                 if(type instanceof ParameterizedType p && p.getRawType() == SpecificAlertActionConverter.class){
+                    result.put((Class)p.getActualTypeArguments()[0], currentActionConverter);
+                    result.put((Class)p.getActualTypeArguments()[1], currentActionConverter);
+                }
+            }
+        }
+        return result;
+    }
+
+
+
+
+    @Bean
+    public Map<Class, SpecificHardwareControllerConverter>
+    hardwareControllerConverterMappings(List<SpecificHardwareControllerConverter> actionConverters){
+        Map<Class, SpecificHardwareControllerConverter> result = new HashMap<>();
+        for(SpecificHardwareControllerConverter currentActionConverter : actionConverters){
+            for(Type type :  currentActionConverter.getClass().getGenericInterfaces()){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificHardwareControllerConverter.class){
                     result.put((Class)p.getActualTypeArguments()[0], currentActionConverter);
                     result.put((Class)p.getActualTypeArguments()[1], currentActionConverter);
                 }

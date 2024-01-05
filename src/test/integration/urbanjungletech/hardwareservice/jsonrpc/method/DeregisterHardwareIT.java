@@ -6,18 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,17 +56,16 @@ public class DeregisterHardwareIT {
      */
     @Test
     public void testDeregisterHardware() throws Exception{
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Hardware hardware = new Hardware();
         hardware.setPort("1");
-        hardwareController.getConfiguration().put("serialNumber", "1234");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("serialNumber", createdHardwareController.getConfiguration().get("serialNumber"));
         params.put("port", createdHardware.getPort());
+        params.put("serialNumber", createdHardwareController.getSerialNumber());
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("DeregisterHardware", params);
 
         String rpcMessage = objectMapper.writeValueAsString(jsonRpcMessage);

@@ -1,18 +1,19 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.HardwareController;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ public class RegisterHardwareControllerIT {
     private MqttTestService mqttTestService;
     @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
-
     /**
      * Given a HardwareController object with the serial number 1234
      * When a json payload of the form:
@@ -48,20 +48,19 @@ public class RegisterHardwareControllerIT {
      */
     @Test
     public void testRegisterHardwareController() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Map<String, Object> params = new HashMap<>();
-        hardwareController.getConfiguration().put("serialNumber", "1234");
         params.put("hardwareController", hardwareController);
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("RegisterHardwareController", params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
         this.mqttTestService.sendMessage(mqttPayload);
 
-        await().atMost(3, TimeUnit.SECONDS)
+        await().atMost(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     List<HardwareController> hardwareControllers = this.hardwareControllerTestService.findAllHardwareControllers();
                     assertTrue(hardwareControllers.size() >= 1);
                     HardwareController hardwareControllerResponse = hardwareControllers.get(0);
-                    assertTrue(hardwareControllerResponse.getConfiguration().get("serialNumber").equals("1234"));
+                    assertTrue(hardwareControllerResponse.getSerialNumber().equals("1234"));
                 });
     }
 

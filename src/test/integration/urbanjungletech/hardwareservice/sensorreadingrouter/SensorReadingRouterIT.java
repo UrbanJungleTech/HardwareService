@@ -5,12 +5,9 @@ import com.azure.storage.queue.QueueClient;
 import com.azure.storage.queue.QueueClientBuilder;
 import com.azure.storage.queue.models.QueueMessageItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.hibernate.Session;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,32 +15,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.dao.DatabaseRouterDAO;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.helpers.services.config.AzureProperties;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.router.DatabaseRouterHelperService;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
-import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.KafkaSensorReadingRouter;
-import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
-import urbanjungletech.hardwareservice.services.config.AzureProperties;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
-import urbanjungletech.hardwareservice.services.router.DatabaseRouterHelperService;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,14 +57,7 @@ public class SensorReadingRouterIT {
     @Autowired
     private DatabaseRouterHelperService databaseRouterHelperService;
     @Autowired
-    private DatasourceClientGenerator datasourceClientGenerator;
-    @Autowired
-    private DatabaseRouterDAO databaseRouterDAO;
-    @Autowired
     private HardwareControllerTestService hardwareControllerTestService;
-    @Autowired
-    private HardwareTestService hardwareTestService;
-
 
     /**
      * Given a valid ScheduledSensorReading with a DatabaseSensorReadingRouter in its list of routers
@@ -136,7 +121,7 @@ public class SensorReadingRouterIT {
     @Test
     void createScheduledReadingWithKafkaSensorReadingRouter() throws Exception {
 
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
+        Sensor sensor = this.sensorTestService.createMqttSensor().getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0 0 0 1 1 ? 2099");
@@ -176,7 +161,7 @@ public class SensorReadingRouterIT {
                 .buildClient();
         queueClient.clearMessages();
 
-        Sensor sensor = this.sensorTestService.createBasicSensor().getSensors().get(0);
+        Sensor sensor = this.sensorTestService.createMqttSensor().getSensors().get(0);
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0/1 * * * * ?");

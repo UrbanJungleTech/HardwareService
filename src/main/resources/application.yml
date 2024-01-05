@@ -1,3 +1,6 @@
+
+server:
+  port: ${PORT:8081}
 spring:
   application:
     name: ${APPLICATION_NAME}
@@ -17,7 +20,7 @@ spring:
       ddl-auto: create-drop
 logging:
   level:
-    root: ${ROOT_LOG_LEVEL:DEBUG}
+    root: ${ROOT_LOG_LEVEL:INFO}
     urbanjungletech: ${ROOT_LOG_LEVEL:DEBUG}
     org.hibernate.SQL: ${SQL_LOG_LEVEL:INFO}
   mqtt:

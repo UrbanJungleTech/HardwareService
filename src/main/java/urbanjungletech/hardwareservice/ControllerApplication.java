@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 @SpringBootApplication(exclude={QuartzEndpointAutoConfiguration.class})
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy()
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "urbanjungletech",
 	entityManagerFactoryRef = "entityManagerFactory",

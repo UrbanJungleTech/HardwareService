@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.service.query;
 
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.util.List;

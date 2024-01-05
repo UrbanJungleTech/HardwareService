@@ -1,18 +1,24 @@
 package urbanjungletech.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.*;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
-import urbanjungletech.hardwareservice.services.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.mockclient.MockMqttClientListener;
+import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -27,7 +33,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest()
+@SpringBootTest(properties = {
+        "mqtt-rpc.enabled=true",
+        "development.mqtt.client.enabled=true",
+        "development.mqtt.server.enabled=true",
+        "development.mqtt.client=true"
+
+})
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class mqttIT {
@@ -54,7 +66,7 @@ public class mqttIT {
     @Test
     void readHardware_whenGivenAValidHardwareId_shouldSendARegisterHardwareMessage() throws Exception {
 
-        HardwareController hardwareController = this.hardwareControllerTestService.createHardwareMqttController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
         Hardware hardware = new Hardware();
         hardware.setPort("1");
         hardware.setOffState("off");
@@ -138,7 +150,6 @@ public class mqttIT {
         timer2.setCronString("0/2 * * * * ?");
         hardware.getTimers().add(timer2);
         HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController(List.of(hardware));
-        hardware = hardwareController.getHardware().get(0);
 
         await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             assertTrue(this.mqttCacheListener.getCache("StateChange").size() >= 3);
@@ -207,15 +218,15 @@ public class mqttIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createBasicSensor();
+        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
 
         Sensor createdSensor = hardwareController.getSensors().get(0);
 
         await()
                 .atMost(Duration.of(3, ChronoUnit.SECONDS))
-                .until(() -> this.mqttCacheListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort())).size() >= 1);
+                .until(() -> this.mqttCacheListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort())).size() >= 1);
 
-        List<JsonRpcMessage> results = this.mqttCacheListener.getCache("RegisterSensor", Map.of("port", (String)createdSensor.getPort()));
+        List<JsonRpcMessage> results = this.mqttCacheListener.getCache("RegisterSensor", Map.of("port", createdSensor.getPort()));
         assertEquals(1, results.size());
         JsonRpcMessage message = results.get(0);
         assertEquals(createdSensor.getPort(), (String)message.getParams().get("port"));

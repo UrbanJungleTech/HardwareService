@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.addition;
 
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Sensor;
 
 public interface HardwareControllerAdditionService extends AdditionService<HardwareController> {

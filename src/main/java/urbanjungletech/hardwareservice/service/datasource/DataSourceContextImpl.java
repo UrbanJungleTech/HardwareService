@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.DatasourceNotRegisteredException;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
 
@@ -18,13 +19,16 @@ public class DataSourceContextImpl implements DataSourceContext{
     private final Map<Object, Object> dataSources;
     private final MultiTenantDataSource multiTenantDataSource;
     private final DatasourceClientGenerator datasourceClientGenerator;
+    private final ExceptionService exceptionService;
 
     public DataSourceContextImpl(@Qualifier("targetDataSources") Map<Object, Object> dataSources,
                                  MultiTenantDataSourceImpl multiTenantDataSource,
-                                 DatasourceClientGenerator datasourceClientGenerator) {
+                                 DatasourceClientGenerator datasourceClientGenerator,
+                                 ExceptionService exceptionService) {
         this.dataSources = dataSources;
         this.multiTenantDataSource = multiTenantDataSource;
         this.datasourceClientGenerator = datasourceClientGenerator;
+        this.exceptionService = exceptionService;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class DataSourceContextImpl implements DataSourceContext{
         }
         else{
             logger.error("Datasource not registered for credentials: {}", credentials);
-            throw new DatasourceNotRegisteredException();
+            this.exceptionService.throwSystemException(DatasourceNotRegisteredException.class);
         }
     }
 }

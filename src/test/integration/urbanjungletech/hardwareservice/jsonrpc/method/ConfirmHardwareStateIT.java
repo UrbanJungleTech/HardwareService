@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,12 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -66,7 +63,6 @@ public class ConfirmHardwareStateIT {
     @Test
     public void confirmHardwareState() throws Exception {
         HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
-        controller.getConfiguration().put("serialNumber", "1234");
         Hardware hardware = new Hardware();
         controller.getHardware().add(hardware);
         hardware.setPort("1");
@@ -90,7 +86,7 @@ public class ConfirmHardwareStateIT {
         this.mqttTestService.sendMessage(mqttPayload);
         //wait for the current state to be updated
         await()
-                .atMost(Duration.of(3, java.time.temporal.ChronoUnit.SECONDS))
+                .atMost(Duration.of(5, java.time.temporal.ChronoUnit.SECONDS))
                 .with()
                 .until(() -> {
                     MvcResult hardwareResponse = mockMvc.perform(get("/hardware/" + responseHardware.getId()))

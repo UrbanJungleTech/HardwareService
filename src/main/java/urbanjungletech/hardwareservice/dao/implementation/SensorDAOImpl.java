@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.SensorConverter;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.SensorEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.Sensor;
@@ -66,14 +66,9 @@ public class SensorDAOImpl implements SensorDAO {
 
     @Override
     public SensorEntity getSensorByPort(String serialNumber, String port) {
-        HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findBySerialNumber(serialNumber);
-        Optional<SensorEntity> result = hardwareControllerEntity.getSensors().stream().filter((sensorEntity -> {
-            if(sensorEntity.getPort().equals(port)){
-                return true;
-            }
-            return false;
-        })).findFirst();
-        SensorEntity sensorEntity = result.get();
+        SensorEntity sensorEntity = this.sensorRepository.findByHardwareControllerSerialNumberAndPort(serialNumber, port).orElseThrow(() -> {
+            throw this.exceptionService.createNotFoundException(SensorEntity.class, port);
+        });
         return sensorEntity;
     }
 

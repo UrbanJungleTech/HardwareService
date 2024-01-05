@@ -6,10 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
-import urbanjungletech.hardwareservice.entity.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 
 import java.util.List;
@@ -39,11 +40,12 @@ class HardwareControllerDAOImplTest {
      */
     @Test
     void createHardwareController() {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         HardwareControllerEntity resultHardwareControllerEntity = new HardwareControllerEntity();
 
 
         when(this.hardwareControllerRepository.save(any(HardwareControllerEntity.class))).thenReturn(resultHardwareControllerEntity);
+        when(this.hardwareControllerConverter.createEntity(any(HardwareController.class))).thenReturn(resultHardwareControllerEntity);
 
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);
 
@@ -59,7 +61,7 @@ class HardwareControllerDAOImplTest {
     void getAllHardwareControllers() {
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
 
-        when(this.hardwareControllerRepository.findAll()).thenReturn(java.util.List.of(hardwareControllerEntity));
+        when(this.hardwareControllerRepository.findAll()).thenReturn(List.of(hardwareControllerEntity));
 
         List<HardwareControllerEntity> result = this.hardwareControllerDAO.getAllHardwareControllers();
 
@@ -123,7 +125,7 @@ class HardwareControllerDAOImplTest {
      */
     @Test
     void updateHardwareController() {
-        HardwareController hardwareController = new HardwareController();
+        HardwareController hardwareController = new MockHardwareController();
         hardwareController.setId(1L);
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         HardwareControllerEntity resultHardwareControllerEntity = new HardwareControllerEntity();

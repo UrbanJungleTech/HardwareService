@@ -2,15 +2,14 @@ package urbanjungletech.hardwareservice.service.controller.validation.sensor.imp
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.cpu.CpuSensorType;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.HardwareControllerCommunicationService;
-import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationServiceImplementation;
+import urbanjungletech.hardwareservice.service.controller.validation.sensor.SpecificSensorValidationService;
 
 import java.util.Arrays;
 
 @Service
-@HardwareControllerCommunicationService(type = "cpu")
-public class CpuSensorValidationService implements SensorValidationServiceImplementation {
+public class CpuSensorValidationService implements SpecificSensorValidationService<CpuHardwareController> {
     @Override
     public SensorValidationError validateSensorType(Sensor sensor) {
         String sensorType = sensor.getConfiguration().get("sensorType");

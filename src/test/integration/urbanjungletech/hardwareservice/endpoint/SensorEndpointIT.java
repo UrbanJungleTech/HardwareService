@@ -3,6 +3,8 @@ package urbanjungletech.hardwareservice.endpoint;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,8 +14,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
-import urbanjungletech.hardwareservice.exception.exception.StandardErrorException;
-import urbanjungletech.hardwareservice.model.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
@@ -21,8 +23,8 @@ import urbanjungletech.hardwareservice.model.sensorreadingrouter.BasicDatabaseSe
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -63,8 +65,6 @@ public class SensorEndpointIT {
     SecretClient secretClient;
     @Autowired
     HardwareControllerTestService hardwareControllerTestService;
-
-
 
     /**
      * Given a HardwareController with a sensor has been created via /hardwarecontroller/
@@ -267,8 +267,7 @@ public class SensorEndpointIT {
      */
     @Test
     void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
-        HardwareController hardwareController = new HardwareController();
-        hardwareController.getConfiguration().put("serialNumber", "1234");
+        HardwareController hardwareController = new MockHardwareController();
         Sensor sensor = new Sensor();
         sensor.setSensorType("temperature");
         sensor.setName("Test Sensor");
