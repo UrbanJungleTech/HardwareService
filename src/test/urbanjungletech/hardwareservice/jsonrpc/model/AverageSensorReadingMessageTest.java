@@ -16,7 +16,7 @@ class AverageSensorReadingMessageTest {
         String method = averageSensorReadingMessage.getMethod();
         assertEquals("ReadAverageSensor", method);
         String[] setPorts = (String[])averageSensorReadingMessage.getParams().get("ports");
-        assertTrue(Arrays.stream(setPorts).anyMatch(port -> {return port == "1";}));
-        assertTrue(Arrays.stream(setPorts).anyMatch(port -> {return port == "2";}));
+        assertTrue(Arrays.stream(setPorts).anyMatch(port -> port == "1"));
+        assertTrue(Arrays.stream(setPorts).anyMatch(port -> port == "2"));
     }
 }

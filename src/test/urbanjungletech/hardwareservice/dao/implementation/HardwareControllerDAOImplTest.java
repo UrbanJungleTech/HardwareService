@@ -45,6 +45,7 @@ class HardwareControllerDAOImplTest {
 
 
         when(this.hardwareControllerRepository.save(any(HardwareControllerEntity.class))).thenReturn(resultHardwareControllerEntity);
+        when(this.hardwareControllerConverter.createEntity(any(HardwareController.class))).thenReturn(resultHardwareControllerEntity);
 
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);
 
@@ -60,7 +61,7 @@ class HardwareControllerDAOImplTest {
     void getAllHardwareControllers() {
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
 
-        when(this.hardwareControllerRepository.findAll()).thenReturn(java.util.List.of(hardwareControllerEntity));
+        when(this.hardwareControllerRepository.findAll()).thenReturn(List.of(hardwareControllerEntity));
 
         List<HardwareControllerEntity> result = this.hardwareControllerDAO.getAllHardwareControllers();
 

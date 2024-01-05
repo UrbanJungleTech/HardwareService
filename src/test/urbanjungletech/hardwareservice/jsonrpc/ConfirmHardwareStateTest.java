@@ -26,4 +26,6 @@ public class ConfirmHardwareStateTest {
     HardwareStateConverter hardwareStateConverter;
     @InjectMocks
     private ConfirmHardwareState confirmHardwareState;
+
+
 }

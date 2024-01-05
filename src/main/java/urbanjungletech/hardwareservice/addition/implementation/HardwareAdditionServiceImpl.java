@@ -17,6 +17,7 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.HardwareStateType;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import urbanjungletech.hardwareservice.service.query.implementation.HardwareQueryServiceImpl;
 
 import java.util.ArrayList;
@@ -32,24 +33,21 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     private final HardwareConverter hardwareConverter;
     private final Logger logger = LoggerFactory.getLogger(HardwareAdditionServiceImpl.class);
     private final ObjectLoggerService objectLoggerService;
-    private final HardwareStateConverter hardwareStateConverter;
     private final HardwareEventPublisher hardwareEventPublisher;
     private final HardwareStateAdditionService hardwareStateAdditionService;
-    private final HardwareQueryServiceImpl hardwareQueryService;
+    private final HardwareQueryService hardwareQueryService;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
                                        HardwareConverter hardwareConverter,
                                        ObjectLoggerService objectLoggerService,
-                                       HardwareStateConverter hardwareStateConverter,
                                        HardwareEventPublisher hardwareEventPublisher,
                                        HardwareStateAdditionService hardwareStateAdditionService,
-                                       HardwareQueryServiceImpl hardwareQueryService) {
+                                       HardwareQueryService hardwareQueryService) {
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
         this.hardwareConverter = hardwareConverter;
         this.objectLoggerService = objectLoggerService;
-        this.hardwareStateConverter = hardwareStateConverter;
         this.hardwareEventPublisher = hardwareEventPublisher;
         this.hardwareStateAdditionService = hardwareStateAdditionService;
         this.hardwareQueryService = hardwareQueryService;

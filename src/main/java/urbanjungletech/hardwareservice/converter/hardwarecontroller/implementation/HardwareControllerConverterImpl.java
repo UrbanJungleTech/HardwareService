@@ -21,20 +21,14 @@ public class HardwareControllerConverterImpl implements HardwareControllerConver
 
     private final HardwareConverter hardwareConverter;
     private final SensorConverter sensorConverter;
-    private final CredentialsConverter credentialsConverter;
-    private final CredentialsDAO credentialsDAO;
     private final Map<Class, SpecificHardwareControllerConverter> specificHardwareControllerConverters;
 
 
     public HardwareControllerConverterImpl(HardwareConverter hardwareConverter,
                                            SensorConverter sensorConverter,
-                                           CredentialsConverter credentialsConverter,
-                                           CredentialsDAO credentialsDAO,
                                            Map<Class, SpecificHardwareControllerConverter> specificHardwareControllerConverters){
         this.hardwareConverter = hardwareConverter;
         this.sensorConverter = sensorConverter;
-        this.credentialsConverter = credentialsConverter;
-        this.credentialsDAO = credentialsDAO;
         this.specificHardwareControllerConverters = specificHardwareControllerConverters;
     }
 

@@ -63,8 +63,7 @@ public class ActionMappingsConfig {
     public Map<Class <? extends AlertCondition>, SpecificConditionTriggerService>
             conditionTriggerServiceMap(List<SpecificConditionTriggerService> routerServices,
                                 MapGeneratorService mapGeneratorService){
-        Map<Class <? extends AlertCondition>, SpecificConditionTriggerService> result = mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
-        return result;
+        return mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
     }
 
     @Bean
@@ -72,8 +71,7 @@ public class ActionMappingsConfig {
     specificSensorRouterAdditionServices(List<SpecificAdditionService> additionServices,
                                 MapGeneratorService mapGeneratorService){
         mapGeneratorService.generateMap(additionServices, SensorReadingRouter.class);
-        Map<Class, SpecificAdditionService> result = mapGeneratorService.generateMap(additionServices, SpecificAdditionService.class);
-        return result;
+        return mapGeneratorService.generateMap(additionServices, SpecificAdditionService.class);
     }
 
 
@@ -81,15 +79,13 @@ public class ActionMappingsConfig {
     public Map<Class <? extends Credentials>, SpecificCredentialRetrievalService>
     credentialRetrievalServiceMap(List<SpecificCredentialRetrievalService> retrievalServices,
                                   MapGeneratorService mapGeneratorService){
-        Map<Class <? extends Credentials>, SpecificCredentialRetrievalService> result = mapGeneratorService.generateMap(retrievalServices, SpecificCredentialRetrievalService.class);
-        return result;
+        return mapGeneratorService.generateMap(retrievalServices, SpecificCredentialRetrievalService.class);
     }
     @Bean
     public Map<Class<? extends HardwareController>, ControllerConfigurationService>
     controllerConfigurationServiceMap(List<ControllerConfigurationService> controllerConfigurationServices,
                                       MapGeneratorService mapGeneratorService){
-        Map<Class<? extends HardwareController>, ControllerConfigurationService> result = mapGeneratorService.generateMap(controllerConfigurationServices, ControllerConfigurationService.class);
-        return result;
+        return mapGeneratorService.generateMap(controllerConfigurationServices, ControllerConfigurationService.class);
     }
 
     /**

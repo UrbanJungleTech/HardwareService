@@ -74,9 +74,4 @@ public class LocalScheduledHardwareScheduleService implements ScheduledHardwareS
             throw new ScheduledHardwareDeleteException(scheduledHardwareId, ex);
         }
     }
-
-    @Override
-    public void deleteAllSchedules() throws SchedulerException {
-        this.scheduler.clear();
-    }
 }

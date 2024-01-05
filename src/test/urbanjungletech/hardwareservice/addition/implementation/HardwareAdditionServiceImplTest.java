@@ -12,9 +12,11 @@ import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.event.hardware.HardwareEventPublisher;
+import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.model.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
+import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,13 +40,14 @@ public class HardwareAdditionServiceImplTest {
     private HardwareEventPublisher hardwareEventPublisher;
     @Mock
     private HardwareStateAdditionService hardwareStateAdditionService;
+    @Mock
+    private HardwareQueryService hardwareQueryService;
 
     @InjectMocks
     private HardwareAdditionServiceImpl hardwareAdditionService;
 
     @Test
     void testCreateHardware() {
-        // Arrange
         Hardware hardware = new Hardware();
         HardwareEntity hardwareEntity = new HardwareEntity();
         hardwareEntity.setId(1L);
@@ -53,10 +56,8 @@ public class HardwareAdditionServiceImplTest {
         when(hardwareDAO.createHardware(any())).thenReturn(hardwareEntity);
         when(hardwareConverter.toModel(any())).thenReturn(hardware);
 
-        // Act
         Hardware createdHardware = hardwareAdditionService.create(hardware);
 
-        // Assert
         verify(hardwareDAO).createHardware(hardware);
         verify(hardwareStateAdditionService, times(2)).create(any(HardwareState.class), any());
         assertNotNull(createdHardware);
@@ -65,36 +66,29 @@ public class HardwareAdditionServiceImplTest {
 
     @Test
     void testUpdateHardwareFailure() {
-        // Arrange
         long hardwareId = 1L;
         Hardware hardware = mock(Hardware.class);
         when(hardwareDAO.updateHardware(eq(hardware))).thenThrow(new RuntimeException("Database error"));
 
-        // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> hardwareAdditionService.update(hardwareId, hardware));
-        assertEquals("Database error", exception.getMessage());
+        assertThrows(RuntimeException.class, () -> hardwareAdditionService.update(hardwareId, hardware));
     }
 
     @Test
     void testDeleteHardwareSuccess() {
-        // Arrange
         long hardwareId = 1L;
 
-        // Act
-        hardwareAdditionService.delete(hardwareId);
+        when(this.hardwareQueryService.getHardware(hardwareId)).thenReturn(new Hardware());
+        this.hardwareAdditionService.delete(hardwareId);
 
-        // Assert
         verify(hardwareDAO).delete(hardwareId);
         verify(hardwareEventPublisher).publishDeleteHardwareEvent(hardwareId);
     }
 
     @Test
-    void testDeleteHardwareFailure() {
+    void testDeleteHardwareNotFoundException() {
         long hardwareId = 1L;
-        doThrow(new RuntimeException("Database error")).when(hardwareDAO).delete(hardwareId);
-
-        Exception exception = assertThrows(RuntimeException.class, () -> hardwareAdditionService.delete(hardwareId));
-        assertEquals("Database error", exception.getMessage());
+        when(this.hardwareQueryService.getHardware(hardwareId)).thenThrow(new NotFoundException("Hardware", hardwareId));
+        assertThrows(NotFoundException.class, () -> this.hardwareAdditionService.delete(hardwareId));
     }
 
 }

@@ -8,6 +8,4 @@ public interface ScheduledHardwareScheduleService {
     void restartSchedule(long scheduledHardwareId);
 
     void deleteSchedule(long scheduledHardwareId);
-
-    void deleteAllSchedules() throws SchedulerException;
 }
