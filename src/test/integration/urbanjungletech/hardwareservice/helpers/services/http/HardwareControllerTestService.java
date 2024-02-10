@@ -1,18 +1,18 @@
 package urbanjungletech.hardwareservice.helpers.services.http;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareMqttClient;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class HardwareControllerTestService {
     }
 
     public Hardware createDefaultHardware(String name){
-        Hardware hardware = new Hardware();
+        MockHardware hardware = new MockHardware();
         hardware.setName(name);
         hardware.setPossibleStates(List.of("on", "off"));
         hardware.setOffState("off");
@@ -121,9 +121,8 @@ public class HardwareControllerTestService {
 
 
     public Sensor createSensor(String name) {
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MockSensor();
         sensor.setName(name);
-        sensor.setSensorType("temperature");
         sensor.setConfiguration(Map.of("testKey", "testValue"));
         sensor.setPort("1");
         sensor.setMetadata(Map.of("testKey", "testValue"));

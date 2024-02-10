@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 
 public interface RpcResponseProcessor {

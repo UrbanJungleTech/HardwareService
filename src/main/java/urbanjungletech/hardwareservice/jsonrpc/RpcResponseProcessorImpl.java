@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.jsonrpc;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 

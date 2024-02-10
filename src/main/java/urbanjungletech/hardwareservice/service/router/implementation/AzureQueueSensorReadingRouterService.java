@@ -7,7 +7,7 @@ import urbanjungletech.hardwareservice.exception.exception.RouterSerializationEx
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
-import urbanjungletech.hardwareservice.service.credentials.generator.implementation.AzureQueueClientGenerator;
+import urbanjungletech.hardwareservice.service.client.generator.implementation.AzureQueueClientGenerator;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
@@ -34,8 +34,7 @@ public class AzureQueueSensorReadingRouterService implements SpecificSensorReadi
         } catch (Exception e) {
             throw new RouterSerializationException(e);
         }
-        TokenCredentials credentials = (TokenCredentials) this.credentialsRetrievalService.getCredentials(routerData.getCredentials());
-        QueueClient queueClient = this.azureQueueClientGenerator.generateClient(credentials);
+        QueueClient queueClient = this.azureQueueClientGenerator.generateClient(routerData.getAzureConnectionDetails());
         queueClient.sendMessage(sensorReadingJson);
     }
 }

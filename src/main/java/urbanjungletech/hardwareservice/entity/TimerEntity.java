@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 
 @Entity
 @Table(name = "Timer")

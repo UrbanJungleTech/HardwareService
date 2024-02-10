@@ -32,4 +32,11 @@ public class SensorReadingQueryServiceImpl implements SensorReadingQueryService 
         SensorReading result = this.sensorReadingConverter.toModel(sensorReadingEntity);
         return result;
     }
+
+    @Override
+    public SensorReading findById(Long id) {
+        return this.sensorReadingRepository.findById(id)
+                .map(this.sensorReadingConverter::toModel)
+                .orElseThrow(() -> this.exceptionService.createNotFoundException(SensorReading.class, id));
+    }
 }

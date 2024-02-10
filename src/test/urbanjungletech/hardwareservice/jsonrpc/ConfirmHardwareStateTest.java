@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.jsonrpc.method.ConfirmHardwareState;
 

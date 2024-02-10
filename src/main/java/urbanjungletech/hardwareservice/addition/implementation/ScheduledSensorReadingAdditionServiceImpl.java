@@ -46,10 +46,6 @@ public class ScheduledSensorReadingAdditionServiceImpl implements ScheduledSenso
     @Transactional
     public ScheduledSensorReading create(ScheduledSensorReading scheduledSensorReading) {
         ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.create(scheduledSensorReading);
-        Optional.ofNullable(scheduledSensorReading.getRouters()).ifPresent((Empty) -> scheduledSensorReading.getRouters().forEach((router) -> {
-            router.setScheduledSensorReadingId(scheduledSensorReadingEntity.getId());
-            this.sensorReadingRouterAdditionService.create(router);
-        }));
         this.scheduledReadingEventPublisher.publishScheduledReadingCreateEvent(scheduledSensorReadingEntity.getId());
         return this.scheduledSensorReadingConverter.toModel(scheduledSensorReadingEntity);
     }

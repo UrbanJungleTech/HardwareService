@@ -10,13 +10,8 @@ public class DatabaseCredentialsConverter implements SpecificCredentialsConverte
     @Override
     public DatabaseCredentials toModel(DatabaseCredentialsEntity entity) {
         DatabaseCredentials result = new DatabaseCredentials();
-        result.setHost(entity.getHost());
-        result.setPort(entity.getPort());
-        result.setDatabase(entity.getDatabase());
         result.setUsername(entity.getUsername());
         result.setPassword(entity.getPassword());
-        result.setDialect(entity.getDialect());
-        result.setDriver(entity.getDriver());
         return result;
     }
 
@@ -29,12 +24,7 @@ public class DatabaseCredentialsConverter implements SpecificCredentialsConverte
 
     @Override
     public void fillEntity(DatabaseCredentialsEntity entity, DatabaseCredentials databaseCredentials) {
-        entity.setHost(databaseCredentials.getHost());
-        entity.setPort(databaseCredentials.getPort());
-        entity.setDatabase(databaseCredentials.getDatabase());
         entity.setUsername(databaseCredentials.getUsername());
         entity.setPassword(databaseCredentials.getPassword());
-        entity.setDialect(databaseCredentials.getDialect());
-        entity.setDriver(databaseCredentials.getDriver());
     }
 }

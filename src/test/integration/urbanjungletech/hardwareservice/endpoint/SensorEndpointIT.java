@@ -3,8 +3,6 @@ package urbanjungletech.hardwareservice.endpoint;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,16 +13,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
+import urbanjungletech.hardwareservice.helpers.mock.sensorreadingrouter.MockSensorReadingRouter;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.sensorreadingrouter.BasicDatabaseSensorReadingRouter;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -65,6 +66,10 @@ public class SensorEndpointIT {
     SecretClient secretClient;
     @Autowired
     HardwareControllerTestService hardwareControllerTestService;
+    @Autowired
+    private HardwareTestService hardwareTestService;
+    @Autowired
+    private SensorTestService sensorService;
 
     /**
      * Given a HardwareController with a sensor has been created via /hardwarecontroller/
@@ -90,7 +95,6 @@ public class SensorEndpointIT {
         Sensor responseSensor = this.objectMapper.readValue(retrievedSensorJson, Sensor.class);
         assertEquals(retrievedSensor.getId(), responseSensor.getId());
         assertEquals(retrievedSensor.getName(), responseSensor.getName());
-        assertEquals(retrievedSensor.getSensorType(), responseSensor.getSensorType());
     }
 
 
@@ -132,6 +136,41 @@ public class SensorEndpointIT {
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
+
+
+    /**
+     * Given a sensor is created
+     * When a POST request is made to /sensor/{sensorId}/reading with a valid SensorReading
+     * Then a 201 status code is returned
+     * And the SensorReading is returned as the body
+     */
+    @Test
+    void createSensorReading_whenGivenAValidSensorReading_shouldCreateTheSensorReading() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        SensorReading sensorReading = new SensorReading();
+        sensorReading.setReading(1);
+        sensorReading.setSensorId(createdSensor.getId());
+        String sensorReadingJson = objectMapper.writeValueAsString(sensorReading);
+        String responseString = mockMvc.perform(post("/sensor/" + createdSensor.getId() + "/reading")
+                        .content(sensorReadingJson)
+                        .contentType("application/json")
+                        .content(sensorReadingJson))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        SensorReading responseSensorReading = objectMapper.readValue(responseString, SensorReading.class);
+        assertEquals(sensorReading.getReading(), responseSensorReading.getReading());
+        assertEquals(sensorReading.getSensorId(), responseSensorReading.getSensorId());
+        assertNotNull(responseSensorReading.getId());
+    }
+
+    /**
+     * Given a valid SensorReading
+     * And given an alert is created with a condition with a threshold of
+     * When a POST request is made to /sensor/{sensorId}/reading
+     */
+
     /**
      * Given an id which is not associated with a sensor
      * When a GET request is made to /sensor/{sensorId}/reading
@@ -162,7 +201,7 @@ public class SensorEndpointIT {
         HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Sensor createdSensor = createdHardwareController.getSensors().get(0);
-        Sensor updatedSensor = new Sensor();
+        Sensor updatedSensor = new MockSensor();
         Map<String, String> metadata = new HashMap<>();
         metadata.put("test", "test value");
         updatedSensor.setMetadata(metadata);
@@ -170,7 +209,6 @@ public class SensorEndpointIT {
         configuration.put("test", "test config value");
         updatedSensor.setConfiguration(configuration);
         updatedSensor.setName("Updated Sensor");
-        updatedSensor.setSensorType("humidity");
         updatedSensor.setPort("2");
 
         String updatedSensorJson = objectMapper.writeValueAsString(updatedSensor);
@@ -182,7 +220,6 @@ public class SensorEndpointIT {
                 .andReturn().getResponse().getContentAsString();
         Sensor responseSensor = objectMapper.readValue(responseString, Sensor.class);
         assertEquals(updatedSensor.getName(), responseSensor.getName());
-        assertEquals(updatedSensor.getSensorType(), responseSensor.getSensorType());
         assertEquals(updatedSensor.getPort(), responseSensor.getPort());
         assertEquals(updatedSensor.getMetadata(), responseSensor.getMetadata());
         assertEquals(updatedSensor.getConfiguration(), responseSensor.getConfiguration());
@@ -198,7 +235,7 @@ public class SensorEndpointIT {
      */
     @Test
     void updateSensor_whenGivenAnInvalidSensorId_shouldReturn404() throws Exception {
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MockSensor();
         String sensorJson = objectMapper.writeValueAsString(sensor);
         String responseJson = mockMvc.perform(put("/sensor/1")
                         .content(sensorJson)
@@ -268,8 +305,7 @@ public class SensorEndpointIT {
     @Test
     void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
         HardwareController hardwareController = new MockHardwareController();
-        Sensor sensor = new Sensor();
-        sensor.setSensorType("temperature");
+        Sensor sensor = new MockSensor();
         sensor.setName("Test Sensor");
         sensor.setPort("1");
         hardwareController.getSensors().add(sensor);
@@ -325,9 +361,8 @@ public class SensorEndpointIT {
     @Test
     void getScheduledReadings_whenGivenAValidSensorId_shouldReturnAListOfScheduledReadings() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MockSensor();
         sensor.setPort("1");
-        sensor.setSensorType("temperature");
         sensor.setName("Test Sensor");
         hardwareController.getSensors().add(sensor);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
@@ -336,8 +371,6 @@ public class SensorEndpointIT {
 
         ScheduledSensorReading scheduledReading = new ScheduledSensorReading();
         scheduledReading.setCronString("0/1 * * * * ?");
-        BasicDatabaseSensorReadingRouter router = new BasicDatabaseSensorReadingRouter();
-        scheduledReading.getRouters().add(router);
 
         String scheduledReadingJson = objectMapper.writeValueAsString(scheduledReading);
         DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss").toFormatter();
@@ -363,5 +396,80 @@ public class SensorEndpointIT {
                 }
 
         );
+    }
+
+    /**
+     * Given a valid sensor with a sensor reading router without an id
+     * When a POST request is made to /sensor/
+     * Then a 201 status code is returned
+     * And the sensor is created
+     * And the sensor has a sensor reading router with an id
+     */
+    @Test
+    void createSensor_whenGivenASensorWithASensorReadingRouterWithoutAnId_shouldCreateTheSensor() throws Exception {
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        Sensor sensor = hardwareController.getSensors().get(0);
+        MockSensorReadingRouter sensorReadingRouter = new MockSensorReadingRouter();
+        sensor.getSensorReadingRouters().add(sensorReadingRouter);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        assertEquals(1, createdSensor.getSensorReadingRouters().size());
+        assertNotNull(createdSensor.getSensorReadingRouters().get(0).getId());
+        assertSame(MockSensorReadingRouter.class, createdSensor.getSensorReadingRouters().get(0).getClass());
+    }
+
+    /**
+     * Given a sensor reading router has been created
+     * and a sensor object with the created sensor reading router in the sensors list of routers
+     * When a POST request is made to /hardwarecontroller/ to create the sensor as part of the hardwarecontroller
+     * Then a 201 status code is returned
+     * And the sensor is created
+     * And the sensor has the same router in the list of routers
+     */
+    @Test
+    void createSensor_whenGivenASensorWithASensorReadingRouterWithAnId_shouldCreateTheSensor() throws Exception {
+        SensorReadingRouter sensorReadingRouter = new MockSensorReadingRouter();
+        String sensorReadingRouterJson = this.mockMvc.perform(post("/sensorreadingrouter/")
+                        .content(this.objectMapper.writeValueAsString(sensorReadingRouter))
+                        .contentType("application/json"))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+        SensorReadingRouter createdSensorReadingRouter = this.objectMapper.readValue(sensorReadingRouterJson, SensorReadingRouter.class);
+
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        Sensor sensor = hardwareController.getSensors().get(0);
+        sensor.getSensorReadingRouters().add(createdSensorReadingRouter);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        assertEquals(1, createdSensor.getSensorReadingRouters().size());
+        assertEquals(createdSensorReadingRouter.getId(), createdSensor.getSensorReadingRouters().get(0).getId());
+    }
+
+    /**
+     * Given a sensor object with a created sensor reading router and a new sensor reading router
+     * When a POST request is made to /hardwarecontroller/ to create the sensor as part of the hardwarecontroller
+     * Then a 201 status code is returned
+     * And the sensor is created
+     * And the sensor has the same routers in the list of routers, with the new one having a new id and the existing one
+     * having the same id
+     */
+    @Test
+    void createSensor_whenGivenASensorWithASensorReadingRouterWithAnIdAndANewSensorReadingRouter_shouldCreateTheSensor() throws Exception {
+        SensorReadingRouter sensorReadingRouter = new MockSensorReadingRouter();
+        String sensorReadingRouterJson = this.mockMvc.perform(post("/sensorreadingrouter/")
+                        .content(this.objectMapper.writeValueAsString(sensorReadingRouter))
+                        .contentType("application/json"))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+        SensorReadingRouter createdSensorReadingRouter = this.objectMapper.readValue(sensorReadingRouterJson, SensorReadingRouter.class);
+
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        Sensor sensor = hardwareController.getSensors().get(0);
+        sensor.getSensorReadingRouters().add(createdSensorReadingRouter);
+        SensorReadingRouter newSensorReadingRouter = new MockSensorReadingRouter();
+        sensor.getSensorReadingRouters().add(newSensorReadingRouter);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
+        assertEquals(2, createdSensor.getSensorReadingRouters().size());
+        assertEquals(createdSensorReadingRouter.getId(), createdSensor.getSensorReadingRouters().get(0).getId());
+        assertNotNull(createdSensor.getSensorReadingRouters().get(1).getId());
     }
 }

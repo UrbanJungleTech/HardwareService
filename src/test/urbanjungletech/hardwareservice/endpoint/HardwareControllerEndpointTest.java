@@ -8,7 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -28,8 +29,8 @@ public class HardwareControllerEndpointTest {
     @Test
     void createHardware() {
         int hardwareId = 1;
-        Hardware hardware = new Hardware();
-        Hardware expectedHardware = new Hardware();
+        Hardware hardware = new MockHardware();
+        Hardware expectedHardware = new MockHardware();
 
         when(this.hardwareControllerAdditionService.addHardware(hardwareId, hardware)).thenReturn(expectedHardware);
         ResponseEntity<Hardware> result = this.hardwareControllerEndpoint.addHardware(hardwareId, hardware);

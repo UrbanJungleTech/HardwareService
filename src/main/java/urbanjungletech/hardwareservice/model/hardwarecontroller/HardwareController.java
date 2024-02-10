@@ -1,8 +1,9 @@
 package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.Sensor;
+import jakarta.validation.Valid;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public abstract class HardwareController {
     private String name;
     private String type;
     private List<Hardware> hardware;
+    @Valid
     private List<Sensor> sensors;
     private Long hardwareControllerGroupId;
     private String serialNumber;

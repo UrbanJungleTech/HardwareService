@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.converter.implementation.HardwareStateConverterImpl;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 import urbanjungletech.hardwareservice.model.HardwareState;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

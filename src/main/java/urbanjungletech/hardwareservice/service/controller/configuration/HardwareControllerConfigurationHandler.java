@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.service.controller.configuration;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerCreateEvent;
@@ -22,6 +23,7 @@ public class HardwareControllerConfigurationHandler {
     }
 
     @TransactionalEventListener
+    @Async
     public void handleHardwareCreateEvent(HardwareControllerCreateEvent hardwareControllerCreatedEvent) {
         HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareController(hardwareControllerCreatedEvent.getId());
         ControllerConfigurationService controllerConfigurationServiceImplementation = this.controllerConfigurationServiceImplementations.get(hardwareController.getClass());

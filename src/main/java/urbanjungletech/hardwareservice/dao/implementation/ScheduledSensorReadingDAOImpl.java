@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.repository.ScheduledSensorReadingRepository;

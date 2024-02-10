@@ -1,0 +1,35 @@
+{
+  "@id": "dtmi:urbanjungletech:HardwareController;1",
+  "@type": "Interface",
+  "displayName": "Hardware",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string",
+      "displayName": "Name",
+      "description": "The name of the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "serialNumber",
+      "schema": "string",
+      "displayName": "Serial Number",
+      "description": "The serial number of the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "type",
+      "schema": "string",
+      "displayName": "Hardware Controller Type",
+      "description": "The type of hardware controller."
+    },
+    {
+      "@type": "Relationship",
+      "name": "sensor",
+      "displayName": "Sensors",
+      "target": "dtmi:urbanjungletech:Sensor;1"
+    }
+    ],
+  "@context": "dtmi:dtdl:context;3"
+}

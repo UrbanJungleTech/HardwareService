@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 import urbanjungletech.hardwareservice.service.datasource.MultiTenantDataSourceImpl;
 
@@ -23,7 +24,7 @@ public class DatabaseConfiguration {
 
 
     @Bean("dataSourceId")
-    public ThreadLocal<DatabaseCredentials> dataSourceId() {
+    public ThreadLocal<DatabaseConnectionDetails> dataSourceId() {
         return new ThreadLocal<>();
     }
 

@@ -1,14 +1,15 @@
 package urbanjungletech.hardwareservice.jsonrpc.model;
 
 import org.junit.jupiter.api.Test;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DeregisterSensorMessageTest {
     @Test
     void testParametersSetOnConstruction(){
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MockSensor();
         String port = "1";
         sensor.setPort(port);
         DeregisterSensorMessage deregisterHardwareMessage = new DeregisterSensorMessage(sensor);
@@ -18,7 +19,7 @@ class DeregisterSensorMessageTest {
 
     @Test
     void testMethodNameSet(){
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MockSensor();
         String port = "1";
         sensor.setPort(port);
         DeregisterSensorMessage deregisterSensorMessage = new DeregisterSensorMessage(sensor);

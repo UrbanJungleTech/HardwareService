@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,16 +10,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareControllerEntity;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
 import java.util.Map;
 
@@ -37,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ComponentScan(basePackages = {"urbanjungletech.hardwareservice"})
 @EntityScan(basePackages = {"urbanjungletech", "urbanjungletech.hardwareservice.mock.hardwarecontroller"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Import(MockHardwareController.class)
+@Import({MockHardwareController.class, MockHardware.class})
 public class HardwareEndpointIT {
 
     @Autowired
@@ -61,7 +60,7 @@ public class HardwareEndpointIT {
     @Test
     void readHardware_whenGivenAValidHardwareId_shouldReturnTheHardware() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setType("light");
         hardware.setName("Test Hardware");
         hardware.setPort("1");
@@ -138,7 +137,7 @@ public class HardwareEndpointIT {
 
         //retrieve the hardware controller from the db
 
-        Hardware updatedHardware = new Hardware();
+        Hardware updatedHardware = new MockHardware();
         updatedHardware.setType("heater");
         updatedHardware.setName("Updated Name");
         updatedHardware.setPort("2");
@@ -167,7 +166,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateHardware_WhenGivenAnInvalidHardwareId_shouldReturn404() throws Exception {
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setType("light");
         hardware.setName("Test Hardware");
         hardware.setPort("1");
@@ -261,9 +260,7 @@ public class HardwareEndpointIT {
      */
     @Test
     public void updateCurrentHardwareState_whenGivenAValidHardwareId_shouldUpdateTheState() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
-        hardwareController.getHardware().add(hardware);
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareControllerWithDefaultHardware();
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
 

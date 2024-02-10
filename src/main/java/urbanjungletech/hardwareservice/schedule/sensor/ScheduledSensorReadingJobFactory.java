@@ -9,6 +9,7 @@ import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
+import urbanjungletech.hardwareservice.service.query.SensorReadingRouterQueryService;
 import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService;
 
 @Service("SensorCronJobFactory")
@@ -18,15 +19,18 @@ public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {
     private final ScheduledSensorReadingQueryService scheduledSensorReadingQueryService;
     private final SensorReadingRouterService sensorReadingRouterService;
     private final SensorReadingAdditionService sensorReadingAdditionService;
+    private final SensorReadingRouterQueryService sensorReadingRouterQueryService;
 
     public ScheduledSensorReadingJobFactory(SensorQueryService sensorQueryService,
                                             ScheduledSensorReadingQueryService scheduledSensorReadingQueryService,
                                             SensorReadingRouterService sensorReadingRouterService,
-                                            SensorReadingAdditionService sensorReadingAdditionService){
+                                            SensorReadingAdditionService sensorReadingAdditionService,
+                                            SensorReadingRouterQueryService sensorReadingRouterQueryService){
         this.sensorQueryService = sensorQueryService;
         this.scheduledSensorReadingQueryService = scheduledSensorReadingQueryService;
         this.sensorReadingRouterService = sensorReadingRouterService;
         this.sensorReadingAdditionService = sensorReadingAdditionService;
+        this.sensorReadingRouterQueryService = sensorReadingRouterQueryService;
     }
 
     @Override
@@ -36,7 +40,8 @@ public class ScheduledSensorReadingJobFactory extends SimpleJobFactory {
                 this.sensorQueryService,
                 this.scheduledSensorReadingQueryService,
                 this.sensorReadingRouterService,
-                this.sensorReadingAdditionService);
+                this.sensorReadingAdditionService,
+                this.sensorReadingRouterQueryService);
         return result;
     }
 }

@@ -5,14 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import urbanjungletech.hardwareservice.converter.implementation.HardwareConverterImpl;
-import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
+import urbanjungletech.hardwareservice.converter.hardware.implementation.HardwareConverterImpl;
 import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
+import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.List;
 

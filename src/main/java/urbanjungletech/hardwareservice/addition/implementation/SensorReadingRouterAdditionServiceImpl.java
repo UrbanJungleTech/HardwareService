@@ -8,6 +8,7 @@ import urbanjungletech.hardwareservice.dao.SensorReadingRouterDAO;
 import urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +39,25 @@ public class SensorReadingRouterAdditionServiceImpl implements SensorReadingRout
 
     @Override
     public void delete(long id) {
-
+        this.sensorReadingRouterDAO.delete(id);
     }
 
     @Override
     public SensorReadingRouter update(long id, SensorReadingRouter sensorReadingRouter) {
-        return null;
+        SensorReadingRouterEntity result = this.sensorReadingRouterDAO.update(sensorReadingRouter);
+        return this.sensorReadingRouterConverter.toModel(result);
     }
 
     @Override
     public List<SensorReadingRouter> updateList(List<SensorReadingRouter> models) {
-        return null;
+        List<SensorReadingRouter> result = new ArrayList<>();
+        models.forEach(model -> {
+            if (model.getId() != null) {
+                result.add(this.update(model.getId(), model));
+            } else {
+                result.add(this.create(model));
+            }
+        });
+        return result;
     }
 }

@@ -5,9 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
+import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 
@@ -22,15 +23,18 @@ public class SensorEndpoint {
     private final ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService;
     private final SensorReadingDAO sensorReadingDAO;
     private final SensorAdditionService sensorAdditionService;
+    private final SensorReadingAdditionService sensorReadingAdditionService;
 
     public SensorEndpoint(ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
                           SensorQueryService sensorQueryService,
                           SensorReadingDAO sensorReadingDAO,
-                          SensorAdditionService sensorAdditionService){
+                          SensorAdditionService sensorAdditionService,
+                          SensorReadingAdditionService sensorReadingAdditionService){
         this.sensorQueryService = sensorQueryService;
         this.sensorReadingDAO = sensorReadingDAO;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorAdditionService = sensorAdditionService;
+        this.sensorReadingAdditionService = sensorReadingAdditionService;
     }
 
     @GetMapping("/{sensorId}")
@@ -43,6 +47,13 @@ public class SensorEndpoint {
     public ResponseEntity<SensorReading> readSensorById(@PathVariable("sensorId") long sensorId){
         SensorReading result = this.sensorQueryService.readSensor(sensorId);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/{sensorId}/reading")
+    public ResponseEntity<SensorReading> addSensorReading(@PathVariable("sensorId") long sensorId,
+                                                          @RequestBody SensorReading sensorReading){
+        SensorReading result = this.sensorReadingAdditionService.create(sensorReading);
+        return ResponseEntity.created(null).body(result);
     }
 
     @GetMapping("/{sensorId}/readings")

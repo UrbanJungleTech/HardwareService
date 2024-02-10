@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.DatasourceNotRegisteredException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
+import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
-import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
+import urbanjungletech.hardwareservice.service.client.generator.implementation.DatasourceClientGenerator;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -32,34 +33,34 @@ public class DataSourceContextImpl implements DataSourceContext{
     }
 
     @Override
-    public void addDataSource(DatabaseCredentials credentials) {
-        if(!this.dataSources.containsKey(credentials)) {
-            logger.debug("Adding datasource for credentials: {}", credentials);
-            DataSource dataSource = this.datasourceClientGenerator.generateClient(credentials);
-            this.dataSources.put(credentials, dataSource);
+    public void addDataSource(DatabaseConnectionDetails connectionDetails) {
+        if(!this.dataSources.containsKey(connectionDetails)) {
+            logger.debug("Adding datasource for credentials: {}", connectionDetails);
+            DataSource dataSource = this.datasourceClientGenerator.generateClient(connectionDetails);
+            this.dataSources.put(connectionDetails, dataSource);
             this.multiTenantDataSource.setTargetDataSources(this.dataSources);
             this.multiTenantDataSource.initialize();
         }
     }
 
     @Override
-    public void removeDataSource(DatabaseCredentials credentials) {
-        if(this.dataSources.containsKey(credentials)) {
-            logger.debug("Removing datasource for credentials: {}", credentials);
-            this.dataSources.remove(credentials);
+    public void removeDataSource(DatabaseConnectionDetails connectionDetails) {
+        if(this.dataSources.containsKey(connectionDetails)) {
+            logger.debug("Removing datasource for credentials: {}", connectionDetails);
+            this.dataSources.remove(connectionDetails);
             this.multiTenantDataSource.setTargetDataSources(this.dataSources);
             this.multiTenantDataSource.initialize();
         }
     }
 
     @Override
-    public void setDataSource(DatabaseCredentials credentials) {
-        if(this.dataSources.containsKey(credentials)) {
-            logger.debug("Setting datasource for credentials: {}", credentials);
-            this.multiTenantDataSource.getDataSourceId().set(credentials);
+    public void setDataSource(DatabaseConnectionDetails connectionDetails) {
+        if(this.dataSources.containsKey(connectionDetails)) {
+            logger.debug("Setting datasource for credentials: {}", connectionDetails);
+            this.multiTenantDataSource.getDataSourceId().set(connectionDetails);
         }
         else{
-            logger.error("Datasource not registered for credentials: {}", credentials);
+            logger.error("Datasource not registered for credentials: {}", connectionDetails);
             this.exceptionService.throwSystemException(DatasourceNotRegisteredException.class);
         }
     }

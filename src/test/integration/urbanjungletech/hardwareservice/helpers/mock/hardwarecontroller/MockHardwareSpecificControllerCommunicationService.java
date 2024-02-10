@@ -1,8 +1,8 @@
 package urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
 
 import java.util.HashMap;

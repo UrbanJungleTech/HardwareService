@@ -2,14 +2,14 @@ package urbanjungletech.hardwareservice.service.query.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
-import urbanjungletech.hardwareservice.converter.SensorConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
 import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
@@ -23,23 +23,17 @@ public class SensorQueryServiceImpl implements SensorQueryService {
 
     private final HardwareControllerDAO hardwareControllerDAO;
     private final ControllerCommunicationService controllerCommunicationService;
-    private final HardwareControllerRepository hardwareControllerRepository;
-    private final ScheduledSensorReadingDAO scheduledSensorReadingDAO;
     private final SensorDAO sensorDAO;
     private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
     private final SensorConverter sensorConverter;
 
-    public SensorQueryServiceImpl(HardwareControllerRepository hardwareControllerRepository,
-                                  ControllerCommunicationService controllerCommunicationService,
+    public SensorQueryServiceImpl(ControllerCommunicationService controllerCommunicationService,
                                   HardwareControllerDAO hardwareControllerDAO,
-                                  ScheduledSensorReadingDAO scheduledSensorReadingDAO,
                                   SensorDAO sensorDAO,
                                   ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                                   SensorConverter sensorConverter){
-        this.hardwareControllerRepository = hardwareControllerRepository;
         this.controllerCommunicationService = controllerCommunicationService;
         this.hardwareControllerDAO = hardwareControllerDAO;
-        this.scheduledSensorReadingDAO = scheduledSensorReadingDAO;
         this.sensorDAO = sensorDAO;
         this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
         this.sensorConverter = sensorConverter;
@@ -54,21 +48,6 @@ public class SensorQueryServiceImpl implements SensorQueryService {
         result.setSensorId(sensorId);
         result.setReadingTime(LocalDateTime.now());
         return result;
-    }
-
-    @Override
-    public double readAverageSensor(long hardwareControllerId, String sensorType) {
-        List<SensorEntity> sensors = this.sensorDAO.findByHardwareControllerIdAndSensorType(hardwareControllerId, sensorType);
-        String[] sensorPorts = sensors.stream().map((sensor) -> {
-            return sensor.getPort();
-        }).toArray(String[]::new);
-        return this.controllerCommunicationService.getAverageSensorReading(sensorPorts);
-    }
-
-    @Override
-    public ScheduledSensorReading createScheduledReading(ScheduledSensorReading scheduledSensorReading) {
-        ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingDAO.create(scheduledSensorReading);
-        return this.scheduledSensorReadingConverter.toModel(scheduledSensorReadingEntity);
     }
 
     @Override

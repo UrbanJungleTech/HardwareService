@@ -36,6 +36,7 @@ entity:
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
     urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
+    urbanjungletech.hardwareservice.entity.SensorReadingRouterEntity: Sensor Reading Router
 
 azure:
   keyvault:

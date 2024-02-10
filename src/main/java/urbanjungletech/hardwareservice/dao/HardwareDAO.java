@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.dao;
 
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.List;
 

@@ -1,20 +1,22 @@
 package urbanjungletech.hardwareservice.entity.hardwarecontroller;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import urbanjungletech.hardwareservice.entity.connectiondetails.WeatherConnectionDetailsEntity;
 import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.entity.credentials.TokenCredentialsEntity;
 
 @Entity
 public class WeatherHardwareControllerEntity extends HardwareControllerEntity{
-    @OneToOne
-    private CredentialsEntity credentials;
+    @ManyToOne
+    private WeatherConnectionDetailsEntity connectionDetails;
 
-    public CredentialsEntity getCredentials() {
-        return credentials;
+    public WeatherConnectionDetailsEntity getConnectionDetails() {
+        return connectionDetails;
     }
 
-    public void setCredentials(CredentialsEntity credentials) {
-        this.credentials = credentials;
+    public void setConnectionDetails(WeatherConnectionDetailsEntity connectionDetails) {
+        this.connectionDetails = connectionDetails;
     }
 }

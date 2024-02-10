@@ -1,17 +1,16 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.converter.SensorConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.SensorRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SensorDAOImpl implements SensorDAO {
@@ -32,8 +31,8 @@ public class SensorDAOImpl implements SensorDAO {
     }
 
     @Override
-    public SensorEntity addSensor(Sensor sensor) {
-        SensorEntity sensorEntity = new SensorEntity();
+    public SensorEntity createSensor(Sensor sensor) {
+        SensorEntity sensorEntity = this.sensorConverter.createEntity(sensor);
         sensorConverter.fillEntity(sensorEntity, sensor);
         HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findById(sensor.getHardwareControllerId()).orElseThrow(() -> {
             return this.exceptionService.createNotFoundException(HardwareControllerEntity.class, sensor.getHardwareControllerId());
@@ -80,11 +79,6 @@ public class SensorDAOImpl implements SensorDAO {
         this.sensorConverter.fillEntity(sensorEntity, sensor);
         this.sensorRepository.save(sensorEntity);
         return sensorEntity;
-    }
-
-    @Override
-    public List<SensorEntity> findByHardwareControllerIdAndSensorType(long hardwareControllerId, String sensorType) {
-        return this.sensorRepository.findByHardwareControllerIdAndSensorType(hardwareControllerId, sensorType);
     }
 
     @Override

@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.addition.implementation;
 
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.CredentialsAdditionService;
 import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverter;
 import urbanjungletech.hardwareservice.dao.CredentialsDAO;
@@ -26,6 +27,7 @@ public class CredentialsAdditionServiceImpl implements CredentialsAdditionServic
         this.credentialsConverter = credentialsConverter;
     }
     @Override
+    @Transactional
     public Credentials create(Credentials credentials) {
         Credentials convertedCredentials = this.credentialsRetrievalService.persistCredentials(credentials);
         CredentialsEntity credentialsEntity = this.credentialsDAO.createCredentials(convertedCredentials);

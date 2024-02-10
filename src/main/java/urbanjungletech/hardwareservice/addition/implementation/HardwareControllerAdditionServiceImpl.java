@@ -8,9 +8,9 @@ import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerEventPublisher;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 

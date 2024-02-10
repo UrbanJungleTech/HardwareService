@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.service.query;
 
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.List;
 

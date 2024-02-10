@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.endpoint.HardwareEndpoint;
 import urbanjungletech.hardwareservice.helper.HardwareHelper;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
 @ExtendWith(MockitoExtension.class)

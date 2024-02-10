@@ -26,8 +26,8 @@ public class HardwareAdditionServiceImplTest {
 //
 //    @Test
 //    public void testAddHardwareCallsTimerAdditionService(){
-//        Hardware hardware = new Hardware();
-//        Hardware savedHardware = new Hardware();
+//        Hardware hardware = new MockHardware();
+//        Hardware savedHardware = new MockHardware();
 //        savedHardware.setId(1L);
 //        hardware.setHardwareControllerId(1L);
 //        Timer timer1 = new Timer();
@@ -44,8 +44,8 @@ public class HardwareAdditionServiceImplTest {
 //
 //    @Test
 //    public void testAddHardwareCallsQueueServiceSendState(){
-//        Hardware hardware = new Hardware();
-//        Hardware savedHardware = new Hardware();
+//        Hardware hardware = new MockHardware();
+//        Hardware savedHardware = new MockHardware();
 //        savedHardware.setId(1L);
 //        hardware.setHardwareControllerId(1L);
 //        String hardwareControllerSerialNumber = "1234";

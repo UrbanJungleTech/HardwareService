@@ -9,12 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class ConfirmHardwareStateIT {
     @Test
     public void confirmHardwareState() throws Exception {
         HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         controller.getHardware().add(hardware);
         hardware.setPort("1");
         controller = this.hardwareControllerTestService.postHardwareController(controller);

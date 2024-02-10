@@ -1,9 +1,10 @@
 package urbanjungletech.hardwareservice.helpers.services.http;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.MqttHardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class HardwareTestService {
     }
 
     public HardwareController createMqttHardwareControllerWithDefaultHardware() throws Exception{
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MqttHardware();
         hardware.setPort("1");
         hardware.setName("hardware1");
         hardware.setType("temperature");
@@ -28,7 +29,7 @@ public class HardwareTestService {
     }
 
     public HardwareController createMqttHardwareControllerWithDefaultHardwareAndTimer() throws Exception {
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MqttHardware();
         hardware.setPort("1");
         hardware.setName("hardware1");
         hardware.setType("temperature");

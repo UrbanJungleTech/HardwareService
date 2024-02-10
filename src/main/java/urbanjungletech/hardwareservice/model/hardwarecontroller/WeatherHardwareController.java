@@ -1,19 +1,18 @@
 package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
+import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
 
 public class WeatherHardwareController extends HardwareController {
     public WeatherHardwareController() {
         super();
     }
-    private Credentials credentials;
+    private WeatherConnectionDetails connectionDetails;
 
-    public Credentials getCredentials() {
-        return credentials;
+    public WeatherConnectionDetails getConnectionDetails() {
+        return connectionDetails;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
+    public void setConnectionDetails(WeatherConnectionDetails connectionDetails) {
+        this.connectionDetails = connectionDetails;
     }
 }

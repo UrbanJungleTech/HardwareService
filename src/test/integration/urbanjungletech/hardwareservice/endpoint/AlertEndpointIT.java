@@ -12,8 +12,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import urbanjungletech.hardwareservice.helpers.mock.action.MockAction;
 import urbanjungletech.hardwareservice.helpers.mock.action.MockActionService;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
+import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.model.alert.Alert;
@@ -24,9 +25,8 @@ import urbanjungletech.hardwareservice.model.alert.action.LoggingAlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.ThresholdType;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
-import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.util.concurrent.TimeUnit;
 
@@ -307,7 +307,7 @@ public class AlertEndpointIT {
     void hardwareStateChangeAlertConditionActionExecution() throws Exception {
         //create a hardware controller with a hardware.
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
@@ -541,7 +541,7 @@ public class AlertEndpointIT {
     void sensorReadingAlertConditionActionExecutionBelowThresholdHardwareStateChangeActionExecution() throws Exception {
         //create a hardware controller with a hardware.
         HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
@@ -606,7 +606,7 @@ public class AlertEndpointIT {
     void sensorReadingAlertConditionActionExecutionBelowThresholdCancelNextScheduledHardwareAlertActionExecution() throws Exception {
         //create a hardware controller with a hardware.
         HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setPort("1");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);

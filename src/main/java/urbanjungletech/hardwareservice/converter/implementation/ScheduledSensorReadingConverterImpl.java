@@ -24,9 +24,6 @@ public class ScheduledSensorReadingConverterImpl implements ScheduledSensorReadi
         result.setCronString(scheduledSensorReadingEntity.getCronString());
         result.setSensorId(scheduledSensorReadingEntity.getSensor().getId());
         result.setId(scheduledSensorReadingEntity.getId());
-        Optional.ofNullable(scheduledSensorReadingEntity.getRouters()).ifPresent(routers ->
-                result.setRouters(routers.stream().map(this.sensorReadingRouterConverter::toModel)
-                        .collect(Collectors.toList())));
         return result;
     }
 

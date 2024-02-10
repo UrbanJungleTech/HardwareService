@@ -354,16 +354,6 @@ public class AzureQueueSensorReadingRouterEntity extends SensorReadingRouterEnti
   }
 ```
 
-1. **Update SensorReadingRouter Metadata**:
-   The following metadata needs to be updated in the class SensorReadingRouter. This is required to let the system know the type of the router during serialization and deserialization.
-```java
-   @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-   @JsonSubTypes({
-       @JsonSubTypes.Type(value = [YourNewRouter].class, name = "[yourNewRouter]")
-       // Other routers...
-   })
-```
-
 1. **Implement SpecificSensorReadingRouterConverter Interface**:
 
 Define a new implementation of the SpecificSensorReadingRouterConverter . This is used to convert between models and entities.
@@ -588,7 +578,7 @@ public ResponseEntity<WebRequestException> handleError(StandardErrorException ex
 Usage: The EntityNameService provides human-readable names for entities, useful in logs and HTTP responses. Names are configured in Spring under entity.names.
 Configured Names:
 urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity: Hardware Controller
-urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
+urbanjungletech.hardwareservice.entity.sensor.SensorEntity: Sensor
 (and other entity names)
 
 An example is in the NotFoundException
@@ -737,3 +727,35 @@ In this scenario the user has a garden, and would like to make sure they keep th
 
 This setup effectively regulates the temperature within a desired range.
 
+# Application Configuration Options
+
+This table outlines the configurable properties within the application.yml file for our IoT Automation Framework Accelerator. These settings are designed to provide flexibility and customization of the application's behavior in different environments. Each property can be overridden by specifying the corresponding environment variable, allowing for seamless integration with various deployment pipelines and cloud services. The configuration covers aspects from application naming and logging levels to integration with Azure services and MQTT settings, ensuring a comprehensive setup for development and production environments.
+
+| Property Name                                      | Description                                                                                         | Environment Variable                 |
+|----------------------------------------------------|-----------------------------------------------------------------------------------------------------|--------------------------------------|
+| `spring.application.name`                          | The name of the Spring application.                                                                 | `APPLICATION_NAME`                   |
+| `spring.jpa.generate-ddl`                          | Enables automatic generation of database schema (DDL scripts). Defaults to `true` if not specified. | `JPA_HIBERNATE_GENERATE_DDL`         |
+| `spring.jpa.database-platform`                     | Specifies the database platform dialect used by Hibernate.                                          | `JPA_HIBERNATE_DATABASE_PLATFORM`    |
+| `spring.jpa.show-sql`                              | Logs SQL statements. Defaults to `false` if not specified.                                          | `JPA_HIBERNATE_SHOW_SQL`             |
+| `spring.cloud.azure.keyvault.secret.endpoint`      | URI of the Azure Key Vault.                                                                         | `AZURE_KEYVAULT_URI`                 |
+| `logging.level.root`                               | The logging level for the root logger. Defaults to `INFO` if not specified.                         | `ROOT_LOG_LEVEL`                     |
+| `logging.level.urbanjungletech`                    | The logging level for `urbanjungletech`. Defaults to `INFO` if not specified.                       | `ROOT_LOG_LEVEL`                     |
+| `logging.level.org.hibernate.SQL`                  | The logging level for Hibernate SQL. Defaults to `INFO` if not specified.                           | `SQL_LOG_LEVEL`                      |
+| `logging.level.mqtt`                               | The logging level for MQTT. Defaults to `INFO` if not specified.                                    | `MQTT_LOG_LEVEL`                     |
+| `azure.keyvault.uri`                               | URI for Azure Key Vault access.                                                                     | `AZURE_KEYVAULT_URI`                 |
+| `azure.keyvault.enabled`                           | Enables Azure Key Vault integration. Defaults to `false`.                                           | `AZURE_KEYVAULT_ENABLED`             |
+| `azure.keyvault.client-id`                         | Azure Key Vault client ID.                                                                          | `AZURE_KEYVAULT_CLIENT_ID`           |
+| `azure.keyvault.client-secret`                     | Secret key for Azure Key Vault client.                                                              | `AZURE_KEYVAULT_CLIENT_SECRET`       |
+| `azure.keyvault.tenant-id`                         | Tenant ID for Azure Key Vault access.                                                               | `AZURE_KEYVAULT_TENANT_ID`           |
+| `mqtt-rpc.uri`                                     | URI for MQTT RPC server.                                                                            | `SYSTEM_MQTT_URI`                    |
+| `mqtt-rpc.queue`                                   | Queue name for MQTT RPC messages.                                                                   | `SYSTEM_MQTT_QUEUE`                  |
+| `mqtt-rpc.enabled`                                 | Enables MQTT RPC functionality. Defaults to `true`.                                                 | `SYSTEM_MQTT_ENABLED`                |
+| `secure-storage.type`                              | Specifies the type of secure storage being used.                                                    | `SECURE_STORAGE_TYPE`                |
+| `development.mqtt.client.enabled`                  | Enables the MQTT client in development environments. Defaults to `true`.                            | `DEV_MQTT_CLIENT_ENABLED`            |
+| `development.azure.storageQueue.key`               | Access key for Azure Storage Queue in development.                                                  | `DEV_AZURE_STORAGE_QUEUE_KEY`        |
+| `weather.apikey`                                   | API key for accessing the weather service in development environments.                              | `DEV_WEATHER_API_KEY`                |
+| `digitaltwins.client-id`                           | Client ID for Azure Digital Twins.                                                                  | `DIGITAL_TWINS_CLIENT_ID`            |
+| `digitaltwins.client-secret`                       | Client secret for Azure Digital Twins.                                                              | `DIGITAL_TWINS_CLIENT_SECRET`        |
+| `digitaltwins.tenant-id`                           | Tenant ID for Azure Digital Twins.                                                                  | `DIGITAL_TWINS_TENANT_ID`            |
+| `digitaltwins.digital-twins-uri`                   | URI for Azure Digital Twins instance.                                                               | `DIGITAL_TWINS_URL`                  |
+| `digitaltwins.enabled`                             | Enables Azure Digital Twins integration. Defaults to `false`.                                       | `DIGITAL_TWINS_ENABLED`              |

@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.hardwarecontroller;
 
-public class HardwareControllerCreateEvent {
+import urbanjungletech.hardwareservice.event.CreateEvent;
+
+public class HardwareControllerCreateEvent implements CreateEvent {
     private long id;
 
     public HardwareControllerCreateEvent(long id) {

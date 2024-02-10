@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,7 +49,7 @@ public class DeregisterSensorIT {
     @Test
     public void testDeregisterSensor() throws Exception{
         HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
-        Sensor sensor = new Sensor();
+        Sensor sensor = new MqttSensor();
         sensor.setPort("1");
         hardwareController.getSensors().add(sensor);
         hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);

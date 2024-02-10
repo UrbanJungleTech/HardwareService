@@ -7,18 +7,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.HardwareStateConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 import urbanjungletech.hardwareservice.event.hardware.HardwareEventPublisher;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.service.ObjectLoggerService;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -48,7 +50,7 @@ public class HardwareAdditionServiceImplTest {
 
     @Test
     void testCreateHardware() {
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         HardwareEntity hardwareEntity = new HardwareEntity();
         hardwareEntity.setId(1L);
         HardwareState offHardwareState = new HardwareState();
@@ -77,7 +79,7 @@ public class HardwareAdditionServiceImplTest {
     void testDeleteHardwareSuccess() {
         long hardwareId = 1L;
 
-        when(this.hardwareQueryService.getHardware(hardwareId)).thenReturn(new Hardware());
+        when(this.hardwareQueryService.getHardware(hardwareId)).thenReturn(new MockHardware());
         this.hardwareAdditionService.delete(hardwareId);
 
         verify(hardwareDAO).delete(hardwareId);

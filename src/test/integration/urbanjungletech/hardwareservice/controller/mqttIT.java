@@ -1,24 +1,23 @@
 package urbanjungletech.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.*;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.mockclient.MockMqttClientListener;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.MqttHardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -67,7 +66,7 @@ public class mqttIT {
     void readHardware_whenGivenAValidHardwareId_shouldSendARegisterHardwareMessage() throws Exception {
 
         HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MqttHardware();
         hardware.setPort("1");
         hardware.setOffState("off");
         hardwareController.getHardware().add(hardware);
@@ -136,7 +135,7 @@ public class mqttIT {
      */
     @Test
     public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MqttHardware();
         hardware.setOffState("off");
         hardware.setPort("1");
         Timer timer1 = new Timer();

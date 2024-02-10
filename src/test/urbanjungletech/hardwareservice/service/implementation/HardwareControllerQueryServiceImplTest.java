@@ -6,18 +6,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
-import urbanjungletech.hardwareservice.converter.SensorConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.query.implementation.HardwareControllerQueryServiceImpl;
 
 import java.util.List;
@@ -58,7 +60,7 @@ class HardwareControllerQueryServiceImplTest {
     void getHardware_whenHardwareIdIsAssociatedWithAHardwareEntity_shouldReturnHardware() {
         long hardwareControllerId = 1l;
         List<HardwareEntity> hardwareEntities = List.of(new HardwareEntity());
-        List<Hardware> expected = List.of(new Hardware());
+        List<Hardware> expected = List.of(new MockHardware());
 
         when(this.hardwareDAO.getHardwareByHardwareControllerId(same(hardwareControllerId))).thenReturn(hardwareEntities);
         when(this.hardwareConverter.toModels(same(hardwareEntities))).thenReturn(expected);
@@ -154,7 +156,7 @@ class HardwareControllerQueryServiceImplTest {
     void getHardwareControllerSensors_whenHardwareControllerIdIsAssociatedWithAHardwareControllerEntity_shouldReturnHardwareControllerSensors() {
         long hardwareControllerId = 1l;
         List<SensorEntity> sensorEntities = List.of(new SensorEntity());
-        List<Sensor> expected = List.of(new Sensor());
+        List<Sensor> expected = List.of(new MockSensor());
 
         when(this.sensorDAO.getSensorsByHardwareControllerId(same(hardwareControllerId))).thenReturn(sensorEntities);
         when(this.sensorConverter.toModels(same(sensorEntities))).thenReturn(expected);

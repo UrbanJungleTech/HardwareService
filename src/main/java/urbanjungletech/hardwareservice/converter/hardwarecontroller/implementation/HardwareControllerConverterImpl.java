@@ -2,19 +2,15 @@ package urbanjungletech.hardwareservice.converter.hardwarecontroller.implementat
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
-import urbanjungletech.hardwareservice.converter.SensorConverter;
-import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
-import urbanjungletech.hardwareservice.dao.CredentialsDAO;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class HardwareControllerConverterImpl implements HardwareControllerConverter {

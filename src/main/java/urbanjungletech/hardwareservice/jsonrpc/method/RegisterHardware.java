@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 

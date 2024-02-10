@@ -3,11 +3,14 @@ package urbanjungletech.hardwareservice.exception.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.exception.exception.StandardErrorException;
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
+import urbanjungletech.hardwareservice.exception.model.InvalidRequestError;
+import urbanjungletech.hardwareservice.exception.model.InvalidRequestField;
 
 
 @ControllerAdvice
@@ -16,7 +19,22 @@ public class ErrorHandler {
     Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
 
-    @ExceptionHandler(value= StandardErrorException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<WebRequestException> handleException(MethodArgumentNotValidException exception){
+        InvalidRequestError error = new InvalidRequestError();
+        error.setFields(
+                exception.getFieldErrors().stream().map(field -> {
+                    InvalidRequestField invalidRequestError = new InvalidRequestField();
+                    invalidRequestError.setField(field.getField());
+                    invalidRequestError.setReason(field.getDefaultMessage());
+                    return invalidRequestError;
+                }).toList()
+        );
+        error.setMessage("Invalid request");
+        error.setHttpStatus(400);
+        return ResponseEntity.status(400).body(error);
+    }
+    @ExceptionHandler(StandardErrorException.class)
     public ResponseEntity<WebRequestException> handleError(StandardErrorException exception){
         WebRequestException error = new WebRequestException();
         error.setMessage(exception.getMessage());

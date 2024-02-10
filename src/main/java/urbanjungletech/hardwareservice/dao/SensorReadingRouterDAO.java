@@ -8,4 +8,5 @@ public interface SensorReadingRouterDAO {
     SensorReadingRouterEntity update(SensorReadingRouter sensorReadingRouter);
 
     SensorReadingRouterEntity getById(Long id);
+    void delete(long id);
 }

@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc.model;
 
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 public class DeregisterHardwareMessage extends JsonRpcMessage {
     public DeregisterHardwareMessage(Hardware hardware){

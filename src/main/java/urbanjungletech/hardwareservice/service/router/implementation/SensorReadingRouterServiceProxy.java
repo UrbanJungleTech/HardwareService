@@ -20,8 +20,7 @@ public class SensorReadingRouterServiceProxy implements SensorReadingRouterServi
         this.sensorReadingRouterMap = sensorReadingRouterMap;
     }
     @Override
-    public void route(ScheduledSensorReading scheduledSensorReading, SensorReading sensorReading) {
-        List<SensorReadingRouter> sensorReadingRouters = scheduledSensorReading.getRouters();
+    public void route(List<SensorReadingRouter> sensorReadingRouters, SensorReading sensorReading) {
         for (SensorReadingRouter router : sensorReadingRouters) {
             this.sensorReadingRouterMap.get(router.getClass()).route(router, sensorReading);
         }

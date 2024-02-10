@@ -1,14 +1,14 @@
 package urbanjungletech.hardwareservice.converter;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import urbanjungletech.hardwareservice.converter.implementation.SensorConverterImpl;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,18 +19,14 @@ class SensorEntityConverterImplTest {
     @Mock
     ScheduledSensorReadingConverter scheduledSensorReadingConverter;
 
+    @InjectMocks
     private SensorConverter sensorConverter;
 
-    @BeforeEach
-    public void setup(){
-        this.sensorConverter = new SensorConverterImpl(scheduledSensorReadingConverter);
-    }
 
     @Test
     void toModel() {
         SensorEntity sensorEntity = new SensorEntity();
         sensorEntity.setId(1L);
-        sensorEntity.setSensorType("humidity");
         HardwareControllerEntity hardwareControllerEntity = new HardwareControllerEntity();
         hardwareControllerEntity.setId(2L);
         sensorEntity.setHardwareController(hardwareControllerEntity);
@@ -38,7 +34,6 @@ class SensorEntityConverterImplTest {
         Sensor result = this.sensorConverter.toModel(sensorEntity);
         assertEquals(sensorEntity.getId(), result.getId());
         assertEquals(sensorEntity.getPort(), result.getPort());
-        assertEquals(sensorEntity.getSensorType(), result.getSensorType());
         assertEquals(sensorEntity.getHardwareController().getId(), result.getHardwareControllerId());
     }
 
