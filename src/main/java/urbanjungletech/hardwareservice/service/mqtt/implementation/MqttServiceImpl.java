@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.service.mqtt.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

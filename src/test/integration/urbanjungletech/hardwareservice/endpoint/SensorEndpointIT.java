@@ -169,7 +169,6 @@ public class SensorEndpointIT {
      * Given a valid SensorReading
      * And given an alert is created with a condition with a threshold of
      * When a POST request is made to /sensor/{sensorId}/reading
-     *
      */
 
     /**
