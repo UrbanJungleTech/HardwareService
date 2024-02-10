@@ -1,10 +1,10 @@
 package urbanjungletech.hardwareservice.service.query.implementation;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
 import java.util.List;

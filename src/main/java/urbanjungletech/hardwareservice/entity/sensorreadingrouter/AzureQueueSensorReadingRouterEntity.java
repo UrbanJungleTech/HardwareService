@@ -1,15 +1,15 @@
 package urbanjungletech.hardwareservice.entity.sensorreadingrouter;
 
-import jakarta.persistence.*;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import urbanjungletech.hardwareservice.entity.connectiondetails.AzureConnectionDetailsEntity;
 
 @Entity
 public class AzureQueueSensorReadingRouterEntity extends SensorReadingRouterEntity{
     private Long id;
-    private String queueName;
     @ManyToOne
-    private CredentialsEntity credentials;
+    private AzureConnectionDetailsEntity azureConnectionDetails;
+    private String queueName;
 
     @Override
     public Long getId() {
@@ -21,19 +21,19 @@ public class AzureQueueSensorReadingRouterEntity extends SensorReadingRouterEnti
         this.id = id;
     }
 
+    public void setAzureConnectionDetails(AzureConnectionDetailsEntity azureConnectionDetails) {
+        this.azureConnectionDetails = azureConnectionDetails;
+    }
+
+    public AzureConnectionDetailsEntity getAzureConnectionDetails() {
+        return azureConnectionDetails;
+    }
+
     public String getQueueName() {
         return queueName;
     }
 
     public void setQueueName(String queueName) {
         this.queueName = queueName;
-    }
-
-    public CredentialsEntity getCredentials() {
-        return credentials;
-    }
-
-    public void setCredentials(CredentialsEntity credentials) {
-        this.credentials = credentials;
     }
 }

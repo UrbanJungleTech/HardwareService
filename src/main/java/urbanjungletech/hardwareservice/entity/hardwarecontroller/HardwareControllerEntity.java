@@ -1,13 +1,11 @@
 package urbanjungletech.hardwareservice.entity.hardwarecontroller;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import org.hibernate.annotations.*;
 import urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

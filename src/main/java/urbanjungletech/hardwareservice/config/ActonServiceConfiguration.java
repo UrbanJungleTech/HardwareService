@@ -11,7 +11,7 @@ import java.util.Map;
 @Configuration
 public class ActonServiceConfiguration {
     /**
-     * Finds all the SpecificActionExecutionService beans and uses the genertic type in their implementation
+     * Finds all the SpecificActionExecutionService beans and uses the generic type in their implementation
      * of ActionExecutionService to create a map of the beans where the key is the generic type and the value is the
      * service itself.
      * @return

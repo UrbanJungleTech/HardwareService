@@ -28,15 +28,8 @@ public class SensorReadingRouterDAOImpl implements SensorReadingRouterDAO {
     }
     @Override
     public SensorReadingRouterEntity create(SensorReadingRouter sensorReadingRouter) {
-        ScheduledSensorReadingEntity scheduledSensorReadingEntity = this.scheduledSensorReadingRepository
-                .findById(sensorReadingRouter.getScheduledSensorReadingId()).orElseThrow(
-                        () -> this.exceptionService.createNotFoundException(ScheduledSensorReadingEntity.class, sensorReadingRouter.getScheduledSensorReadingId())
-                );
         SensorReadingRouterEntity sensorReadingRouterEntity = this.sensorReadingRouterConverter.createEntity(sensorReadingRouter);
-        sensorReadingRouterEntity.setScheduledSensorReadingEntity(scheduledSensorReadingEntity);
         sensorReadingRouterEntity = this.sensorReadingRouterRepository.save(sensorReadingRouterEntity);
-        scheduledSensorReadingEntity.getRouters().add(sensorReadingRouterEntity);
-        this.scheduledSensorReadingRepository.save(scheduledSensorReadingEntity);
         return sensorReadingRouterEntity;
     }
 
@@ -55,5 +48,13 @@ public class SensorReadingRouterDAOImpl implements SensorReadingRouterDAO {
         return this.sensorReadingRouterRepository.findById(id).orElseThrow(
                 () -> this.exceptionService.createNotFoundException(SensorReadingRouterEntity.class, id)
         );
+    }
+
+    @Override
+    public void delete(long id) {
+        SensorReadingRouterEntity sensorReadingRouterEntity = this.sensorReadingRouterRepository.findById(id).orElseThrow(
+                () -> this.exceptionService.createNotFoundException(SensorReadingRouterEntity.class, id)
+        );
+        this.sensorReadingRouterRepository.delete(sensorReadingRouterEntity);
     }
 }

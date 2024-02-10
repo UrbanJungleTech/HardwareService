@@ -6,7 +6,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 import urbanjungletech.hardwareservice.service.query.TimerQueryService;

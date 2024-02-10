@@ -24,6 +24,6 @@ public class SensorReadingConditionEventHandler {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleSensorReadingEvent(SensorReadingCreateEvent sensorReadingCreateEvent) {
-        this.sensorReadingConditionTriggerService.trigger(sensorReadingCreateEvent.getSensorId());
+        this.sensorReadingConditionTriggerService.trigger(sensorReadingCreateEvent.getId());
     }
 }

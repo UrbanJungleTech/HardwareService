@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.service.controller.controllercommunication;
 
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 public interface ControllerCommunicationService {
     void sendStateToController(Hardware hardware);

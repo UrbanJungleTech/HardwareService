@@ -2,8 +2,8 @@ package urbanjungletech.hardwareservice.service.controller.controllercommunicati
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.jsonrpc.model.*;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.mqtt.MqttService;

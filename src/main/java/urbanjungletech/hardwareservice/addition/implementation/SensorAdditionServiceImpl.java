@@ -4,15 +4,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.ScheduledSensorReadingAdditionService;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
-import urbanjungletech.hardwareservice.converter.SensorConverter;
+import urbanjungletech.hardwareservice.addition.SensorReadingRouterAdditionService;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.event.sensor.SensorEventPublisher;
-import urbanjungletech.hardwareservice.exception.exception.InvalidSensorConfigurationException;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
+import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
-import urbanjungletech.hardwareservice.service.controller.validation.sensor.implementation.SensorValidationError;
 import urbanjungletech.hardwareservice.service.query.implementation.SensorQueryServiceImpl;
 
 import java.util.ArrayList;
@@ -28,29 +28,30 @@ public class SensorAdditionServiceImpl implements SensorAdditionService {
     private final SensorEventPublisher sensorEventPublisher;
     private final SensorValidationService sensorValidationService;
     private final SensorQueryServiceImpl sensorQueryService;
+    private final SensorReadingRouterAdditionService sensorReadingRouterAdditionService;
 
     public SensorAdditionServiceImpl(SensorDAO sensorDAO,
                                      SensorConverter sensorConverter,
                                      ScheduledSensorReadingAdditionService scheduledSensorReadingAdditionService,
                                      SensorEventPublisher sensorEventPublisher,
                                      SensorValidationService sensorValidationService,
-                                     SensorQueryServiceImpl sensorQueryService){
+                                     SensorQueryServiceImpl sensorQueryService,
+                                     SensorReadingRouterAdditionService sensorReadingRouterAdditionService){
         this.sensorDAO = sensorDAO;
         this.sensorConverter = sensorConverter;
         this.scheduledSensorReadingAdditionService = scheduledSensorReadingAdditionService;
         this.sensorEventPublisher = sensorEventPublisher;
         this.sensorValidationService = sensorValidationService;
         this.sensorQueryService = sensorQueryService;
+        this.sensorReadingRouterAdditionService = sensorReadingRouterAdditionService;
     }
 
     @Transactional
     @Override
     public Sensor create(Sensor sensor) {
-        SensorValidationError validationError = this.sensorValidationService.validateSensorType(sensor);
-        if(validationError.getMessages().size() > 0){
-            throw new InvalidSensorConfigurationException(validationError);
-        }
-        SensorEntity result = this.sensorDAO.addSensor(sensor);
+        List<SensorReadingRouter> updatedRouters = this.sensorReadingRouterAdditionService.updateList(sensor.getSensorReadingRouters());
+        sensor.setSensorReadingRouters(updatedRouters);
+        SensorEntity result = this.sensorDAO.createSensor(sensor);
         Optional.ofNullable(sensor.getScheduledSensorReadings())
                 .ifPresent(readings -> readings
                         .forEach((ScheduledSensorReading scheduledSensorReading)

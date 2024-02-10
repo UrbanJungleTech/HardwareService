@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.jsonrpc.model;
 
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 public class RegisterSensorMessage extends JsonRpcMessage{
     public RegisterSensorMessage(Sensor sensor){

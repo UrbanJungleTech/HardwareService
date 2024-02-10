@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,7 +41,6 @@ public class CredentialsEndpointIT {
     private ObjectMapper objectMapper;
     @MockBean
     private SecretClient mockSecretClient;
-
     @BeforeEach
     public void before(){
         Map<String, String> secretCache = new HashMap<>();
@@ -97,7 +95,6 @@ public class CredentialsEndpointIT {
         String passwordStoredInKeyVault = mockSecretClient.getSecret(responseCredentials.getPassword()).getValue();
         assertEquals(credentials.getPassword(), passwordStoredInKeyVault);
         assertEquals(credentials.getUsername(), usernameStoredInKeyVault);
-        assertEquals(credentials.getPassword(), passwordStoredInKeyVault);
     }
 
     /**
@@ -111,7 +108,6 @@ public class CredentialsEndpointIT {
     public void testTokenCredentials() throws Exception {
         TokenCredentials credentials = new TokenCredentials();
         credentials.setTokenValue("token1");
-        credentials.setUrl("url1");
         String responseString = this.mockMvc.perform(post("/credentials/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(credentials)))
@@ -120,10 +116,7 @@ public class CredentialsEndpointIT {
         TokenCredentials responseCredentials = objectMapper.readValue(responseString, TokenCredentials.class);
         String tokenStoredInKeyVault = mockSecretClient.getSecret(responseCredentials.getTokenValue()).getValue();
         assertEquals(credentials.getTokenValue(), tokenStoredInKeyVault);
-        String urlStoredInKeyVault = mockSecretClient.getSecret(responseCredentials.getUrl()).getValue();
-        assertEquals(credentials.getUrl(), urlStoredInKeyVault);
         assertEquals(credentials.getTokenValue(), tokenStoredInKeyVault);
-        assertEquals(credentials.getUrl(), urlStoredInKeyVault);
 
     }
 

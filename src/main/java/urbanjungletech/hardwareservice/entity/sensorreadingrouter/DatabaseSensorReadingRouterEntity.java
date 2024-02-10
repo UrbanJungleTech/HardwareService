@@ -2,7 +2,9 @@ package urbanjungletech.hardwareservice.entity.sensorreadingrouter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import urbanjungletech.hardwareservice.entity.connectiondetails.DatabaseConnectionDetailsEntity;
 import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
+import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 
 @Entity
 public class DatabaseSensorReadingRouterEntity extends SensorReadingRouterEntity{
@@ -10,7 +12,7 @@ public class DatabaseSensorReadingRouterEntity extends SensorReadingRouterEntity
     private String valueColumn;
     private String timestampColumn;
     @ManyToOne
-    private CredentialsEntity credentials;
+    private DatabaseConnectionDetailsEntity connectionDetails;
 
     public String getTableName() {
         return tableName;
@@ -28,19 +30,21 @@ public class DatabaseSensorReadingRouterEntity extends SensorReadingRouterEntity
         this.valueColumn = valueColumn;
     }
 
+
+
+    public DatabaseConnectionDetailsEntity getConnectionDetails() {
+        return connectionDetails;
+    }
+
+    public void setConnectionDetails(DatabaseConnectionDetailsEntity connectionDetails) {
+        this.connectionDetails = connectionDetails;
+    }
+
     public String getTimestampColumn() {
         return timestampColumn;
     }
 
     public void setTimestampColumn(String timestampColumn) {
         this.timestampColumn = timestampColumn;
-    }
-
-    public CredentialsEntity getCredentials() {
-        return credentials;
-    }
-
-    public void setCredentials(CredentialsEntity credentials) {
-        this.credentials = credentials;
     }
 }

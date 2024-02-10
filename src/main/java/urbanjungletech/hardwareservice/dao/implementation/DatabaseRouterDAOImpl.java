@@ -1,16 +1,12 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.converter.SensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.DatabaseRouterDAO;
 import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
-import urbanjungletech.hardwareservice.service.credentials.generator.implementation.DatasourceClientGenerator;
 
 import java.util.List;
 import java.util.stream.Collectors;

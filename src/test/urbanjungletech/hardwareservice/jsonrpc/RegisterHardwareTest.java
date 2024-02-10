@@ -22,7 +22,7 @@ public class RegisterHardwareTest {
 //        expectedHardwareMap.put("port", expectedPort);
 //        params.put("hardware", expectedHardwareMap);
 //
-//        Hardware expectedHardware = new Hardware();
+//        Hardware expectedHardware = new MockHardware();
 //        expectedHardware.setName(expectedName);
 //        expectedHardware.setPort(expectedPort);
 //

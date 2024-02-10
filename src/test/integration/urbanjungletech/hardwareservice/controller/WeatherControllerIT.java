@@ -8,18 +8,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.helpers.services.config.WeatherProperties;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.WeatherSensor;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.model.WeatherSensorTypes;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -46,18 +48,22 @@ public class WeatherControllerIT {
         WeatherHardwareController hardwareController = new WeatherHardwareController();
         TokenCredentials tokenCredentials = new TokenCredentials();
         tokenCredentials.setTokenValue(weatherProperties.getApikey());
-        tokenCredentials.setUrl(weatherProperties.getUrl());
-        hardwareController.setCredentials(tokenCredentials);
-        Sensor temperatureSensor = new Sensor();
+        WeatherConnectionDetails connectionDetails = new WeatherConnectionDetails();
+        connectionDetails.setUrl(weatherProperties.getUrl());
+        TokenCredentials credentials = new TokenCredentials();
+        credentials.setTokenValue(weatherProperties.getApikey());
+        connectionDetails.setCredentials(credentials);
+        hardwareController.setConnectionDetails(connectionDetails);
+        WeatherSensor temperatureSensor = new WeatherSensor();
         temperatureSensor.setName("Temperature Sensor");
-        temperatureSensor.getConfiguration().put("sensorType", "temperature");
-        temperatureSensor.getConfiguration().put("latitude", "43.64493");
-        temperatureSensor.getConfiguration().put("longitude", "-79.39076");
-        Sensor humiditySensor = new Sensor();
+        temperatureSensor.setSensorType(WeatherSensorTypes.TEMPERATURE);
+        temperatureSensor.setLatitude(43.64493);
+        temperatureSensor.setLongitude(-79.39076);
+        WeatherSensor humiditySensor = new WeatherSensor();
         humiditySensor.setName("Humidity Sensor");
-        humiditySensor.getConfiguration().put("sensorType", "humidity");
-        humiditySensor.getConfiguration().put("latitude", "43.64493");
-        humiditySensor.getConfiguration().put("longitude", "-79.39076");
+        humiditySensor.setSensorType(WeatherSensorTypes.HUMIDITY);
+        humiditySensor.setLatitude(43.64493);
+        humiditySensor.setLongitude(-79.39076);
         hardwareController.getSensors().add(humiditySensor);
         hardwareController.getSensors().add(temperatureSensor);
         String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")

@@ -19,6 +19,7 @@ spring:
       keyvault:
         secret:
           endpoint: ${AZURE_KEYVAULT_URI}
+
 logging:
   level:
     root: ${ROOT_LOG_LEVEL:INFO}
@@ -29,14 +30,15 @@ logging:
 entity:
   names:
     urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity: Hardware Controller
-    urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
-    urbanjungletech.hardwareservice.entity.HardwareEntity: Hardware
+    urbanjungletech.hardwareservice.entity.sensor.SensorEntity: Sensor
+    urbanjungletech.hardwareservice.entity.hardware.HardwareEntity: Hardware
     urbanjungletech.hardwareservice.entity.TimerEntity: Timer
     urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity: Scheduled Sensor Reading
     urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
     urbanjungletech.hardwareservice.entity.alert.AlertEntity: Sensor Reading Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
+    urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity: Sensor Reading Router
 
 azure:
   keyvault:
@@ -70,7 +72,10 @@ development:
   azure:
     storageQueue:
       key: ${DEV_AZURE_STORAGE_QUEUE_KEY}
+      endpoint: ${DEV_AZURE_STORAGE_QUEUE_ENDPOINT}
       queueName: ${DEV_AZURE_STORAGE_QUEUE_NAME}
+      storageAccountName: ${DEV_AZURE_STORAGE_QUEUE_ACCOUNT_NAME}
+      storageAccountKey: ${DEV_AZURE_STORAGE_QUEUE_ACCOUNT_KEY}
     kafka:
       topic: ${DEV_AZURE_KAFKA_TOPIC}
       key: ${DEV_AZURE_KAFKA_KEY}
@@ -86,3 +91,10 @@ weather:
     enabled: ${DEV_WEATHER_API_ENABLED:true}
     apikey: ${DEV_WEATHER_API_KEY}
     url: ${WEATHER_API_URL}
+
+digitaltwins:
+  client-id: ${DIGITAL_TWINS_CLIENT_ID}
+  client-secret: ${DIGITAL_TWINS_CLIENT_SECRET}
+  tenant-id: ${DIGITAL_TWINS_TENANT_ID}
+  digital-twins-uri: ${DIGITAL_TWINS_URL}
+  enabled: ${DIGITAL_TWINS_ENABLED:false}

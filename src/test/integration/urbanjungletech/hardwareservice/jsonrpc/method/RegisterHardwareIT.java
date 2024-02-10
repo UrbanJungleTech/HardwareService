@@ -7,14 +7,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -70,7 +71,7 @@ public class RegisterHardwareIT {
 
         HardwareController hardwareControllerResponse = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setPort("1");
         hardware.getConfiguration().put("serialNumber", "1234");
         HardwareState hardwareState = new HardwareState();

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface SensorReadingQueryService {
     SensorReading findSensorReadingBySensorId(Long sensorId);
+
+    SensorReading findById(Long id);
 }

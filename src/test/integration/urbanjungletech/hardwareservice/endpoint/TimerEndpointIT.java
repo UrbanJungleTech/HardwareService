@@ -11,12 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.TimerRepository;
-import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 
 import java.sql.Date;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
@@ -59,7 +59,7 @@ public class TimerEndpointIT {
     @Test
     public void testGetTimer() throws Exception {
         HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardwareController.getHardware().add(hardware);
         hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         hardware = hardwareController.getHardware().get(0);
@@ -108,7 +108,7 @@ public class TimerEndpointIT {
     @Test
     public void testDeleteTimerShouldDeleteTheTimerEntity() throws Exception {
         HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setOffState("off");
         Timer timer = new Timer();
         timer.setLevel(100);
@@ -150,7 +150,7 @@ public class TimerEndpointIT {
         timer2.setCronString("0 0 0 1 1 ? 2099");
 
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardwareController.getHardware().add(hardware);
         hardwareController.getHardware().get(0).getTimers().add(timer1);
         hardwareController.getHardware().get(0).getTimers().add(timer2);
@@ -177,7 +177,7 @@ public class TimerEndpointIT {
     @Test
     public void testUpdateTimer() throws Exception {
         HardwareController hardwareController = hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardwareController.getHardware().add(hardware);
         Timer timer = new Timer();
         timer.setLevel(100);

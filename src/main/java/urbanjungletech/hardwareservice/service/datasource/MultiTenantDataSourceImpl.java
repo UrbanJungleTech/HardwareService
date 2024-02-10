@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 
 import javax.sql.DataSource;
@@ -13,9 +14,9 @@ import java.util.Map;
 @Primary
 public class MultiTenantDataSourceImpl extends AbstractRoutingDataSource implements MultiTenantDataSource{
 
-    private final ThreadLocal<DatabaseCredentials> dataSourceId;
+    private final ThreadLocal<DatabaseConnectionDetails> dataSourceId;
 
-    public MultiTenantDataSourceImpl(@Qualifier("dataSourceId") ThreadLocal<DatabaseCredentials> dataSourceId,
+    public MultiTenantDataSourceImpl(@Qualifier("dataSourceId") ThreadLocal<DatabaseConnectionDetails> dataSourceId,
                                      DataSource defaultDataSource,
                                      Map<Object, Object> targetDataSources) {
         this.dataSourceId = dataSourceId;
@@ -24,7 +25,7 @@ public class MultiTenantDataSourceImpl extends AbstractRoutingDataSource impleme
     }
 
     @Override
-    public ThreadLocal<DatabaseCredentials> getDataSourceId() {
+    public ThreadLocal<DatabaseConnectionDetails> getDataSourceId() {
         return this.dataSourceId;
     }
     @Override

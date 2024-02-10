@@ -3,7 +3,7 @@ package urbanjungletech.hardwareservice.jsonrpc.method;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.SensorAdditionService;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.Map;
 

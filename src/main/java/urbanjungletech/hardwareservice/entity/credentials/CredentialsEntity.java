@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 public class CredentialsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String type;
+    protected Long id;
+    protected String type;
 
     public Long getId() {
         return id;

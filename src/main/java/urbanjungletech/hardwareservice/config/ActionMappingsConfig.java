@@ -1,13 +1,20 @@
 package urbanjungletech.hardwareservice.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
+import urbanjungletech.hardwareservice.converter.connectiondetails.SpecificConnectionDetailsConverter;
 import urbanjungletech.hardwareservice.converter.credentials.SpecificCredentialsConverter;
+import urbanjungletech.hardwareservice.converter.hardware.SpecificHardwareConverter;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SpecificSensorConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
+import urbanjungletech.hardwareservice.digitaltwins.service.SpecificDigitalTwinsService;
+import urbanjungletech.hardwareservice.event.CreateEvent;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
@@ -35,6 +42,14 @@ public class ActionMappingsConfig {
     public Map<Class <? extends AlertAction>, SpecificActionExecutionService>
     actionMappings(List<SpecificActionExecutionService> actionExecutionServices, MapGeneratorService mapGeneratorService){
         Map<Class <? extends AlertAction>, SpecificActionExecutionService> result = mapGeneratorService.generateMap(actionExecutionServices, SpecificActionExecutionService.class);
+        return result;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "digitaltwins.enabled", havingValue = "true")
+    public Map<Class<?extends CreateEvent>, SpecificDigitalTwinsService>
+    digitalTwinsMappings(List<SpecificDigitalTwinsService> specificDigitalTwinsServices, MapGeneratorService mapGeneratorService){
+        Map<Class <? extends CreateEvent>, SpecificDigitalTwinsService> result = mapGeneratorService.generateMap(specificDigitalTwinsServices, SpecificDigitalTwinsService.class);
         return result;
     }
 
@@ -124,6 +139,53 @@ public class ActionMappingsConfig {
         return result;
     }
 
+    @Bean
+    public Map<Class, SpecificConnectionDetailsConverter>
+    connectionDetailsConverterMap(List<SpecificConnectionDetailsConverter> connectionDetailsConverters,
+                                 MapGeneratorService mapGeneratorService){
+        Map<Class, SpecificConnectionDetailsConverter> result = new HashMap<>();
+        for(SpecificConnectionDetailsConverter connectionDetailsConverter : connectionDetailsConverters){
+            for(Type type :  connectionDetailsConverter.getClass().getGenericInterfaces()){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificConnectionDetailsConverter.class){
+                    result.put((Class)p.getActualTypeArguments()[0], connectionDetailsConverter);
+                    result.put((Class)p.getActualTypeArguments()[1], connectionDetailsConverter);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Bean
+    public Map<Class, SpecificSensorConverter>
+    sensorConverterMappings(List<SpecificSensorConverter> sensorConverters,
+                                 MapGeneratorService mapGeneratorService){
+        Map<Class, SpecificSensorConverter> result = new HashMap<>();
+        for(SpecificSensorConverter currentSensorConverter : sensorConverters){
+            for(Type type :  currentSensorConverter.getClass().getGenericInterfaces()){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificSensorConverter.class){
+                    result.put((Class)p.getActualTypeArguments()[0], currentSensorConverter);
+                    result.put((Class)p.getActualTypeArguments()[1], currentSensorConverter);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Bean
+    public Map<Class, SpecificHardwareConverter>
+    hardwareConverterMappings(List<SpecificHardwareConverter> hardwareConverters,
+                            MapGeneratorService mapGeneratorService){
+        Map<Class, SpecificHardwareConverter> result = new HashMap<>();
+        for(SpecificHardwareConverter currentHardwareConverter : hardwareConverters){
+            for(Type type :  currentHardwareConverter.getClass().getGenericInterfaces()){
+                if(type instanceof ParameterizedType p && p.getRawType() == SpecificHardwareConverter.class){
+                    result.put((Class)p.getActualTypeArguments()[0], currentHardwareConverter);
+                    result.put((Class)p.getActualTypeArguments()[1], currentHardwareConverter);
+                }
+            }
+        }
+        return result;
+    }
 
 
 

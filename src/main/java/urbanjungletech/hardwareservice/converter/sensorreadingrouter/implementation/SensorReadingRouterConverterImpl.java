@@ -22,7 +22,6 @@ public class SensorReadingRouterConverterImpl implements SensorReadingRouterConv
     public SensorReadingRouter toModel(SensorReadingRouterEntity entity) {
         SensorReadingRouter result = this.converters.get(entity.getClass()).toModel(entity);
         result.setId(entity.getId());
-        result.setScheduledSensorReadingId(entity.getScheduledSensorReadingEntity().getId());
         return result;
     }
 

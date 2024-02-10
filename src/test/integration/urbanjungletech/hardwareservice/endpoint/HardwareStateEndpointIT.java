@@ -7,11 +7,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
+import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +21,6 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {"development.mqtt.client.enabled=false",
@@ -85,7 +85,7 @@ public class HardwareStateEndpointIT {
     @Test
     public void updateHardwareState() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setPort("1");
         hardwareController.addHardware(hardware);
         hardwareController.getHardware().add(hardware);

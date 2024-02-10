@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
-import urbanjungletech.hardwareservice.model.Sensor;
 
 import java.time.LocalDateTime;
 

@@ -6,8 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.jsonrpc.method.DeregisterHardware;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class DeregisterHardwareTest {
     @Test
     public void process_shouldDeleteHardware_whenHardwareIsFound(){
         long hardwareId = 1;
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setId(hardwareId);
 
         Map<String, Object> params = new HashMap<>();

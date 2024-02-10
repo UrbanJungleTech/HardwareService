@@ -1,12 +1,13 @@
 package urbanjungletech.hardwareservice.service.datasource;
 
 import jakarta.activation.DataSource;
+import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 
 public interface DataSourceContext {
-    void addDataSource(DatabaseCredentials credentials);
+    void addDataSource(DatabaseConnectionDetails connectionDetails);
 
-    void removeDataSource(DatabaseCredentials credentials);
+    void removeDataSource(DatabaseConnectionDetails connectionDetails);
 
-    void setDataSource(DatabaseCredentials credentials);
+    void setDataSource(DatabaseConnectionDetails connectionDetails);
 }

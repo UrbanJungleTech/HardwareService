@@ -5,13 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import urbanjungletech.hardwareservice.converter.HardwareConverter;
+import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
+import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
-import urbanjungletech.hardwareservice.entity.HardwareEntity;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.helper.HardwareHelper;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 
@@ -70,7 +71,7 @@ class HardwareDAOImplTest {
 
     @Test
     public void testCreateHardwareControllerNotFound(){
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setHardwareControllerId(1L);
         when(this.hardwareControllerRepository.findById(any())).thenReturn(Optional.empty());
         when(exceptionService.createNotFoundException(any(), anyLong())).thenReturn(new NotFoundException("hardware controller", "1"));
@@ -79,7 +80,7 @@ class HardwareDAOImplTest {
 
     @Test
     public void updateHardware_shouldReturnHardwareEntity_whenHardwareExists(){
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         HardwareEntity hardwareEntity = new HardwareEntity();
 
         when(this.hardwareRepository.findById(any())).thenReturn(Optional.of(hardwareEntity));
@@ -92,7 +93,7 @@ class HardwareDAOImplTest {
 
     @Test
     public void updateHardware_shouldThrowNotFoundException_whenHardwareNotFound(){
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setId(1L);
 
         when(this.hardwareRepository.findById(any())).thenReturn(Optional.empty());

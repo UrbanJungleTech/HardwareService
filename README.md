@@ -588,7 +588,7 @@ public ResponseEntity<WebRequestException> handleError(StandardErrorException ex
 Usage: The EntityNameService provides human-readable names for entities, useful in logs and HTTP responses. Names are configured in Spring under entity.names.
 Configured Names:
 urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity: Hardware Controller
-urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
+urbanjungletech.hardwareservice.entity.sensor.SensorEntity: Sensor
 (and other entity names)
 
 An example is in the NotFoundException

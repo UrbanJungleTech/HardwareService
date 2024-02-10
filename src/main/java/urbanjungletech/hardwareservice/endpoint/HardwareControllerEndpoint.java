@@ -2,14 +2,15 @@ package urbanjungletech.hardwareservice.endpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class HardwareControllerEndpoint {
     }
 
     @PostMapping("/")
-    public ResponseEntity<HardwareController> create(@RequestBody HardwareController hardwareController) throws JsonProcessingException {
+    public ResponseEntity<HardwareController> create(@Valid @RequestBody HardwareController hardwareController) throws JsonProcessingException {
         HardwareController result = this.hardwareControllerAdditionService.create(hardwareController);
         return ResponseEntity.created(null).body(result);
     }

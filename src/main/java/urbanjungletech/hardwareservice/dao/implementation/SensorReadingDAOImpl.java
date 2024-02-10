@@ -1,10 +1,9 @@
 package urbanjungletech.hardwareservice.dao.implementation;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.converter.SensorReadingConverter;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
-import urbanjungletech.hardwareservice.entity.SensorEntity;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;

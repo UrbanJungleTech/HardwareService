@@ -1,14 +1,7 @@
 package urbanjungletech.hardwareservice.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 
 @Entity
 @Table(name = "ScheduledSensorReading")
@@ -20,13 +13,6 @@ public class ScheduledSensorReadingEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sensor_id")
     private SensorEntity sensorEntity;
-
-    @OneToMany(mappedBy = "scheduledSensorReadingEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<SensorReadingRouterEntity> routers;
-
-    public ScheduledSensorReadingEntity() {
-        this.routers = new ArrayList<>();
-    }
 
     public String getCronString() {
         return cronString;
@@ -50,13 +36,5 @@ public class ScheduledSensorReadingEntity {
 
     public void setSensor(SensorEntity sensorEntity) {
         this.sensorEntity = sensorEntity;
-    }
-
-    public List<SensorReadingRouterEntity> getRouters() {
-        return routers;
-    }
-
-    public void setRouters(List<SensorReadingRouterEntity> routers) {
-        this.routers = routers;
     }
 }

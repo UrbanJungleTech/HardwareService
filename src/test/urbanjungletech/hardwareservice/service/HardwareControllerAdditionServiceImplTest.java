@@ -41,8 +41,8 @@ class HardwareControllerAdditionServiceImplTest {
 //        HardwareController originalHardwareController = new HardwareController();
 //        HardwareController savedHardwareController = new HardwareController();
 //        savedHardwareController.setId(1L);
-//        Sensor sensor1 = new Sensor();
-//        Sensor sensor2 = new Sensor();
+//        Sensor sensor1 = new MockSensor();
+//        Sensor sensor2 = new MockSensor();
 //        originalHardwareController.setSensors(List.of(sensor1, sensor2));
 //        when(hardwareControllerDAO.createHardwareController(any())).thenReturn(savedHardwareController);
 //        hardwareControllerAdditionService.addHardwareController(originalHardwareController);
@@ -57,8 +57,8 @@ class HardwareControllerAdditionServiceImplTest {
 //        HardwareController originalHardwareController = new HardwareController();
 //        HardwareController savedHardwareController = new HardwareController();
 //        savedHardwareController.setId(1L);
-//        Hardware hardware1 = new Hardware();
-//        Hardware hardware2 = new Hardware();
+//        Hardware hardware1 = new MockHardware();
+//        Hardware hardware2 = new MockHardware();
 //        originalHardwareController.setHardware(List.of(hardware1, hardware2));
 //        when(hardwareControllerDAO.createHardwareController(any())).thenReturn(savedHardwareController);
 //        hardwareControllerAdditionService.addHardwareController(originalHardwareController);

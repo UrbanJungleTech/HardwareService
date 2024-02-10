@@ -1,24 +1,23 @@
 package urbanjungletech.hardwareservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.exception.model.InvalidRequestError;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.sensor.CpuSensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.cpu.CpuSensorType;
 
 import java.util.List;
-import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,11 +43,8 @@ public class cpuIT {
     @Test
     public void getSensorReading_temperatureSensor_returnsDoubleGreaterThanZero() throws Exception {
         HardwareController hardwareController = new CpuHardwareController();
-        hardwareController.setType("cpu");
-        Sensor sensor = new Sensor();
-        sensor.setName("Temperature Sensor");
-        Map<String, String> configuration = Map.of("sensorType", "TEMPERATURE");
-        sensor.setConfiguration(configuration);
+        CpuSensor sensor = new CpuSensor();
+        sensor.setSensorType(CpuSensorType.TEMPERATURE);
         hardwareController.setSensors(List.of(sensor));
         String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
                 .contentType("application/json")
@@ -75,12 +71,11 @@ public class cpuIT {
      */
     @Test
     public void getSensorReading_clockSpeedSensor_returnsDoubleGreaterThanZero() throws Exception {
-        HardwareController hardwareController = new MockHardwareController();
+        HardwareController hardwareController = new CpuHardwareController();
         hardwareController.setType("cpu");
-        Sensor sensor = new Sensor();
+        CpuSensor sensor = new CpuSensor();
         sensor.setName("Clock Speed Sensor");
-        Map<String, String> configuration = Map.of("sensorType", "CLOCK_SPEED");
-        sensor.setConfiguration(configuration);
+        sensor.setSensorType(CpuSensorType.CLOCK_SPEED);
         hardwareController.setSensors(List.of(sensor));
         String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
                 .contentType("application/json")
@@ -106,14 +101,20 @@ public class cpuIT {
     @Test
     public void getSensorReading_invalidSensorType_returns400() throws Exception {
         HardwareController hardwareController = new CpuHardwareController();
-        Sensor sensor = new Sensor();
+        hardwareController.setName(null);
+        CpuSensor sensor = new CpuSensor();
         sensor.setName("Invalid Sensor");
-        Map<String, String> configuration = Map.of("sensorType", "INVALID");
-        sensor.setConfiguration(configuration);
+        sensor.setSensorType(null);
         hardwareController.setSensors(List.of(sensor));
-        this.mockMvc.perform(post("/hardwarecontroller/")
+        String jsonResponse = this.mockMvc.perform(post("/hardwarecontroller/")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(hardwareController)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        InvalidRequestError error = objectMapper.readValue(jsonResponse, InvalidRequestError.class);
+        assertEquals(1, error.getFields().size());
+        assertEquals("sensors[0].sensorType", error.getFields().get(0).getField());
+        assertEquals("must not be null", error.getFields().get(0).getReason());
+        assertEquals("Invalid request", error.getMessage());
     }
 }

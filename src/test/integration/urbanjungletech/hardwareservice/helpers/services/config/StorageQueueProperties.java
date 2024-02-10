@@ -3,6 +3,9 @@ package urbanjungletech.hardwareservice.helpers.services.config;
 public class StorageQueueProperties {
     private String key;
     private String queueName;
+    private String endpoint;
+    private String storageAccountName;
+    private String storageAccountKey;
 
     public String getKey() {
         return key;
@@ -18,5 +21,29 @@ public class StorageQueueProperties {
 
     public void setQueueName(String queueName) {
         this.queueName = queueName;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public String getStorageAccountName() {
+        return storageAccountName;
+    }
+
+    public void setStorageAccountName(String storageAccountName) {
+        this.storageAccountName = storageAccountName;
+    }
+
+    public String getStorageAccountKey() {
+        return storageAccountKey;
+    }
+
+    public void setStorageAccountKey(String storageAccountKey) {
+        this.storageAccountKey = storageAccountKey;
     }
 }

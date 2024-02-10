@@ -11,7 +11,7 @@ public class TokenCredentialsConverter implements SpecificCredentialsConverter<T
     public TokenCredentials toModel(TokenCredentialsEntity entity) {
         TokenCredentials result = new TokenCredentials();
         result.setTokenValue(entity.getTokenValue());
-        result.setUrl(entity.getUrl());
+        result.setId(entity.getId());
         return result;
     }
 
@@ -25,6 +25,5 @@ public class TokenCredentialsConverter implements SpecificCredentialsConverter<T
     @Override
     public void fillEntity(TokenCredentialsEntity entity, TokenCredentials tokenCredentials) {
         entity.setTokenValue(tokenCredentials.getTokenValue());
-        entity.setUrl(tokenCredentials.getUrl());
     }
 }

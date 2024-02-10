@@ -28,8 +28,8 @@ public class DatabaseSensorReadingRouterService implements SpecificSensorReading
     @Override
     @Transactional
     public void route(DatabaseSensorReadingRouter sensorReadingRouter, SensorReading sensorReading) {
-        dataSourceContext.addDataSource(sensorReadingRouter.getCredentials());
-        dataSourceContext.setDataSource(sensorReadingRouter.getCredentials());
+        dataSourceContext.addDataSource(sensorReadingRouter.getDatabaseConnectionDetails());
+        dataSourceContext.setDataSource(sensorReadingRouter.getDatabaseConnectionDetails());
         this.transactionTemplate.execute((sensorRead) -> this.databaseRouterDAO.create(sensorReading));
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.service.query.HardwareQueryService;

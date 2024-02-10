@@ -2,8 +2,9 @@ package urbanjungletech.hardwareservice.service.controller.controllercommunicati
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.Sensor;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.sensor.CpuSensor;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
 
@@ -31,8 +32,7 @@ public class CpuSpecificControllerCommunicationService implements SpecificContro
 
     @Override
     public double getSensorReading(Sensor sensor) {
-        CpuSensorType cpuSensorType = CpuSensorType.valueOf(sensor.getConfiguration().get("sensorType"));
-        double result = this.sensorTypeMappings.get(cpuSensorType).get();
+        double result = this.sensorTypeMappings.get(((CpuSensor)sensor).getSensorType()).get();
         return result;
     }
 

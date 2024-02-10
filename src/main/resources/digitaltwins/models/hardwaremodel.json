@@ -1,0 +1,53 @@
+{
+  "@id": "dtmi:urbanjungletech:Hardware;1",
+  "@type": "Interface",
+  "displayName": "Hardware",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "name",
+      "schema": "string",
+      "displayName": "Name",
+      "description": "The name of the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "port",
+      "schema": "string",
+      "displayName": "Port",
+      "description": "The port on the controller used by the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "offState",
+      "schema": "string",
+      "displayName": "Off State",
+      "description": "The state of the hardware when it is off."
+    },
+    {
+      "@type": "Property",
+      "name": "desiredState",
+      "schema": "string",
+      "displayName": "Desired State",
+      "description": "The state that the user desires for the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "currentState",
+      "schema": "string",
+      "displayName": "Current State",
+      "description": "The current state of the hardware."
+    },
+    {
+      "@type": "Property",
+      "name": "possibleStates",
+      "schema": {
+        "@type": "Array",
+        "elementSchema": "string"
+      },
+      "displayName": "Possible States",
+      "description": "A list of possible states for the hardware."
+    }
+  ],
+  "@context": "dtmi:dtdl:context;3"
+}

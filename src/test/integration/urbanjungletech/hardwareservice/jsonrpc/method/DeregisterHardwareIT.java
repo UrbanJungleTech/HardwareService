@@ -1,18 +1,18 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.model.Hardware;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +56,8 @@ public class DeregisterHardwareIT {
      */
     @Test
     public void testDeregisterHardware() throws Exception{
-        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
-        Hardware hardware = new Hardware();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Hardware hardware = new MockHardware();
         hardware.setPort("1");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);

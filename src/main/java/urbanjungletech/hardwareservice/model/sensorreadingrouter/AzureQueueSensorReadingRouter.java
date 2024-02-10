@@ -1,15 +1,12 @@
 package urbanjungletech.hardwareservice.model.sensorreadingrouter;
 
+import urbanjungletech.hardwareservice.model.connectiondetails.AzureConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 
 public class AzureQueueSensorReadingRouter extends SensorReadingRouter {
-    public AzureQueueSensorReadingRouter() {
-        super("azureQueueSensorReadingRouter");
-    }
-
     private String queueName;
-    private Credentials credentials;
+    private AzureConnectionDetails azureConnectionDetails;
 
     public String getQueueName() {
         return queueName;
@@ -19,11 +16,11 @@ public class AzureQueueSensorReadingRouter extends SensorReadingRouter {
         this.queueName = queueName;
     }
 
-    public Credentials getCredentials() {
-        return credentials;
+    public AzureConnectionDetails getAzureConnectionDetails() {
+        return azureConnectionDetails;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
+    public void setAzureConnectionDetails(AzureConnectionDetails azureConnectionDetails) {
+        this.azureConnectionDetails = azureConnectionDetails;
     }
 }

@@ -1,8 +1,9 @@
 package urbanjungletech.hardwareservice.helper;
 
-import urbanjungletech.hardwareservice.model.Hardware;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 public class HardwareHelper {
     public static Hardware createHardware(){
-        Hardware hardware = new Hardware();
+        Hardware hardware = new MockHardware();
         hardware.setPort("1");
         hardware.setName("hardware");
         hardware.setId(2L);

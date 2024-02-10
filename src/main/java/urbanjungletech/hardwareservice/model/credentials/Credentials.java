@@ -2,18 +2,18 @@ package urbanjungletech.hardwareservice.model.credentials;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = UsernamePasswordCredentials.class, name = "usernamePasswordCredentials"),
-        @JsonSubTypes.Type(value = CertificateCredentials.class, name = "certificateCredentials"),
-        @JsonSubTypes.Type(value = TokenCredentials.class, name = "tokenCredentials")
-})
 public class Credentials {
     private Long id;
     private String type;
+
+    public Credentials() {
+        this.type = this.getClass().getSimpleName();
+    }
 
     public Long getId() {
         return id;
