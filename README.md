@@ -385,6 +385,116 @@ public class AzureQueueSensorReadingRouterService implements SpecificSensorReadi
 }
 ```
 
+# Credentials Entity Documentation
+
+## Overview
+The Credentials entity serves as an abstract base class for different types of authentication credentials within the system. It abstracts the commonalities shared by various credential types, providing a foundation for specific credential implementations. This entity is crucial for managing authentication mechanisms across different components and services, ensuring secure access and interaction.
+
+## Fields
+
+The Credentials class is designed with polymorphism in mind, allowing for the dynamic inclusion of various credential types based on a type property. This design facilitates the easy addition of new credential types as the system evolves.
+
+
+| Field Name     | Data Type            | Description                                             |
+|----------------|----------------------|---------------------------------------------------------|
+| `id`           | Long                 | The database ID of the Credential instance.             |
+| `type`         | String               | The derived type of the Credentials class               |
+
+## Supported Credential Types
+
+The system supports various types of credentials, each tailored for specific authentication mechanisms. Below are the details of each supported credential type.
+
+### CertificateCredentials
+
+- **Purpose**: Authenticate using certificates.
+  
+| Field         | Data Type | Description               |
+|---------------|-----------|---------------------------|
+| `certificate` | `Byte[]`  | The certificate data.     |
+
+### DatabaseCredentials
+
+- **Purpose**: Authenticate with a database.
+  
+| Field       | Data Type  | Description            |
+|-------------|------------|------------------------|
+| `username`  | `String`   | The database username. |
+| `password`  | `String`   | The database password. |
+
+### TokenCredentials
+
+- **Purpose**: Authenticate using a token.
+  
+| Field         | Data Type | Description       |
+|---------------|-----------|-------------------|
+| `tokenValue`  | `String`  | The token value.  |
+
+### UsernamePasswordCredentials
+
+- **Purpose**: Authenticate using a username and password.
+  
+| Field       | Data Type | Description            |
+|-------------|-----------|------------------------|
+| `username`  | `String`  | The username.          |
+| `password`  | `String`  | The password.          |
+
+Each type of credentials is designed to cater to different authentication needs, ensuring the system's flexibility and security in handling authentication across various services and components.
+
+# Credentials API Endpoints
+
+The following table outlines the API endpoints available for managing credentials within the system.
+
+| Endpoint               | Method | Description                                      | Query Parameters | Request Body          |
+|------------------------|--------|--------------------------------------------------|------------------|-----------------------|
+| `/credentials/`        | POST   | Creates new credentials and stores them securely.|                  | `Credentials` object  |
+
+This endpoint allows for the creation of various types of credentials, leveraging the polymorphic nature of the `Credentials` class to accommodate different authentication mechanisms.
+
+## Secure Storage and Retrieval
+
+Credentials are never stored in their raw form in the database. Instead, they are processed through an implementation of CredentialsRetrievalService, which securely stores actual credential values in a secure store and replaces them with hashes for database storage.
+
+### CredentialsRetrievalService
+
+This service defines methods for retrieving, persisting, deleting, and updating credentials, handling them through secure storage.
+
+```java
+public interface CredentialsRetrievalService {
+    Credentials getCredentials(Credentials credentials);
+    Credentials persistCredentials(Credentials credentials);
+    void deleteCredentials(Credentials credentials);
+    void updateCredentials(Credentials credentialsKeys, Credentials credentialsValues);
+}
+```
+
+### SpecificCredentialRetrievalService
+
+A dedicated service for each model of credentials, responsible for the secure handling of credential fields.
+
+```java
+public interface SpecificCredentialRetrievalService <T extends Credentials>{
+    T getCredentials(T credentials);
+    T persistCredentials(T credentials);
+    void deleteCredentials(T credentials);
+    void updateCredentials(T credentialsKeys, T credentialsValues);
+}
+```
+
+### SecureStorageService
+
+Defines the interaction with the secure store, ensuring the confidentiality of credential values.
+
+```java
+public interface SecureStorageService {
+    String saveSecret(String secret);
+    void saveSecret(String secretId, String secret);
+    String getSecret(String secretId);
+    void deleteSecret(String secretId);
+}
+```
+
+The AzureSecureStorage implementation interacts with an Azure Key Store, storing credential values as secrets and using hashes as keys for retrieval.
+
 # Alert Entity
 
 ## Overview
@@ -602,7 +712,140 @@ Example Method: The createNotFoundException method in ExceptionService is an exa
 NotFoundException createNotFoundException(Class clazz, long id);
 ```
 
+# Polymorphic Entities Documentation
 
+This section outlines the approach for handling polymorphic entities in our project, focusing on the ConnectionDetails as a primary example. This mechanism is essential for representing various types of connections with common attributes while allowing for specific differences.
+
+## Model Definition
+### Abstract Base Class
+
+The abstract base class defines shared fields and employs the @JsonTypeInfo annotation to facilitate polymorphic JSON serialization and deserialization based on a type field.
+
+## Polymorphic Model Definition
+### Abstract Base Model
+
+The foundation of polymorphic handling in our models is established through an abstract base class annotated with @JsonTypeInfo. This setup enables automatic type resolution during JSON serialization and deserialization processes.
+
+```java
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+              include = JsonTypeInfo.As.PROPERTY,
+              property = "type")
+public abstract class ConnectionDetails {
+    private Long id;
+    // Shared fields across all connection types
+}
+```
+
+The type property dictates the concrete class to be instantiated when processing JSON data.
+
+### Concrete Model Implementations
+
+Derived classes extend this base class, incorporating specific fields and behaviors relevant to their unique context.
+
+    Example: AzureConnectionDetails
+```java
+public class AzureConnectionDetails extends ConnectionDetails {
+    private String url;
+    private Credentials credentials;
+    // Azure-specific fields
+}
+```
+
+Entity Structure for Persistence
+
+### Base Entity
+
+Entities mirror the polymorphic structure of models, with a base entity class using JPA annotations to define a suitable inheritance strategy.
+
+Base Entity: ConnectionDetailsEntity
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class ConnectionDetailsEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    // Common entity attributes
+}
+```
+
+### Concrete Entity Classes
+
+These classes provide persistence mechanisms for each type of connection detail, extending the base entity class.
+
+Example: AzureConnectionDetailsEntity
+
+```java
+@Entity
+public class AzureConnectionDetailsEntity extends ConnectionDetailsEntity {
+    private String url;
+    @ManyToOne
+    private CredentialsEntity credentials;
+    // Attributes specific to Azure connections
+}
+```
+
+## Converters
+
+Converters play a crucial role in translating between entity and model representations. This section outlines the architecture designed to facilitate this process efficiently, accommodating the polymorphic nature of our data.
+
+### Proxy Converter
+
+A proxy converter interface acts as a unified facade for all conversion operations, simplifying the conversion process for consumers.
+
+Interface: ConnectionDetailsConverter
+```java
+public interface ConnectionDetailsConverter {
+    ConnectionDetails toModel(ConnectionDetailsEntity entity);
+    ConnectionDetailsEntity createEntity(ConnectionDetails model);
+    void fillEntity(ConnectionDetailsEntity entity, ConnectionDetails model);
+}
+```
+
+### Implementation with Delegation
+
+The concrete implementation of this converter manages a collection of specific converters, delegating tasks based on the runtime type of the objects involved.
+
+Implementation: ConnectionDetailsConverterImpl
+
+```java
+@Service
+public class ConnectionDetailsConverterImpl implements ConnectionDetailsConverter {
+    private final Map<Class<?>, SpecificConnectionDetailsConverter<?, ?>> converterMap;
+
+    // Implementation details focusing on delegation logic
+}
+```
+
+### Specific Converters
+
+For each concrete subclass of ConnectionDetails, a corresponding converter is defined to handle its specific conversion logic.
+
+Specific Converter Interface
+
+```java
+public interface SpecificConnectionDetailsConverter<T extends ConnectionDetails, U extends ConnectionDetailsEntity> {
+    T toModel(U entity);
+    U createEntity(T model);
+    void fillEntity(U entity, T model);
+}
+```
+
+## Configuration and Registration
+
+To ensure that all specific converters are correctly instantiated and accessible, a configuration class is employed to populate a map with converter instances. This map facilitates the dynamic selection of converters based on the class of the object being converted.
+
+Converter Configuration
+
+```Java
+@Bean
+public Map<Class<?>, SpecificConnectionDetailsConverter<?, ?>> configureConverters(List<SpecificConnectionDetailsConverter<?, ?>> converters) {
+    Map<Class<?>, SpecificConnectionDetailsConverter<?, ?>> map = new HashMap<>();
+    // Populate the map with converter instances
+    return map;
+}
+```
 
 
 # System Flows
