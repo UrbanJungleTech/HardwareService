@@ -670,6 +670,74 @@ For example, in the Hardware Controller Addition Service, it:
 -
 Note: Updating a parent entity updates and creates children as needed, but does not delete. Deletion should be handled separately.
 
+## DAO (Data Access Object) Layer Documentation
+
+## Overview
+
+The DAO layer acts as the bridge between the application's business logic and the database, abstracting the complexity of data access operations. It offers a streamlined interface for CRUD operations on entities, ensuring data integrity and encapsulating database interaction logic.
+
+## DAO Interfaces
+
+For each entity in the system, there's a corresponding DAO interface that outlines possible operations, including creating, retrieving, updating, and deleting entity instances. Finder methods for entity retrieval based on specific criteria are also defined here, returning entities rather than models.
+
+### Example: HardwareDAO Interface
+
+```java
+public interface HardwareDAO {
+    HardwareEntity createHardware(Hardware hardware);
+    HardwareEntity getHardware(long hardwareId);
+    HardwareEntity updateHardware(Hardware hardware);
+    void deleteHardware(long hardwareId);
+}
+```
+
+Responsibilities:
+
+- Create: Insert a new entity into the database.
+- Retrieve: Fetch an entity using its ID.
+- Update: Modify an existing entity.
+- Delete: Remove an entity from the database.
+
+### DAO Implementations
+
+Implementations of DAOs are responsible for carrying out the defined operations. They interact with the database through repositories and adhere to key principles:
+
+- Entity-Specific Operations: Implementations focus solely on operations related to their respective entities.
+- Relationship Management: DAOs manage an entity's relationship with its parent where necessary but do not alter child entity fields directly.
+
+Example Implementation: HardwareDAO
+
+```java
+@Override
+public HardwareEntity createHardware(Hardware hardware) {
+    HardwareEntity hardwareEntity = this.hardwareConverter.createEntity(hardware);
+    this.hardwareConverter.fillEntity(hardwareEntity, hardware);
+    HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findById(hardware.getHardwareControllerId())
+        .orElseThrow(() -> this.exceptionService.createNotFoundException(HardwareControllerEntity.class, hardware.getHardwareControllerId()));
+    hardwareEntity.setHardwareController(hardwareControllerEntity);
+    hardwareEntity = this.hardwareRepository.save(hardwareEntity);
+    hardwareControllerEntity.getHardware().add(hardwareEntity);
+    this.hardwareControllerRepository.save(hardwareControllerEntity);
+    return hardwareEntity;
+}
+```
+
+Principles:
+
+- Repository Usage: DAOs leverage associated repositories for database interactions.
+- Entity Retrieval: DAOs utilize the appropriate DAO for needed entities of other types, rather than repositories directly.
+- Child-Parent Relationships: Maintained by child entities, indicating updates to their linkage with parents, not the reverse.
+- Exception Handling: A NotFoundException is thrown for non-existent entities during operations like updates.
+
+### Handling NotFoundException:
+
+```java
+HardwareControllerEntity hardwareControllerEntity = this.hardwareControllerRepository.findById(hardware.getHardwareControllerId())
+    .orElseThrow(() -> this.exceptionService.createNotFoundException(HardwareControllerEntity.class, hardware.getHardwareControllerId()));
+```
+
+This code snippet shows the approach for throwing a NotFoundException when a required parent entity is missing, ensuring robust error handling.
+
 ## Query Services
 
 Query services are used for retrieving entities from the database.
@@ -680,6 +748,14 @@ Query services are used for retrieving entities from the database.
 - The converted model is returned.
 
 ### Note: query services should only return models, not entities.
+
+
+### DAO vs. Query Services
+
+DAOs focus on direct entity management operations, while the transformation of entities to models and the encapsulation of business logic are responsibilities of the Query Services layer. This separation maintains clarity and focus within the system architecture.
+Conclusion
+
+The DAO layer is essential for clean separation of concerns between business logic and data storage, facilitating maintainability, scalability, and ease of updates and enhancements within the system.
 
 # Alert Flow
 
