@@ -180,7 +180,7 @@ Note: Sensors are created under the `HardwareController` endpoint. This ensures 
 
 ## Hardware Controller Types
 
-Hardware controllers have specific types that define their communication protocols and functionalities. There are two standard types of controllers: MQTT and CPU.
+Hardware controllers have specific types that define their communication protocols and functionalities. 
 
 ### MQTT Controller
 - **Description:** Uses a custom protocol with messages sent to an MQTT queue.
@@ -208,6 +208,18 @@ Hardware controllers have specific types that define their communication protoco
 | `CORE_MULTIPLIER` | Measures CPU core multiplier. |
 | `FAN_SPEED`       | Measures CPU fan speed.       |
 | `LOAD`            | Measures CPU load.            |
+
+### Weather Controller
+- **Description:** This controller type is intended to measure aspects of the weather at any location in the world. Its sensors are completely virtual and use an API to gather the sensor readings. Each sensor needs to have a few fields configured which will determine in what location and what aspect of the weather it will return. The API used is tomorrow.io.
+
+#### Supported Sensor Types
+
+| Sensor Type       | Description                   |
+|-------------------|-------------------------------|
+| SensorType        | The aspect of the weather to measure|
+| latitude          | The latitude of the location. |
+| longitude         | The longitude of the location.|
+
 
 
 # Hardware State Entity Documentation
@@ -453,6 +465,14 @@ This endpoint allows for the creation of various types of credentials, leveragin
 ## Secure Storage and Retrieval
 
 Credentials are never stored in their raw form in the database. Instead, they are processed through an implementation of CredentialsRetrievalService, which securely stores actual credential values in a secure store and replaces them with hashes for database storage.
+
+## Supported implementations
+
+Currently there are two implementations
+- Azure Keyvault
+- Hashicorp vault
+
+  The choice can be made by setting the property secure-storage.type
 
 ### CredentialsRetrievalService
 
