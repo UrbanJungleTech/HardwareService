@@ -7,7 +7,6 @@ import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.entity.SensorReadingEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.cpu.CpuSensorType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,6 @@
 package urbanjungletech.hardwareservice.model.sensorreadingrouter;
 
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 
 public class DatabaseSensorReadingRouter extends SensorReadingRouter{
     private String tableName;

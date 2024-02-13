@@ -4,11 +4,9 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.connectiondetails.ConnectionDetailsConverter;
 import urbanjungletech.hardwareservice.dao.ConnectionDetailsDAO;
 import urbanjungletech.hardwareservice.entity.connectiondetails.ConnectionDetailsEntity;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.model.connectiondetails.ConnectionDetails;
 import urbanjungletech.hardwareservice.repository.ConnectionDetailsRepository;
 import urbanjungletech.hardwareservice.repository.CredentialsRepository;
-import urbanjungletech.hardwareservice.service.query.CredentialsQueryService;
 
 @Service
 public class ConnectionDetailsDAOImpl implements ConnectionDetailsDAO {

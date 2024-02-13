@@ -6,7 +6,6 @@ import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
-import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.service.query.ScheduledSensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorReadingRouterQueryService;

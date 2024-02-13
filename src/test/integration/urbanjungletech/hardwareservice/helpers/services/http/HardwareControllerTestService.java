@@ -123,9 +123,7 @@ public class HardwareControllerTestService {
     public Sensor createSensor(String name) {
         Sensor sensor = new MockSensor();
         sensor.setName(name);
-        sensor.setConfiguration(Map.of("testKey", "testValue"));
         sensor.setPort("1");
-        sensor.setMetadata(Map.of("testKey", "testValue"));
         return sensor;
     }
 

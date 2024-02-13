@@ -369,8 +369,6 @@ public class HardwareControllerEndpointIT {
         assertEquals(1, responseHardwareController.getSensors().size());
         Sensor responseSensor = responseHardwareController.getSensors().get(0);
         assertNotNull(responseSensor.getId());
-        assertEquals(sensor.getConfiguration(), responseSensor.getConfiguration());
-        assertEquals(sensor.getMetadata(), responseSensor.getMetadata());
         assertEquals(sensor.getName(), responseSensor.getName());
         assertEquals(sensor.getPort(), responseSensor.getPort());
     }
@@ -541,12 +539,10 @@ public class HardwareControllerEndpointIT {
         sensor.setPort("1");
         Map<String, String> metadata = new HashMap<>();
         metadata.put("name", "temperature");
-        sensor.setMetadata(metadata);
         sensor.setName("Test Sensor");
 
         Map<String, String> sensorConfiguration = new HashMap<>();
         sensorConfiguration.put("readingTarget", "temperature");
-        sensor.setConfiguration(sensorConfiguration);
 
         String sensorJson = objectMapper.writeValueAsString(sensor);
         result = mockMvc.perform(post("/hardwarecontroller/" + createdHardwareController.getId() + "/sensor")
@@ -557,8 +553,6 @@ public class HardwareControllerEndpointIT {
                 .andReturn();
         Sensor responseSensor = objectMapper.readValue(result.getResponse().getContentAsString(), Sensor.class);
         assertNotNull(responseSensor.getId());
-        assertEquals(sensor.getConfiguration(), responseSensor.getConfiguration());
-        assertEquals(sensor.getMetadata(), responseSensor.getMetadata());
         assertEquals(sensor.getName(), responseSensor.getName());
         assertEquals(sensor.getPort(), responseSensor.getPort());
     }

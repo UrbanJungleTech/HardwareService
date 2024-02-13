@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.converter.hardware.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.hardware.SpecificHardwareConverter;
 import urbanjungletech.hardwareservice.entity.hardware.TpLinkHardwareEntity;
-import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardware.TpLinkHardware;
 
 @Service

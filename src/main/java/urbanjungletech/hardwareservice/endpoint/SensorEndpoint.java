@@ -8,8 +8,8 @@ import urbanjungletech.hardwareservice.addition.SensorAdditionService;
 import urbanjungletech.hardwareservice.addition.SensorReadingAdditionService;
 import urbanjungletech.hardwareservice.dao.SensorReadingDAO;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 
 import java.time.LocalDateTime;

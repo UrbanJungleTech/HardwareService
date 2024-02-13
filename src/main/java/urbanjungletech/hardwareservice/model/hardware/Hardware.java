@@ -18,19 +18,16 @@ public abstract class Hardware {
     private String name;
     private String type;
     private List<String> possibleStates;
+    private String serialNumber;
     private String offState;
     private HardwareState desiredState;
     private HardwareState currentState;
     private Long hardwareControllerId;
     private List<Timer> timers;
-    private Map<String, String> metadata;
-    private Map<String, String> configuration;
 
     public Hardware(){
         this.type = this.getClass().getSimpleName();
-        this.metadata = new HashMap<>();
         this.timers = new ArrayList<>();
-        this.configuration = new HashMap<>();
     }
     public String getName() {
         return name;
@@ -73,14 +70,6 @@ public abstract class Hardware {
         this.timers = timers;
     }
 
-    public Map<String, String> getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-    }
-
     public Long getId() {
         return id;
     }
@@ -95,14 +84,6 @@ public abstract class Hardware {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Map<String, String> getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(Map<String, String> configuration) {
-        this.configuration = configuration;
     }
 
     public String getPort() {
@@ -127,5 +108,13 @@ public abstract class Hardware {
 
     public void setOffState(String offState) {
         this.offState = offState;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

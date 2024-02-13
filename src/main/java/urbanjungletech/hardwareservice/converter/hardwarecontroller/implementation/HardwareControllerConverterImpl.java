@@ -3,8 +3,8 @@ package urbanjungletech.hardwareservice.converter.hardwarecontroller.implementat
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.HardwareControllerConverter;
 import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
-import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
+import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 

@@ -19,12 +19,9 @@ public abstract class Sensor {
     private String name;
     private Long hardwareControllerId;
     private List<ScheduledSensorReading> scheduledSensorReadings;
-    private Map<String, String> metadata;
-    private Map<String, String> configuration;
     private List<SensorReadingRouter> sensorReadingRouters;
 
     public Sensor(){
-        this.configuration = new HashMap<>();
         this.scheduledSensorReadings = new ArrayList<>();
         this.sensorReadingRouters = new ArrayList<>();
     }
@@ -67,22 +64,6 @@ public abstract class Sensor {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Map<String, String> getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-    }
-
-    public Map<String, String> getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(Map<String, String> configuration) {
-        this.configuration = configuration;
     }
 
     public List<SensorReadingRouter> getSensorReadingRouters() {

@@ -28,7 +28,6 @@
         </profile>
     </profiles>
 
-
     <dependencies>
         <dependency>
             <groupId>com.azure</groupId>
@@ -125,6 +124,21 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-vault-config</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
             <version>${spring.version}</version>
         </dependency>
@@ -177,12 +191,12 @@
         <dependency>
             <groupId>com.azure.spring</groupId>
             <artifactId>spring-cloud-azure-starter-integration-storage-queue</artifactId>
-            <version>6.0.0-beta.4</version>
+            <version>5.9.1</version>
         </dependency>
         <dependency>
             <groupId>com.azure.spring</groupId>
             <artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>
-            <version>6.0.0-beta.4</version>
+            <version>5.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

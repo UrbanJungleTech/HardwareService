@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.DefaultSystemException;
-import urbanjungletech.hardwareservice.exception.exception.DatasourceNotRegisteredException;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.exception.SystemException;
 

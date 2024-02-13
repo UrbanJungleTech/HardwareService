@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.HardwareMqttClientConverter;
 import urbanjungletech.hardwareservice.dao.HardwareMqttClientDAO;
-import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareMqttClientEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.MqttHardwareControllerEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;

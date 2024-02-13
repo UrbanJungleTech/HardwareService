@@ -11,8 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
-import urbanjungletech.hardwareservice.service.datasource.MultiTenantDataSourceImpl;
+import urbanjungletech.hardwareservice.service.datasource.implementation.MultiTenantDataSourceImpl;
 
 import javax.sql.DataSource;
 import java.util.HashMap;

@@ -73,7 +73,6 @@ public class RegisterHardwareIT {
 
         Hardware hardware = new MockHardware();
         hardware.setPort("1");
-        hardware.getConfiguration().put("serialNumber", "1234");
         HardwareState hardwareState = new HardwareState();
         hardwareState.setState("on");
         hardwareState.setLevel(100);

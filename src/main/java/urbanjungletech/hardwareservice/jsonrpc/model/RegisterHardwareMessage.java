@@ -10,6 +10,5 @@ public class RegisterHardwareMessage extends JsonRpcMessage{
         super("RegisterHardware");
         this.getParams().put("port", hardware.getPort());
         this.getParams().put("state", hardware.getDesiredState());
-        this.getParams().put("configuration", hardware.getConfiguration());
     }
 }

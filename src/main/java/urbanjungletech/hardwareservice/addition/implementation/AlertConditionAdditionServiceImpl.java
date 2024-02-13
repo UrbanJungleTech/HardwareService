@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.dao.AlertConditionDAO;
-import urbanjungletech.hardwareservice.entity.alert.AlertConditionsEntity;
 import urbanjungletech.hardwareservice.entity.alert.condition.AlertConditionEntity;
 import urbanjungletech.hardwareservice.event.condition.ConditionEventPublisher;
 import urbanjungletech.hardwareservice.model.alert.Alert;

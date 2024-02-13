@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.service.router.implementation;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService;

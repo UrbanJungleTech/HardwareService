@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.AlertActionAdditionService;
 import urbanjungletech.hardwareservice.addition.AlertAdditionService;
-import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
 import urbanjungletech.hardwareservice.addition.AlertConditionsAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.dao.AlertDAO;

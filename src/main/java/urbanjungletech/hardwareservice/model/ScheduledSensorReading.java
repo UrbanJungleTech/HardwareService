@@ -1,10 +1,5 @@
 package urbanjungletech.hardwareservice.model;
 
-import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class ScheduledSensorReading {
     private Long id;
     private Long sensorId;

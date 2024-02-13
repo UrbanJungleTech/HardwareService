@@ -1,8 +1,6 @@
 package urbanjungletech.hardwareservice.model.sensorreadingrouter;
 
 import urbanjungletech.hardwareservice.model.connectiondetails.AzureConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 
 public class AzureQueueSensorReadingRouter extends SensorReadingRouter {
     private String queueName;

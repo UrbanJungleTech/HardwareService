@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.model.alert.condition;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(

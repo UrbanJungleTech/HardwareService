@@ -2,11 +2,8 @@ package urbanjungletech.hardwareservice.service.query.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
-import urbanjungletech.hardwareservice.converter.alert.condition.implementation.SensorReadingAlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.condition.SensorReadingAlertConditionEntity;
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
-import urbanjungletech.hardwareservice.repository.AlertConditionRepository;
 import urbanjungletech.hardwareservice.repository.SensorReadingAlertConditionRepository;
 import urbanjungletech.hardwareservice.service.query.SensorReadingAlertConditionQueryService;
 

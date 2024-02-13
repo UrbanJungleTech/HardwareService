@@ -1,8 +1,5 @@
 package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
-import urbanjungletech.hardwareservice.model.hardware.MqttHardware;
-import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
-
 public class MqttHardwareController extends HardwareController {
     private HardwareMqttClient hardwareMqttClient;
     public MqttHardwareController() {

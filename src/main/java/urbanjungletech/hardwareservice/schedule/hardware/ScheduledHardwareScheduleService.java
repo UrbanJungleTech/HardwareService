@@ -1,7 +1,5 @@
 package urbanjungletech.hardwareservice.schedule.hardware;
 
-import org.quartz.SchedulerException;
-
 public interface ScheduledHardwareScheduleService {
     void start(long scheduledHardwareId);
 

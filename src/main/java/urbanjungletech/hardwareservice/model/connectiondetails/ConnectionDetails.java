@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.model.connectiondetails;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,

@@ -3,6 +3,7 @@ package urbanjungletech.hardwareservice.service.controller.controllercommunicati
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.DeviceNotFoundException;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.TpLinkHardware;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.TpLinkCommandService;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.TpLinkEncryptionService;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.tplink.service.TpLinkQueryService;
@@ -28,7 +29,8 @@ public class TplinkActionServiceImpl implements TplinkActionService {
 
     @Override
     public void setState(Hardware hardware) throws DeviceNotFoundException {
-        String macAddress = hardware.getConfiguration().get("macAddress");
+        TpLinkHardware tpLinkHardware = (TpLinkHardware) hardware;
+        String macAddress = tpLinkHardware.getMacAddress();
         String ipAddress = this.tpLinkQueryService.getIpAddressFromMac(macAddress);
         if (ipAddress != null) {
             String payload = this.tpLinkCommandService.createStateCommand(hardware.getDesiredState().getState() == hardware.getOffState());

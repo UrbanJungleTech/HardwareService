@@ -4,12 +4,10 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.alert.AlertConditionsConverter;
 import urbanjungletech.hardwareservice.converter.alert.AlertConverter;
 import urbanjungletech.hardwareservice.converter.alert.action.AlertActionConverter;
-import urbanjungletech.hardwareservice.converter.alert.condition.AlertConditionConverter;
 import urbanjungletech.hardwareservice.entity.alert.AlertEntity;
 import urbanjungletech.hardwareservice.model.alert.Alert;
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 
 import java.util.List;
 import java.util.Optional;

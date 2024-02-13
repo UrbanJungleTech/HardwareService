@@ -3,8 +3,6 @@ package urbanjungletech.hardwareservice.entity.sensorreadingrouter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import urbanjungletech.hardwareservice.entity.connectiondetails.DatabaseConnectionDetailsEntity;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
-import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 
 @Entity
 public class DatabaseSensorReadingRouterEntity extends SensorReadingRouterEntity{

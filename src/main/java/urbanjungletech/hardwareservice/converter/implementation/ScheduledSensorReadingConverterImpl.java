@@ -7,7 +7,6 @@ import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

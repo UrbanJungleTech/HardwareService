@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.model.sensorreadingrouter;
 
 import urbanjungletech.hardwareservice.model.connectiondetails.MqttConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 
 public class MqttSensorReadingRouter extends SensorReadingRouter {
     private String topic;

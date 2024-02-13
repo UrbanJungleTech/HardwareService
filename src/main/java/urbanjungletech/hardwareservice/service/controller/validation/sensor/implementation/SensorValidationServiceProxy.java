@@ -2,8 +2,8 @@ package urbanjungletech.hardwareservice.service.controller.validation.sensor.imp
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SensorValidationService;
 import urbanjungletech.hardwareservice.service.controller.validation.sensor.SpecificSensorValidationService;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;

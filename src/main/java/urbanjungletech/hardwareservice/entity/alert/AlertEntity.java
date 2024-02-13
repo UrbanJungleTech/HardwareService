@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.entity.alert;
 
 import jakarta.persistence.*;
 import urbanjungletech.hardwareservice.entity.alert.action.AlertActionEntity;
-import urbanjungletech.hardwareservice.entity.alert.condition.AlertConditionEntity;
 
 import java.util.ArrayList;
 import java.util.List;

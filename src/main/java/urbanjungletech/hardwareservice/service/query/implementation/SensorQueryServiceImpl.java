@@ -4,19 +4,14 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
 import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
-import urbanjungletech.hardwareservice.dao.ScheduledSensorReadingDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
-import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class SensorQueryServiceImpl implements SensorQueryService {

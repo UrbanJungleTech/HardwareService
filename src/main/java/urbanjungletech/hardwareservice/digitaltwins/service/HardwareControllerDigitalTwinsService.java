@@ -5,8 +5,6 @@ import com.azure.digitaltwins.core.BasicDigitalTwinMetadata;
 import com.azure.digitaltwins.core.DigitalTwinsClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.event.hardware.HardwareCreateEvent;
-import urbanjungletech.hardwareservice.event.hardware.HardwareDeleteEvent;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerCreateEvent;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerDeleteEvent;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerCreateEvent;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 
 import java.util.Map;

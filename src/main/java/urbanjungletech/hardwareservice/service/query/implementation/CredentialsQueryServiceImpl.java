@@ -5,7 +5,6 @@ import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverte
 import urbanjungletech.hardwareservice.dao.CredentialsDAO;
 import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.repository.CredentialsRepository;
 import urbanjungletech.hardwareservice.service.query.CredentialsQueryService;
 
 @Service

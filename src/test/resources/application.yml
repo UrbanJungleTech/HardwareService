@@ -8,7 +8,7 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-            auto: create-drop
+          auto: create-drop
   datasource:
     url: ${DATABASE_URL}
     driverClassName: ${DATABASE_DRIVER}
@@ -19,6 +19,23 @@ spring:
       keyvault:
         secret:
           endpoint: ${AZURE_KEYVAULT_URI}
+    vault:
+      uri: ${VAULT_URI}
+      connection-timeout: ${VAULT_CONNECTION_TIMEOUT:5000}
+      read-timeout: ${VAULT_READ_TIMEOUT:15000}
+      authentication: ${VAULT_AUTHENTICATION:TOKEN}
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: ${VAULT_KV_ENABLED:false}
+        backend: ${VAULT_KV_BACKEND}
+        profile-separator: ${VAULT_KV_PROFILE_SEPARATOR:/}
+        path: ${VAULT_KV_CREDENTIAL_PATH}
+  security:
+    type: ${SECURITY_TYPE:none}
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI}
 
 logging:
   level:
@@ -40,6 +57,8 @@ entity:
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
     urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity: Sensor Reading Router
 
+credentials-vault:
+  path: ${CREDENTIALS_VAULT_PATH}
 azure:
   keyvault:
     uri: ${AZURE_KEYVAULT_URI}
@@ -98,3 +117,4 @@ digitaltwins:
   tenant-id: ${DIGITAL_TWINS_TENANT_ID}
   digital-twins-uri: ${DIGITAL_TWINS_URL}
   enabled: ${DIGITAL_TWINS_ENABLED:false}
+

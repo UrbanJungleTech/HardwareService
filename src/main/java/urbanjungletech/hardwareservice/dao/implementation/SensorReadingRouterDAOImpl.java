@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.dao.implementation;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.dao.SensorReadingRouterDAO;
-import urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity;
 import urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;

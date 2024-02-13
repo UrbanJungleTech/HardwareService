@@ -65,7 +65,6 @@ public class HardwareEndpointIT {
         hardware.setName("Test Hardware");
         hardware.setPort("1");
         Map<String, String> configuration = Map.of("test", "test");
-        hardware.setConfiguration(configuration);
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
@@ -77,7 +76,6 @@ public class HardwareEndpointIT {
         assertEquals(createdHardware.getType(), responseHardware.getType());
         assertEquals(createdHardware.getName(), responseHardware.getName());
         assertEquals(createdHardware.getPort(), responseHardware.getPort());
-        assertEquals(createdHardware.getConfiguration(), responseHardware.getConfiguration());
     }
 
 
