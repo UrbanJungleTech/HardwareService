@@ -3,9 +3,9 @@ package urbanjungletech.hardwareservice.service.controller.controllercommunicati
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
 import urbanjungletech.hardwareservice.model.sensor.CpuSensor;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.CpuHardwareController;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.SpecificControllerCommunicationService;
 
 import java.util.Map;

@@ -1,8 +1,7 @@
 package urbanjungletech.hardwareservice.service.query;
 
-import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 public interface SensorQueryService {
     SensorReading readSensor(long sensorId);

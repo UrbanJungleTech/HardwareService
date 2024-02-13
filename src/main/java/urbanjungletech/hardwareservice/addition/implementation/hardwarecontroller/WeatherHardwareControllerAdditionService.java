@@ -1,11 +1,9 @@
 package urbanjungletech.hardwareservice.addition.implementation.hardwarecontroller;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.addition.CredentialsAdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.connectiondetails.WeatherConnectionDetailsAdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
 
 @Service

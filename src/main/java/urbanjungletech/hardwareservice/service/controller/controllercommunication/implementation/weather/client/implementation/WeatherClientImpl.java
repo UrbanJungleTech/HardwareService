@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.config.WeatherApiProperties;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.client.WeatherClient;
+import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.config.WeatherApiProperties;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.model.WeatherResponse;
 
 @Service

@@ -8,9 +8,7 @@ import urbanjungletech.hardwareservice.entity.alert.condition.AlertConditionEnti
 import urbanjungletech.hardwareservice.model.alert.AlertConditions;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class AlertConditionsConverterImpl implements AlertConditionsConverter {

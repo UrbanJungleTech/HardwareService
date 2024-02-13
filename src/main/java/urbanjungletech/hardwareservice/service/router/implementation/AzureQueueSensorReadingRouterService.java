@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.RouterSerializationException;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
 import urbanjungletech.hardwareservice.service.client.generator.implementation.AzureQueueClientGenerator;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;

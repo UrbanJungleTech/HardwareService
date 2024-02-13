@@ -7,7 +7,6 @@ import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.service.alert.action.ActionExecutionService;
 import urbanjungletech.hardwareservice.service.alert.action.SpecificActionExecutionService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service

@@ -3,8 +3,6 @@ package urbanjungletech.hardwareservice.service.alert.condition.service;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.AlertConditionAdditionService;
 import urbanjungletech.hardwareservice.model.HardwareState;
-import urbanjungletech.hardwareservice.model.alert.Alert;
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.HardwareStateChangeAlertCondition;
 import urbanjungletech.hardwareservice.service.alert.action.ActionExecutionService;
 import urbanjungletech.hardwareservice.service.query.AlertQueryService;
@@ -12,7 +10,6 @@ import urbanjungletech.hardwareservice.service.query.HardwareStateChangeAlertCon
 import urbanjungletech.hardwareservice.service.query.HardwareStateQueryService;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class HardwareConditionTriggerService implements SpecificConditionTriggerService<HardwareStateChangeAlertCondition> {

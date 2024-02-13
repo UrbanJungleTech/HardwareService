@@ -12,7 +12,6 @@ public interface HardwareDAO {
     HardwareEntity getHardware(String serialNumber, String port);
     List<HardwareEntity> getAllHardware();
     void delete(long hardwareId);
-
     List<HardwareEntity> getHardwareByHardwareControllerId(long hardwareControllerId);
     HardwareEntity getHardwareByStateId(long hardwareStateId);
 }

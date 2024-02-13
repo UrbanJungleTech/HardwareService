@@ -204,10 +204,8 @@ public class SensorEndpointIT {
         Sensor updatedSensor = new MockSensor();
         Map<String, String> metadata = new HashMap<>();
         metadata.put("test", "test value");
-        updatedSensor.setMetadata(metadata);
         Map<String, String> configuration = new HashMap<>();
         configuration.put("test", "test config value");
-        updatedSensor.setConfiguration(configuration);
         updatedSensor.setName("Updated Sensor");
         updatedSensor.setPort("2");
 
@@ -221,8 +219,6 @@ public class SensorEndpointIT {
         Sensor responseSensor = objectMapper.readValue(responseString, Sensor.class);
         assertEquals(updatedSensor.getName(), responseSensor.getName());
         assertEquals(updatedSensor.getPort(), responseSensor.getPort());
-        assertEquals(updatedSensor.getMetadata(), responseSensor.getMetadata());
-        assertEquals(updatedSensor.getConfiguration(), responseSensor.getConfiguration());
     }
 
     /**

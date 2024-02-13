@@ -1,15 +1,9 @@
 package urbanjungletech.hardwareservice.service.credentials.retrieval.implementation;
 
-import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.security.keyvault.secrets.SecretClient;
-import com.azure.storage.queue.QueueClient;
-import com.azure.storage.queue.QueueClientBuilder;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.SpecificCredentialRetrievalService;
 import urbanjungletech.hardwareservice.service.credentials.securestorage.SecureStorageService;
-
-import java.util.UUID;
 
 @Service
 public class UsernamePasswordCredentialsRetrievalService implements SpecificCredentialRetrievalService<UsernamePasswordCredentials> {

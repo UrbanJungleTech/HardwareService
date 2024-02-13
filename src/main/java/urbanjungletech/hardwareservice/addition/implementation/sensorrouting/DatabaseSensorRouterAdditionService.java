@@ -1,12 +1,9 @@
 package urbanjungletech.hardwareservice.addition.implementation.sensorrouting;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.connectiondetails.DatabaseConnectionDetailsAdditionService;
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.DatabaseSensorReadingRouter;
-
-import java.util.List;
 
 @Service
 public class DatabaseSensorRouterAdditionService implements SpecificAdditionService<DatabaseSensorReadingRouter> {

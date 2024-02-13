@@ -3,13 +3,14 @@ package urbanjungletech.hardwareservice.event.sensorreading;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.SensorReading;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorReadingQueryService;
 import urbanjungletech.hardwareservice.service.query.SensorReadingRouterQueryService;
 import urbanjungletech.hardwareservice.service.router.SensorReadingRouterService;
+
 import java.util.List;
 @Service
 public class SensorReadingRouterEventHandler {

@@ -1,7 +1,5 @@
 package urbanjungletech.hardwareservice.exception.exception;
 
-import org.springframework.http.HttpStatus;
-
 import java.util.Map;
 
 public class StandardErrorException extends RuntimeException{

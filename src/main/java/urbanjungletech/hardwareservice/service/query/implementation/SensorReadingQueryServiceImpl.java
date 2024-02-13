@@ -8,8 +8,6 @@ import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.repository.SensorReadingRepository;
 import urbanjungletech.hardwareservice.service.query.SensorReadingQueryService;
 
-import java.util.List;
-
 @Service
 public class SensorReadingQueryServiceImpl implements SensorReadingQueryService {
 

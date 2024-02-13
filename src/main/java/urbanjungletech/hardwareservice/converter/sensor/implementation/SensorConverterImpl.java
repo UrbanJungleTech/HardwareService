@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.converter.sensor.implementation;
 
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
@@ -42,10 +41,8 @@ public class SensorConverterImpl implements SensorConverter {
         result.setName(sensorEntity.getName());
         result.setPort(sensorEntity.getPort());
         result.setHardwareControllerId(sensorEntity.getHardwareController().getId());
-        result.setMetadata(sensorEntity.getMetadata());
         List<ScheduledSensorReading> scheduledSensorReadings = this.scheduledSensorReadingConverter.toModels(sensorEntity.getScheduledSensorReadings());
         result.setScheduledSensorReadings(scheduledSensorReadings);
-        result.setConfiguration(sensorEntity.getConfiguration());
         List<SensorReadingRouter> sensorReadingRouters = sensorEntity.getSensorReadingRouters()
                 .stream()
                 .map(sensorReadingRouterEntity -> this.sensorReadingRouterConverter.toModel(sensorReadingRouterEntity)).collect(Collectors.toList());
@@ -65,8 +62,6 @@ public class SensorConverterImpl implements SensorConverter {
     public void fillEntity(SensorEntity sensorEntity, Sensor sensor) {
         sensorEntity.setPort(sensor.getPort());
         sensorEntity.setName(sensor.getName());
-        sensorEntity.setMetadata(sensor.getMetadata());
-        sensorEntity.setConfiguration(sensor.getConfiguration());
         sensor.getSensorReadingRouters().forEach(sensorReadingRouter -> {
             SensorReadingRouterEntity sensorReadingRouterEntity = this.sensorReadingRouterDAO.getById(sensorReadingRouter.getId());
             sensorEntity.getSensorReadingRouters().add(sensorReadingRouterEntity);

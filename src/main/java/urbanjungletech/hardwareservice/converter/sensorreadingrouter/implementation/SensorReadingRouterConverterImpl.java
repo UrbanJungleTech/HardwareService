@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.converter.sensorreadingrouter.implementa
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 

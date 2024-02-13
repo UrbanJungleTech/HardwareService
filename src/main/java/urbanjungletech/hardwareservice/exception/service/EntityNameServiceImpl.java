@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.EntityNameConfiguration;
 import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
 
-import java.util.Arrays;
-
 
 @Service
 public class EntityNameServiceImpl implements EntityNameService {

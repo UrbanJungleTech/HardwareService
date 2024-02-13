@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.model.alert;
 
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,8 +6,8 @@ import urbanjungletech.hardwareservice.converter.TimerConverter;
 import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
 import urbanjungletech.hardwareservice.converter.hardware.SpecificHardwareConverter;
 import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
-import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.HardwareState;
+import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,6 @@ public class HardwareConverterImpl implements HardwareConverter {
         result.setDesiredState(desiredState);
         result.setHardwareControllerId(hardwareEntity.getHardwareController().getId());
         result.setTimers(this.timerConverter.toModels(hardwareEntity.getTimers()));
-        result.setMetadata(hardwareEntity.getMetadata());
-        result.setConfiguration(hardwareEntity.getConfiguration());
         result.setPossibleStates(hardwareEntity.getPossibleStates());
         result.setOffState(hardwareEntity.getOffState());
         return result;
@@ -60,8 +58,6 @@ public class HardwareConverterImpl implements HardwareConverter {
     @Override
     public void fillEntity(HardwareEntity hardwareEntity, Hardware hardware) {
         hardwareEntity.setHardwareCategory(hardware.getType());
-        hardwareEntity.setMetadata(hardware.getMetadata());
-        hardwareEntity.setConfiguration(hardware.getConfiguration());
         hardwareEntity.setPort(hardware.getPort());
         hardwareEntity.setHardwareCategory(hardware.getType());
         hardwareEntity.setId(hardware.getId());

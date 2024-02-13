@@ -3,9 +3,7 @@ package urbanjungletech.hardwareservice.addition.implementation.connectiondetail
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.CredentialsAdditionService;
-import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.converter.connectiondetails.ConnectionDetailsConverter;
-import urbanjungletech.hardwareservice.converter.connectiondetails.implementation.SpecificAzureConnectionDetailsConverter;
 import urbanjungletech.hardwareservice.dao.ConnectionDetailsDAO;
 import urbanjungletech.hardwareservice.entity.connectiondetails.AzureConnectionDetailsEntity;
 import urbanjungletech.hardwareservice.model.connectiondetails.AzureConnectionDetails;

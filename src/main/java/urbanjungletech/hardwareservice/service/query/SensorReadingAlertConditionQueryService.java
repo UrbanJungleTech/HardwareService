@@ -1,6 +1,5 @@
 package urbanjungletech.hardwareservice.service.query;
 
-import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.alert.condition.SensorReadingAlertCondition;
 
 import java.util.List;

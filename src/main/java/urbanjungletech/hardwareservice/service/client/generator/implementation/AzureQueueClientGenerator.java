@@ -4,7 +4,6 @@ import com.azure.storage.queue.QueueClient;
 import com.azure.storage.queue.QueueClientBuilder;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.connectiondetails.AzureConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.service.client.generator.SpecificClientGenerator;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;

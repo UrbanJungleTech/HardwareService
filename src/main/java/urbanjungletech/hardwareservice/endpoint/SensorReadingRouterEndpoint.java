@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.endpoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import urbanjungletech.hardwareservice.addition.SensorReadingRouterAdditionService;
-import urbanjungletech.hardwareservice.dao.SensorReadingRouterDAO;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 import urbanjungletech.hardwareservice.service.query.SensorReadingRouterQueryService;
 

@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import urbanjungletech.hardwareservice.addition.AdditionService;
 import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.converter.alert.action.SpecificAlertActionConverter;
 import urbanjungletech.hardwareservice.converter.alert.condition.SpecificAlertConditionConverter;
@@ -76,9 +75,9 @@ public class ActionMappingsConfig {
 
     @Bean
     public Map<Class <? extends AlertCondition>, SpecificConditionTriggerService>
-            conditionTriggerServiceMap(List<SpecificConditionTriggerService> routerServices,
+            conditionTriggerServiceMap(List<SpecificConditionTriggerService> conditionTriggerServices,
                                 MapGeneratorService mapGeneratorService){
-        return mapGeneratorService.generateMap(routerServices, SpecificConditionTriggerService.class);
+        return mapGeneratorService.generateMap(conditionTriggerServices, SpecificConditionTriggerService.class);
     }
 
     @Bean

@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.event.condition;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 public class ConditionEventPublisher {

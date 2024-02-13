@@ -2,18 +2,10 @@ package urbanjungletech.hardwareservice.converter.hardwarecontroller.implementat
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.connectiondetails.implementation.WeatherConnectionDetailsConverter;
-import urbanjungletech.hardwareservice.converter.credentials.CredentialsConverter;
 import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHardwareControllerConverter;
-import urbanjungletech.hardwareservice.dao.ConnectionDetailsDAO;
-import urbanjungletech.hardwareservice.dao.CredentialsDAO;
-import urbanjungletech.hardwareservice.entity.connectiondetails.ConnectionDetailsEntity;
 import urbanjungletech.hardwareservice.entity.connectiondetails.WeatherConnectionDetailsEntity;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.WeatherHardwareControllerEntity;
-import urbanjungletech.hardwareservice.model.connectiondetails.ConnectionDetails;
 import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
 import urbanjungletech.hardwareservice.repository.ConnectionDetailsRepository;
 

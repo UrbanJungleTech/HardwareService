@@ -30,8 +30,7 @@ public class RegisterHardware implements RpcMethod {
     @Override
     public void process(Map<String, Object> params) {
         Hardware hardware = objectMapper.convertValue(params.get("hardware"), Hardware.class);
-        String serialNumber = hardware.getConfiguration().get("serialNumber");
-        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareControllerBySerialNumber(serialNumber);
+        HardwareController hardwareController = this.hardwareControllerQueryService.getHardwareControllerBySerialNumber(hardware.getSerialNumber());
         hardwareAdditionService.addHardware(hardwareController.getId(), hardware);
     }
 }

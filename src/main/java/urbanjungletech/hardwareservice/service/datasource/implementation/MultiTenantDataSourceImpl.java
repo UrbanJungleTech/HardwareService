@@ -1,18 +1,18 @@
-package urbanjungletech.hardwareservice.service.datasource;
+package urbanjungletech.hardwareservice.service.datasource.implementation;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
+import urbanjungletech.hardwareservice.service.datasource.MultiTenantDataSource;
 
 import javax.sql.DataSource;
 import java.util.Map;
 
 @Service
 @Primary
-public class MultiTenantDataSourceImpl extends AbstractRoutingDataSource implements MultiTenantDataSource{
+public class MultiTenantDataSourceImpl extends AbstractRoutingDataSource implements MultiTenantDataSource {
 
     private final ThreadLocal<DatabaseConnectionDetails> dataSourceId;
 

@@ -1,7 +1,5 @@
 package urbanjungletech.hardwareservice.entity.credentials;
 
-import jakarta.persistence.Entity;
-
 public class CertificateCredentialsEntity extends CredentialsEntity{
     private Byte[] certificate;
 

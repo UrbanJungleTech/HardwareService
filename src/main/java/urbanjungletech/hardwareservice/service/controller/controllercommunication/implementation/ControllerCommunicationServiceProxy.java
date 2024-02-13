@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
-import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
+import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.ControllerCommunicationService;
 import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryService;
 

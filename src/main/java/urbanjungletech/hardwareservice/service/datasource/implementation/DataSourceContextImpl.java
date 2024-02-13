@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.service.datasource;
+package urbanjungletech.hardwareservice.service.datasource.implementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,14 +7,15 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.DatasourceNotRegisteredException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.DatabaseCredentials;
 import urbanjungletech.hardwareservice.service.client.generator.implementation.DatasourceClientGenerator;
+import urbanjungletech.hardwareservice.service.datasource.DataSourceContext;
+import urbanjungletech.hardwareservice.service.datasource.MultiTenantDataSource;
 
 import javax.sql.DataSource;
 import java.util.Map;
 
 @Service
-public class DataSourceContextImpl implements DataSourceContext{
+public class DataSourceContextImpl implements DataSourceContext {
 
     private Logger logger = LoggerFactory.getLogger(DataSourceContextImpl.class);
     private final Map<Object, Object> dataSources;

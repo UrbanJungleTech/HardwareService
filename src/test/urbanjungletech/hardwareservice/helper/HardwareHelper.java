@@ -32,7 +32,6 @@ public class HardwareHelper {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("first", "first_value");
         metadata.put("second", "second_value");
-        hardware.setMetadata(metadata);
 
         return hardware;
     }

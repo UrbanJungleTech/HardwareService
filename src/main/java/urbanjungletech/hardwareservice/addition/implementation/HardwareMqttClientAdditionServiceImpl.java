@@ -7,7 +7,6 @@ import urbanjungletech.hardwareservice.dao.HardwareMqttClientDAO;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareMqttClientEntity;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareMqttClient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

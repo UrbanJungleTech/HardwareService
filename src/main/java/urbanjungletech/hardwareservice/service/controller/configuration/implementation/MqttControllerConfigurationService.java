@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.mqtt.SystemMqttClientProperties;
 import urbanjungletech.hardwareservice.exception.MqttClientConfigurationException;
-import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 import urbanjungletech.hardwareservice.service.controller.configuration.ControllerConfigurationService;
 

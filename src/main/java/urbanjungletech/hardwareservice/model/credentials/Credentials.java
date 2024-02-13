@@ -1,8 +1,6 @@
 package urbanjungletech.hardwareservice.model.credentials;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

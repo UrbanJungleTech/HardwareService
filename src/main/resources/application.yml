@@ -1,42 +1,60 @@
-
-server:
-  port: ${PORT:8081}
 spring:
   application:
     name: ${APPLICATION_NAME}
+  jpa:
+    generate-ddl: ${JPA_HIBERNATE_GENERATE_DDL:true}
+    database-platform: ${JPA_HIBERNATE_DATABASE_PLATFORM}
+    show-sql: ${JPA_HIBERNATE_SHOW_SQL:false}
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create-drop
   datasource:
     url: ${DATABASE_URL}
     driverClassName: ${DATABASE_DRIVER}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-
   cloud:
     azure:
       keyvault:
         secret:
           endpoint: ${AZURE_KEYVAULT_URI}
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
+    vault:
+      uri: ${VAULT_URI}
+      connection-timeout: ${VAULT_CONNECTION_TIMEOUT:5000}
+      read-timeout: ${VAULT_READ_TIMEOUT:15000}
+      authentication: ${VAULT_AUTHENTICATION:TOKEN}
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: ${VAULT_KV_ENABLED:false}
+        backend: ${VAULT_KV_BACKEND}
+        profile-separator: ${VAULT_KV_PROFILE_SEPARATOR:/}
+  security:
+    type: ${SECURITY_TYPE:none}
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI}
+
 logging:
   level:
     root: ${ROOT_LOG_LEVEL:INFO}
-    urbanjungletech: ${ROOT_LOG_LEVEL:DEBUG}
+    urbanjungletech: ${ROOT_LOG_LEVEL:INFO}
     org.hibernate.SQL: ${SQL_LOG_LEVEL:INFO}
   mqtt:
     level: ${MQTT_LOG_LEVEL:INFO}
 entity:
   names:
-    urbanjungletech.hardwareservice.entity.HardwareControllerEntity: Hardware Controller
-    urbanjungletech.hardwareservice.entity.SensorEntity: Sensor
-    urbanjungletech.hardwareservice.entity.HardwareEntity: Hardware
+    urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity: Hardware Controller
+    urbanjungletech.hardwareservice.entity.sensor.SensorEntity: Sensor
+    urbanjungletech.hardwareservice.entity.hardware.HardwareEntity: Hardware
     urbanjungletech.hardwareservice.entity.TimerEntity: Timer
     urbanjungletech.hardwareservice.entity.ScheduledSensorReadingEntity: Scheduled Sensor Reading
     urbanjungletech.hardwareservice.entity.HardwareStateEntity: Hardware State
     urbanjungletech.hardwareservice.action.entity.ActionEntity: Action
-    urbanjungletech.hardwareservice.entity.SensorReadingAlertEntity: Sensor Reading Alert
+    urbanjungletech.hardwareservice.entity.alert.AlertEntity: Sensor Reading Alert
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
-    urbanjungletech.hardwareservice.entity.SensorReadingRouterEntity: Sensor Reading Router
+    urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity: Sensor Reading Router
 
 azure:
   keyvault:
@@ -53,12 +71,47 @@ mqtt-rpc:
 
 secure-storage:
   type: ${SECURE_STORAGE_TYPE}
+development:
+  mqtt:
+    client:
+      enabled: ${DEV_MQTT_CLIENT_ENABLED:true}
+      serialNumber: ${DEV_MQTT_CLIENT_SERIAL_NUMBER}
+      callbacks:
+        SensorReadingCallback : ${DEV_MQTT_CLIENT_SENSOR_READING_CALLBACK}
+        StateChangeCallback : ${DEV_MQTT_CLIENT_STATE_CHANGE_CALLBACK}
+        RegisterHardwareCallback: ${DEV_MQTT_CLIENT_REGISTER_HARDWARE_CALLBACK}
+    server:
+      enabled: ${DEV_MQTT_SERVER_ENABLED:true}
+      port: ${DEV_MQTT_SERVER_PORT:1883}
+      host: ${DEV_MQTT_SERVER_HOST:localhost}
+      logAll: ${DEV_MQTT_SERVER_LOG_ALL:true}
+  azure:
+    storageQueue:
+      key: ${DEV_AZURE_STORAGE_QUEUE_KEY}
+      endpoint: ${DEV_AZURE_STORAGE_QUEUE_ENDPOINT}
+      queueName: ${DEV_AZURE_STORAGE_QUEUE_NAME}
+      storageAccountName: ${DEV_AZURE_STORAGE_QUEUE_ACCOUNT_NAME}
+      storageAccountKey: ${DEV_AZURE_STORAGE_QUEUE_ACCOUNT_KEY}
+    kafka:
+      topic: ${DEV_AZURE_KAFKA_TOPIC}
+      key: ${DEV_AZURE_KAFKA_KEY}
 
 weather:
-  api:
-    uri: ${WEATHER_API_URI}
-    apiKeyParamName: ${WEATHER_API_KEY_PARAM_NAME}
-    targetFieldParamName: ${WEATHER_API_TARGET_FIELD_PARAM_NAME}
-    locationParamName: ${WEATHER_API_LOCATION_PARAM_NAME}
-    enabled: ${WEATHER_API_ENABLED:true}
+  apiKeyParamName: ${WEATHER_API_KEY_PARAM_NAME}
+  targetFieldParamName: ${WEATHER_API_TARGET_FIELD_PARAM_NAME}
+  locationParamName: ${WEATHER_API_LOCATION_PARAM_NAME}
+  enabled: ${WEATHER_API_ENABLED:true}
+  apikey: ${DEV_WEATHER_API_KEY}
+  baseUrl: ${WEATHER_API_URL}
+  development:
+    enabled: ${DEV_WEATHER_API_ENABLED:true}
+    apikey: ${DEV_WEATHER_API_KEY}
+    url: ${WEATHER_API_URL}
+
+digitaltwins:
+  client-id: ${DIGITAL_TWINS_CLIENT_ID}
+  client-secret: ${DIGITAL_TWINS_CLIENT_SECRET}
+  tenant-id: ${DIGITAL_TWINS_TENANT_ID}
+  digital-twins-uri: ${DIGITAL_TWINS_URL}
+  enabled: ${DIGITAL_TWINS_ENABLED:false}
 

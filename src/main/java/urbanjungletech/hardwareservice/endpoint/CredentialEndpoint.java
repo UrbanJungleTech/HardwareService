@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import urbanjungletech.hardwareservice.addition.CredentialsAdditionService;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
-import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
 
 @RestController
 @RequestMapping("/credentials")

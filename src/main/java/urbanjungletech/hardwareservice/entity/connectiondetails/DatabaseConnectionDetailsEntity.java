@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.entity.connectiondetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import urbanjungletech.hardwareservice.entity.credentials.CredentialsEntity;
 
 @Entity
