@@ -1165,7 +1165,7 @@ public class BasicAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 ```
 In this example, a basic authentication configuration is defined for demonstration purposes. By setting an appropriate profile or conditionally loading this configuration based on the spring.security.type property, users can easily extend the framework's security capabilities.
 
-# Digital Twins Integration
+# Digital Twins Integration <Under Development>
 ## Overview
 
 The IoT Automation Framework Accelerator now supports Digital Twins Integration, enhancing the system's capabilities by synchronizing the physical and digital worlds. This integration introduces two new event types, CreateEvent and DeleteEvent, which are implemented by specific events like HardwareCreateEvent and HardwareDeleteEvent. This hierarchical event structure automates the synchronization process, ensuring that changes in the physical entities are accurately reflected in their digital counterparts.
