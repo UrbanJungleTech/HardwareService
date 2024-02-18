@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
 import urbanjungletech.hardwareservice.addition.HardwareStateAdditionService;
 import urbanjungletech.hardwareservice.addition.TimerAdditionService;
+import urbanjungletech.hardwareservice.addition.implementation.sensorrouting.SpecificAdditionService;
 import urbanjungletech.hardwareservice.converter.hardware.HardwareConverter;
 import urbanjungletech.hardwareservice.dao.HardwareDAO;
 import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
@@ -20,6 +21,7 @@ import urbanjungletech.hardwareservice.service.query.HardwareQueryService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -34,6 +36,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     private final HardwareEventPublisher hardwareEventPublisher;
     private final HardwareStateAdditionService hardwareStateAdditionService;
     private final HardwareQueryService hardwareQueryService;
+    private final Map<Class, SpecificAdditionService> specificHardwareControllerAdditionServiceMap;
 
     public HardwareAdditionServiceImpl(HardwareDAO hardwareDAO,
                                        TimerAdditionService timerAdditionService,
@@ -41,7 +44,8 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
                                        ObjectLoggerService objectLoggerService,
                                        HardwareEventPublisher hardwareEventPublisher,
                                        HardwareStateAdditionService hardwareStateAdditionService,
-                                       HardwareQueryService hardwareQueryService) {
+                                       HardwareQueryService hardwareQueryService,
+                                       Map<Class, SpecificAdditionService> specificHardwareControllerAdditionServiceMap) {
         this.hardwareDAO = hardwareDAO;
         this.timerAdditionService = timerAdditionService;
         this.hardwareConverter = hardwareConverter;
@@ -49,6 +53,7 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
         this.hardwareEventPublisher = hardwareEventPublisher;
         this.hardwareStateAdditionService = hardwareStateAdditionService;
         this.hardwareQueryService = hardwareQueryService;
+        this.specificHardwareControllerAdditionServiceMap = specificHardwareControllerAdditionServiceMap;
     }
 
     @Transactional
@@ -71,7 +76,10 @@ public class HardwareAdditionServiceImpl implements HardwareAdditionService {
     @Transactional
     public Hardware create(Hardware hardware) {
         this.objectLoggerService.logInfo("Creating hardware", hardware);
+        Optional.ofNullable(this.specificHardwareControllerAdditionServiceMap.get(hardware.getClass()))
+                .ifPresent((specificHardwareControllerAdditionService) -> specificHardwareControllerAdditionService.create(hardware));
         HardwareEntity result = this.hardwareDAO.createHardware(hardware);
+        hardware.setId(result.getId());
         if (hardware.getDesiredState() == null) {
             HardwareState hardwareState = new HardwareState(hardware.getOffState(), 0);
             hardware.setDesiredState(hardwareState);

@@ -21,8 +21,6 @@ import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.repository.HardwareRepository;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

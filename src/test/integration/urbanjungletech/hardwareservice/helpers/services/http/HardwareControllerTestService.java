@@ -17,7 +17,6 @@ import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -1,12 +1,16 @@
 package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
+import jakarta.validation.constraints.NotEmpty;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
 
 public class HardwareMqttClient {
     private Long id;
     private Long hardwareControllerId;
+    @NotEmpty
     private String brokerUrl;
+    @NotEmpty
     private String requestTopic;
+    @NotEmpty
     private String responseTopic;
     private Credentials credentials;
 

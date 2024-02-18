@@ -2,7 +2,6 @@ package urbanjungletech.hardwareservice.service.credentials.securestorage.implem
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.vault.config.VaultAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.vault.core.VaultKeyValueOperationsSupport;
 import org.springframework.vault.core.VaultTemplate;
@@ -13,7 +12,6 @@ import urbanjungletech.hardwareservice.service.credentials.securestorage.SecretK
 import urbanjungletech.hardwareservice.service.credentials.securestorage.SecureStorageService;
 
 import java.util.Collections;
-import java.util.Map;
 
 @Service
 @ConditionalOnProperty(value = "secure-storage.type", havingValue = "vault")

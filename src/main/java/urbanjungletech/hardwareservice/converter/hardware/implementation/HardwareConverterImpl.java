@@ -57,6 +57,7 @@ public class HardwareConverterImpl implements HardwareConverter {
 
     @Override
     public void fillEntity(HardwareEntity hardwareEntity, Hardware hardware) {
+        this.specificHardwareConverters.get(hardware.getClass()).fillEntity(hardwareEntity, hardware);
         hardwareEntity.setHardwareCategory(hardware.getType());
         hardwareEntity.setPort(hardware.getPort());
         hardwareEntity.setHardwareCategory(hardware.getType());
@@ -68,6 +69,7 @@ public class HardwareConverterImpl implements HardwareConverter {
 
     @Override
     public HardwareEntity createEntity(Hardware hardware) {
-        return this.specificHardwareConverters.get(hardware.getClass()).createEntity(hardware);
+        HardwareEntity result = this.specificHardwareConverters.get(hardware.getClass()).createEntity(hardware);
+        return result;
     }
 }

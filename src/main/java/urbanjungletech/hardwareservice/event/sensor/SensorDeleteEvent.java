@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.sensor;
 
-public class SensorDeleteEvent {
+import urbanjungletech.hardwareservice.event.digitaltwins.DeleteEvent;
+
+public class SensorDeleteEvent implements DeleteEvent {
     private long sensorId;
 
     public SensorDeleteEvent(long sensorId) {

@@ -12,7 +12,6 @@ import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerT
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;

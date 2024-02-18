@@ -36,7 +36,7 @@ class HardwareEndpointTest {
         ResponseEntity<Hardware> result = this.hardwareEndpoint.getHardwareById(hardwareControllerId);
 
         verify(this.hardwareQueryService).getHardware(hardwareControllerId);
-        assertEquals(200, result.getStatusCodeValue());
+        assertEquals(200, result.getStatusCode().value());
         assertSame(expectedHardware, result.getBody());
     }
 

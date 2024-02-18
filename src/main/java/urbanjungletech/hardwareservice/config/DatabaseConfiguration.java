@@ -20,8 +20,6 @@ import java.util.Map;
 @Configuration
 @EnableAspectJAutoProxy
 public class DatabaseConfiguration {
-
-
     @Bean("dataSourceId")
     public ThreadLocal<DatabaseConnectionDetails> dataSourceId() {
         return new ThreadLocal<>();
