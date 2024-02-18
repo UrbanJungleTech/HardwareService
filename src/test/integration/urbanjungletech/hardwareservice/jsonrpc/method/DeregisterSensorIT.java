@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
@@ -48,8 +49,8 @@ public class DeregisterSensorIT {
      */
     @Test
     public void testDeregisterSensor() throws Exception{
-        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
-        Sensor sensor = new MqttSensor();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
+        Sensor sensor = new MockSensor();
         sensor.setPort("1");
         hardwareController.getSensors().add(sensor);
         hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);

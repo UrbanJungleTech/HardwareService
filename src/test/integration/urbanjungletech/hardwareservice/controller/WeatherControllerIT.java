@@ -8,7 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import urbanjungletech.hardwareservice.exception.model.InvalidRequestError;
+import urbanjungletech.hardwareservice.helpers.WeatherTestService;
 import urbanjungletech.hardwareservice.helpers.services.config.WeatherProperties;
+import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
@@ -18,8 +21,8 @@ import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.model.sensor.WeatherSensor;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.model.WeatherSensorTypes;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +37,10 @@ public class WeatherControllerIT {
     private ObjectMapper objectMapper;
     @Autowired
     WeatherProperties weatherProperties;
+    @Autowired
+    WeatherTestService weatherTestService;
+    @Autowired
+    HardwareControllerTestService hardwareControllerTestService;
 
 
     /**
@@ -45,27 +52,13 @@ public class WeatherControllerIT {
      */
     @Test
     public void getSensorReading_temperatureSensor_returnsDoubleGreaterThanZero() throws Exception {
-        WeatherHardwareController hardwareController = new WeatherHardwareController();
-        TokenCredentials tokenCredentials = new TokenCredentials();
-        tokenCredentials.setTokenValue(weatherProperties.getApikey());
-        WeatherConnectionDetails connectionDetails = new WeatherConnectionDetails();
-        connectionDetails.setUrl(weatherProperties.getUrl());
-        TokenCredentials credentials = new TokenCredentials();
-        credentials.setTokenValue(weatherProperties.getApikey());
-        connectionDetails.setCredentials(credentials);
-        hardwareController.setConnectionDetails(connectionDetails);
-        WeatherSensor temperatureSensor = new WeatherSensor();
-        temperatureSensor.setName("Temperature Sensor");
-        temperatureSensor.setSensorType(WeatherSensorTypes.TEMPERATURE);
-        temperatureSensor.setLatitude(43.64493);
-        temperatureSensor.setLongitude(-79.39076);
-        WeatherSensor humiditySensor = new WeatherSensor();
-        humiditySensor.setName("Humidity Sensor");
-        humiditySensor.setSensorType(WeatherSensorTypes.HUMIDITY);
-        humiditySensor.setLatitude(43.64493);
-        humiditySensor.setLongitude(-79.39076);
-        hardwareController.getSensors().add(humiditySensor);
+        WeatherHardwareController hardwareController = this.weatherTestService.createWeatherHardwareController();
+        WeatherSensor temperatureSensor = this.weatherTestService.createWeatherSensor();
+        temperatureSensor.setPort(WeatherSensorTypes.TEMPERATURE.toString());
         hardwareController.getSensors().add(temperatureSensor);
+        WeatherSensor humiditySensor = this.weatherTestService.createWeatherSensor();
+        humiditySensor.setPort(WeatherSensorTypes.HUMIDITY.toString());
+        hardwareController.getSensors().add(humiditySensor);
         String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(hardwareController)))
@@ -92,5 +85,55 @@ public class WeatherControllerIT {
         Double humidityReading = humiditySensorReading.getReading();
         assertNotNull(humidityReading);
         assertNotEquals(0, humidityReading);
+    }
+
+    /**
+     * Given a controller of type weather with a port equal to null
+     * When a POST request is made to /hardwarecontroller/
+     * Then the response status is 400
+     * And the response body contains an error message
+     */
+    @Test
+    public void createWeatherController_nullPort_returnsBadRequest() throws Exception {
+        WeatherHardwareController hardwareController = this.weatherTestService.createWeatherHardwareController();
+        WeatherSensor temperatureSensor = this.weatherTestService.createWeatherSensor();
+        hardwareController.getSensors().add(temperatureSensor);
+
+        String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(hardwareController)))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        InvalidRequestError result = this.objectMapper.readValue(controllerResponseString, InvalidRequestError.class);
+        assertNotNull(result);
+        assertEquals("sensors[0].port", result.getFields().get(0).getField());
+        assertEquals("Port cannot be null", result.getFields().get(0).getReason());
+        assertEquals("Invalid request", result.getMessage());
+    }
+
+    /**
+     * Given a controller of type weather with an invalid sensorType
+     * When a POST request is made to /hardwarecontroller/
+     * Then the response status is 400
+     * And the response body contains an error message
+     *
+     */
+    @Test
+    public void createWeatherController_invalidSensorType_returnsBadRequest() throws Exception {
+        WeatherHardwareController hardwareController = this.weatherTestService.createWeatherHardwareController();
+        WeatherSensor temperatureSensor = this.weatherTestService.createWeatherSensor();
+        temperatureSensor.setPort("INVALID_SENSOR_TYPE");
+        hardwareController.getSensors().add(temperatureSensor);
+
+        String controllerResponseString = this.mockMvc.perform(post("/hardwarecontroller/")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(hardwareController)))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        InvalidRequestError result = this.objectMapper.readValue(controllerResponseString, InvalidRequestError.class);
+        assertNotNull(result);
+        assertEquals("sensors[0].port", result.getFields().get(0).getField());
+        assertEquals("Invalid weather sensor type", result.getFields().get(0).getReason());
+        assertEquals("Invalid request", result.getMessage());
     }
 }

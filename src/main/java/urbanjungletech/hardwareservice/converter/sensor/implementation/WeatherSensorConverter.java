@@ -12,7 +12,7 @@ public class WeatherSensorConverter implements SpecificSensorConverter<WeatherSe
         WeatherSensor result = new WeatherSensor();
         result.setLatitude(sensor.getLatitude());
         result.setLongitude(sensor.getLongitude());
-        result.setSensorType(sensor.getSensorType());
+        result.setPort(sensor.getPort());
         return result;
     }
 
@@ -21,7 +21,7 @@ public class WeatherSensorConverter implements SpecificSensorConverter<WeatherSe
         WeatherSensorEntity result = new WeatherSensorEntity();
         result.setLatitude(sensor.getLatitude());
         result.setLongitude(sensor.getLongitude());
-        result.setSensorType(sensor.getSensorType());
+        result.setPort(sensor.getPort());
         return result;
     }
 
@@ -29,6 +29,6 @@ public class WeatherSensorConverter implements SpecificSensorConverter<WeatherSe
     public void fillEntity(WeatherSensorEntity sensorEntity, WeatherSensor sensor) {
         sensorEntity.setLatitude(sensor.getLatitude());
         sensorEntity.setLongitude(sensor.getLongitude());
-        sensorEntity.setSensorType(sensor.getSensorType());
+        sensorEntity.setPort(sensor.getPort());
     }
 }

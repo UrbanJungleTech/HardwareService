@@ -1,7 +1,7 @@
 package urbanjungletech.hardwareservice.digitaltwins.service;
 
-import org.hibernate.event.spi.DeleteEvent;
-import urbanjungletech.hardwareservice.event.CreateEvent;
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
+import urbanjungletech.hardwareservice.event.digitaltwins.DeleteEvent;
 
 public interface DigitalTwinsService {
     void createDigitalTwin(CreateEvent hardwareCreateEvent);

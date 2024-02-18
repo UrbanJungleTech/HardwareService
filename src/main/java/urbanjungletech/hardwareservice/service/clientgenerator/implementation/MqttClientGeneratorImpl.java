@@ -1,14 +1,14 @@
-package urbanjungletech.hardwareservice.service.client.generator.implementation;
+package urbanjungletech.hardwareservice.service.clientgenerator.implementation;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.connectiondetails.MqttConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.UsernamePasswordCredentials;
-import urbanjungletech.hardwareservice.service.client.generator.SpecificClientGenerator;
+import urbanjungletech.hardwareservice.service.clientgenerator.MqttClientGenerator;
 
 @Service
-public class MqttClientGenerator implements SpecificClientGenerator<MqttClient, MqttConnectionDetails> {
+public class MqttClientGeneratorImpl implements MqttClientGenerator {
     @Override
     public MqttClient generateClient(MqttConnectionDetails connectionDetails) {
         try {

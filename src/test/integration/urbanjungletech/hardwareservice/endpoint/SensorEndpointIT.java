@@ -302,8 +302,7 @@ public class SensorEndpointIT {
     void createScheduledReading_whenGivenAValidScheduledReading_shouldCreateTheScheduledReading() throws Exception {
         HardwareController hardwareController = new MockHardwareController();
         Sensor sensor = new MockSensor();
-        sensor.setName("Test Sensor");
-        sensor.setPort("1");
+
         hardwareController.getSensors().add(sensor);
         String hardwareControllerJson = objectMapper.writeValueAsString(hardwareController);
         MvcResult result = mockMvc.perform(post("/hardwarecontroller/")

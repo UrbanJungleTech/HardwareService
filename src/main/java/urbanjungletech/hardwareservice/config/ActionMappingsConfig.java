@@ -13,7 +13,7 @@ import urbanjungletech.hardwareservice.converter.hardwarecontroller.SpecificHard
 import urbanjungletech.hardwareservice.converter.sensor.SpecificSensorConverter;
 import urbanjungletech.hardwareservice.converter.sensorreadingrouter.SpecificSensorReadingRouterConverter;
 import urbanjungletech.hardwareservice.digitaltwins.service.SpecificDigitalTwinsService;
-import urbanjungletech.hardwareservice.event.CreateEvent;
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
 import urbanjungletech.hardwareservice.model.alert.action.AlertAction;
 import urbanjungletech.hardwareservice.model.alert.condition.AlertCondition;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;

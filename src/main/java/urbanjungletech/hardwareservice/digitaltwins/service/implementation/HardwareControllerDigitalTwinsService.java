@@ -1,10 +1,11 @@
-package urbanjungletech.hardwareservice.digitaltwins.service;
+package urbanjungletech.hardwareservice.digitaltwins.service.implementation;
 
 import com.azure.digitaltwins.core.BasicDigitalTwin;
 import com.azure.digitaltwins.core.BasicDigitalTwinMetadata;
 import com.azure.digitaltwins.core.DigitalTwinsClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.digitaltwins.service.SpecificDigitalTwinsService;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerCreateEvent;
 import urbanjungletech.hardwareservice.event.hardwarecontroller.HardwareControllerDeleteEvent;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
@@ -12,7 +13,7 @@ import urbanjungletech.hardwareservice.service.query.HardwareControllerQueryServ
 
 @Service
 @ConditionalOnProperty(name = "digitaltwins.enabled", havingValue = "true")
-public class HardwareControllerDigitalTwinsService implements SpecificDigitalTwinsService<HardwareControllerCreateEvent, HardwareControllerDeleteEvent>{
+public class HardwareControllerDigitalTwinsService implements SpecificDigitalTwinsService<HardwareControllerCreateEvent, HardwareControllerDeleteEvent> {
 
     private final DigitalTwinsClient digitalTwinsClient;
     private final HardwareControllerQueryService hardwareControllerQueryService;

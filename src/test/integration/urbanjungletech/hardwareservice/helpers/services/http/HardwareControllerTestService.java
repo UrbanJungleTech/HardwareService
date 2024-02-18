@@ -9,9 +9,11 @@ import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.mock.hardwarecontroller.MockHardwareController;
 import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
+import urbanjungletech.hardwareservice.model.hardware.MqttHardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareMqttClient;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
+import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.List;
@@ -86,6 +88,7 @@ public class HardwareControllerTestService {
     public MqttHardwareController createMqttHardwareController() {
         MqttHardwareController hardwareController = new MqttHardwareController();
         HardwareMqttClient hardwareMqttClient = new HardwareMqttClient();
+        hardwareController.setName("test");
         hardwareMqttClient.setBrokerUrl("tcp://localhost:1883");
         hardwareMqttClient.setRequestTopic("1234ToMicro");
         hardwareMqttClient.setResponseTopic("HardwareServer");
@@ -97,6 +100,7 @@ public class HardwareControllerTestService {
     public HardwareController createMockHardwareController() {
         HardwareController result = new MockHardwareController();
         result.setSerialNumber("1234");
+        result.setName("test");
         return result;
     }
 
@@ -104,6 +108,15 @@ public class HardwareControllerTestService {
         HardwareController result = createMockHardwareController();
         result.setHardware(hardware);
         return result;
+    }
+
+    public MqttHardware createMqttHardware() {
+        MqttHardware hardware = new MqttHardware();
+        hardware.setName("test");
+        hardware.setPort("1");
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardware.setOffState("off");
+        return hardware;
     }
 
     public HardwareController createMockHardwareControllerWithSensors(List<Sensor> sensors) {
@@ -160,5 +173,12 @@ public class HardwareControllerTestService {
         }
         String sensorResponse = result.getResponse().getContentAsString();
         return this.objectMapper.readValue(sensorResponse, Sensor.class);
+    }
+
+    public Sensor createMqttSensor() {
+        MqttSensor sensor = new MqttSensor();
+        sensor.setName("test");
+        sensor.setPort("1");
+        return sensor;
     }
 }

@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.hardware;
 
-public class HardwareDeleteEvent {
+import urbanjungletech.hardwareservice.event.digitaltwins.DeleteEvent;
+
+public class HardwareDeleteEvent implements DeleteEvent {
     private long hardwareId;
 
     public HardwareDeleteEvent(long hardwareId) {

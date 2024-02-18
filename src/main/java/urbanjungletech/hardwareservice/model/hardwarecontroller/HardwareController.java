@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
@@ -13,8 +14,11 @@ import java.util.List;
         property = "type")
 public abstract class HardwareController {
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String type;
+    @Valid
     private List<Hardware> hardware;
     @Valid
     private List<Sensor> sensors;

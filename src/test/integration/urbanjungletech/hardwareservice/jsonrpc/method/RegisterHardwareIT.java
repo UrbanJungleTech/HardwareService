@@ -11,13 +11,16 @@ import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterHardwareMessage;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.service.mqtt.MqttClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -79,8 +82,10 @@ public class RegisterHardwareIT {
         hardware.setCurrentState(hardwareState);
 
 
-        RegisterHardwareMessage registerHardwareMessage = new RegisterHardwareMessage();
-        registerHardwareMessage.getParams().put("hardware", hardware);
+        Map<String, Object> params = new HashMap<>();
+        params.put("hardware", hardware);
+        params.put("serialNumber", hardwareController.getSerialNumber());
+        JsonRpcMessage registerHardwareMessage = new JsonRpcMessage("RegisterHardware", params);
         String messageJson = objectMapper.writeValueAsString(registerHardwareMessage);
 
         this.mqttTestService.sendMessage(messageJson);
