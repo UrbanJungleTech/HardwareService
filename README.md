@@ -7,6 +7,8 @@ Each hardware controller is designated a type that dictates its mode of communic
 - Virtual Hardware Controllers: In scenarios like the weather controller, where physical hardware is absent, sensor data is acquired through API calls, serving as a virtual counterpart or backup to tangible weather sensors connected via an MQTT hardware controller.
 - Hardware and Sensor Flexibility: The framework's design allows for the replacement and interchangeability of hardware and sensors, allowing for adaptability to a broad spectrum of IoT applications.
 
+Note that some of the documentation may become outdated as some concepts change as this is still under development, but its close to stable and so changes should be minimal. 
+
 ## Core Features
 
 ### The IoT Automation Framework Accelerator is equipped with a robust set of features designed to cater to diverse IoT automation needs:
