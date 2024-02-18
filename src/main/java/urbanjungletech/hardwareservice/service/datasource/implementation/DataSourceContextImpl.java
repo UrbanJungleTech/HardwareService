@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.DatasourceNotRegisteredException;
 import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 import urbanjungletech.hardwareservice.model.connectiondetails.DatabaseConnectionDetails;
-import urbanjungletech.hardwareservice.service.client.generator.implementation.DatasourceClientGenerator;
+import urbanjungletech.hardwareservice.service.clientgenerator.DatasourceClientGenerator;
 import urbanjungletech.hardwareservice.service.datasource.DataSourceContext;
 import urbanjungletech.hardwareservice.service.datasource.MultiTenantDataSource;
 

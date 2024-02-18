@@ -7,14 +7,15 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.RouterSerializationException;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.MqttSensorReadingRouter;
-import urbanjungletech.hardwareservice.service.client.generator.implementation.MqttClientGenerator;
+import urbanjungletech.hardwareservice.service.clientgenerator.MqttClientGenerator;
+import urbanjungletech.hardwareservice.service.clientgenerator.implementation.MqttClientGeneratorImpl;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
 @Service
 public class MqttSensorReadingRouterService implements SpecificSensorReadingRouterService<MqttSensorReadingRouter> {
     private final MqttClientGenerator mqttClientGenerator;
     private final ObjectMapper objectMapper;
-    public MqttSensorReadingRouterService(MqttClientGenerator mqttClientGenerator,
+    public MqttSensorReadingRouterService(MqttClientGeneratorImpl mqttClientGenerator,
                                           ObjectMapper objectMapper) {
         this.mqttClientGenerator = mqttClientGenerator;
         this.objectMapper = objectMapper;

@@ -1,18 +1,18 @@
-package urbanjungletech.hardwareservice.service.client.generator.implementation;
+package urbanjungletech.hardwareservice.service.clientgenerator.implementation;
 
 import com.azure.storage.queue.QueueClient;
 import com.azure.storage.queue.QueueClientBuilder;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.model.connectiondetails.AzureConnectionDetails;
 import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
-import urbanjungletech.hardwareservice.service.client.generator.SpecificClientGenerator;
+import urbanjungletech.hardwareservice.service.clientgenerator.AzureQueueClientGenerator;
 import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;
 
 @Service
-public class AzureQueueClientGenerator implements SpecificClientGenerator<QueueClient, AzureConnectionDetails> {
-    private CredentialsRetrievalService credentialsRetrievalService;
+public class AzureQueueClientGeneratorImpl implements AzureQueueClientGenerator {
+    private final CredentialsRetrievalService credentialsRetrievalService;
 
-    public AzureQueueClientGenerator(CredentialsRetrievalService credentialsRetrievalService) {
+    public AzureQueueClientGeneratorImpl(CredentialsRetrievalService credentialsRetrievalService) {
         this.credentialsRetrievalService = credentialsRetrievalService;
     }
     @Override

@@ -6,21 +6,17 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.exception.RouterSerializationException;
 import urbanjungletech.hardwareservice.model.SensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.AzureQueueSensorReadingRouter;
-import urbanjungletech.hardwareservice.service.client.generator.implementation.AzureQueueClientGenerator;
-import urbanjungletech.hardwareservice.service.credentials.retrieval.CredentialsRetrievalService;
+import urbanjungletech.hardwareservice.service.clientgenerator.AzureQueueClientGenerator;
 import urbanjungletech.hardwareservice.service.router.SpecificSensorReadingRouterService;
 
 @Service
 public class AzureQueueSensorReadingRouterService implements SpecificSensorReadingRouterService<AzureQueueSensorReadingRouter> {
 
-    private final CredentialsRetrievalService credentialsRetrievalService;
     private final AzureQueueClientGenerator azureQueueClientGenerator;
     private final ObjectMapper objectMapper;
 
-    public AzureQueueSensorReadingRouterService(CredentialsRetrievalService credentialsRetrievalService,
-                                                AzureQueueClientGenerator azureQueueClientGenerator,
+    public AzureQueueSensorReadingRouterService(AzureQueueClientGenerator azureQueueClientGenerator,
                                                 ObjectMapper objectMapper) {
-        this.credentialsRetrievalService = credentialsRetrievalService;
         this.azureQueueClientGenerator = azureQueueClientGenerator;
         this.objectMapper = objectMapper;
     }
