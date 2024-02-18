@@ -7,20 +7,20 @@ Each hardware controller is designated a type that dictates its mode of communic
 - Virtual Hardware Controllers: In scenarios like the weather controller, where physical hardware is absent, sensor data is acquired through API calls, serving as a virtual counterpart or backup to tangible weather sensors connected via an MQTT hardware controller.
 - Hardware and Sensor Flexibility: The framework's design allows for the replacement and interchangeability of hardware and sensors, allowing for adaptability to a broad spectrum of IoT applications.
 
-Core Features
+## Core Features
 
-The IoT Automation Framework Accelerator is equipped with a robust set of features designed to cater to diverse IoT automation needs:
+### The IoT Automation Framework Accelerator is equipped with a robust set of features designed to cater to diverse IoT automation needs:
 
 - Alert System: Configurable alerts trigger based on specific conditions, such as sensor values exceeding predefined thresholds.
 - Actionable Responses: Defines actions that are automatically executed in response to alerts, facilitating reactive system behaviors.
 - Scheduling Mechanism: Enables the scheduling of sensor readings and hardware state changes, ensuring timely operations.
 - Data Routing: Integrates routers to direct sensor readings towards various endpoints or integrations, enhancing data utilization and connectivity.
 
-Envisioning IoT Solutions
+### Envisioning IoT Solutions
 
 This framework will hopefully lay the groundwork for developing sophisticated IoT solutions that are adaptable, scalable, and capable of integrating with a wide array of hardware configurations. Whether you're aiming to automate home environments, optimize agricultural practices, or deploy industrial monitoring systems, this system should offer you what you need and if not, feel free to raise your suggestions as an issue or raise a pull request if you would like to contribute.
 
-### Key Features
+### Core Design Goals
 
 - **Modular Entity Management**: Streamlines the handling of diverse IoT entities like hardware devices, sensors, and controllers.
 - **Dynamic Alert System**: Enables responsive system behavior with complex alert conditions and actions based on real-time data.
@@ -34,13 +34,42 @@ This framework will hopefully lay the groundwork for developing sophisticated Io
 1. **Accelerator, Not a Complete Product**: This framework is designed to provide the majority of functionalities required for integrating hardware with a smart controller. It is an accelerator, meaning it sets up the foundation but leaves aspects such as security to be implemented by the end user according to their specific requirements.
 2. **Custom Integration Support**: For integrations not included out-of-the-box, we provide guidelines and methods to seamlessly incorporate your unique hardware and requirements into the system.
 
-### Ideal for Custom IoT Solutions
+# Getting Started
 
-Whether it's for automating a compact home garden, orchestrating a complex smart home system, or building a tailored IoT solution, this framework offers the tools and adaptability needed for a wide range of IoT projects.
+## Prerequisites
 
-### Getting Started
+Before diving into the setup process, ensure you have the following:
 
-Explore our extensive documentation to learn how to set up and utilize the framework effectively. You'll find detailed entity setups, flow documentation, and example scenarios to guide you in your IoT journey.
+- Microservice Documentation: Available below to guide you through running the microservice.
+- Microcontroller Compatibility: A microcontroller that supports MicroPython, necessary for using the MQTT hardware controller feature.
+- Java 17 or higher.
+
+## Setup the Microservice
+
+Follow these steps to get the microservice up and running:
+To get started you will need 2 things
+1) The microservice itself, you will find documentation on running it below.
+2) A microcontroller able to run micropython if you would like to use the provided mqtt hardware controller type.
+
+## Setup the microservice
+
+1. Configure Application Properties:
+
+    Locate the application.properties file in the /src/main/resources/application.properties. These can also be set as environment variables.
+    Fill in the placeholders with your values based on your requirements. For unused services, like Azure, simply remove the corresponding field.
+    Refer to the table at the bottom of this README for a complete list of options.
+2. Compile the Application:
+
+    Ensure Maven is installed on your system. If not, follow Maven Installation Instructions.
+    Navigate to the project directory and run mvn clean package in your terminal. This will compile the code and generate a .jar file in the target directory.
+3. Run the Application:
+
+    Execute the jar file with java -jar target/app-name.jar, replacing app-name.jar with the name of your generated file.
+    If the service starts successfully, you should see
+
+## Setup the Microcontroller
+
+Coming Soon: This section will cover preparing your microcontroller for use with the microservice based on using an esp32 and micropython.
 
 # Hardware Entity
 
