@@ -379,10 +379,10 @@ The `Router` entity is designed to route sensor readings to various destinations
 
 ## Existing Router Types
 Out-of-the-box, the system includes the following router types:
-- `databaseSensorReadingRouter`
-- `kafkaSensorReadingRouter`
-- `basicDatabaseSensorReadingRouter`
-- `azureQueueSensorReadingRouter`
+- `databaseSensorReadingRouter` - Saves to a database other than the applications internal database.
+- `kafkaSensorReadingRouter` - Sends router data to a kafka topic.
+- `basicDatabaseSensorReadingRouter`- Saves to the application database.
+- `azureQueueSensorReadingRouter` - Sends router data to an azure storage queue.
 
 ## Adding a New Router Type
 
