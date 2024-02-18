@@ -36,6 +36,8 @@ This framework will hopefully lay the groundwork for developing sophisticated Io
 
 # Getting Started
 
+The following guide is intended to get people started using any hardware which supports Java and with an esp32 microcontroller, although this could be replaced with any hardware which supports micropython. 
+
 ## Prerequisites
 
 Before diving into the setup process, ensure you have the following:
