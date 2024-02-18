@@ -71,6 +71,8 @@ To get started you will need 2 things
 
 Coming Soon: This section will cover preparing your microcontroller for use with the microservice based on using an esp32 and micropython.
 
+# Core Entities
+The following sections outline the core entities of the system, for each one there is an associated endpoint where crud operations can be performed.
 # Hardware Entity
 
 ## Overview
