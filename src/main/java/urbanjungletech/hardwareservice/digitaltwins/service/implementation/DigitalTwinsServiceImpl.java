@@ -1,10 +1,12 @@
-package urbanjungletech.hardwareservice.digitaltwins.service;
+package urbanjungletech.hardwareservice.digitaltwins.service.implementation;
 
 import com.azure.digitaltwins.core.DigitalTwinsClient;
-import org.hibernate.event.spi.DeleteEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.event.CreateEvent;
+import urbanjungletech.hardwareservice.digitaltwins.service.DigitalTwinsService;
+import urbanjungletech.hardwareservice.digitaltwins.service.SpecificDigitalTwinsService;
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
+import urbanjungletech.hardwareservice.event.digitaltwins.DeleteEvent;
 
 import java.util.Map;
 

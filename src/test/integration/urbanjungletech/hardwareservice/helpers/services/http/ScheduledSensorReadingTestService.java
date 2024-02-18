@@ -16,12 +16,18 @@ public class ScheduledSensorReadingTestService {
     private SensorTestService sensorTestService;
     private MockMvc mockmvc;
     private ObjectMapper objectMapper;
+    private final HardwareTestService hardwareTestService;
+    private final HardwareControllerTestService hardwareControllerTestService;
     public ScheduledSensorReadingTestService(SensorTestService sensorTestService,
                                              MockMvc mockmvc,
-                                             ObjectMapper objectMapper){
+                                             ObjectMapper objectMapper,
+                                             HardwareTestService hardwareTestService,
+                                             HardwareControllerTestService hardwareControllerTestService){
         this.sensorTestService = sensorTestService;
         this.mockmvc = mockmvc;
         this.objectMapper = objectMapper;
+        this.hardwareTestService = hardwareTestService;
+        this.hardwareControllerTestService = hardwareControllerTestService;
     }
 
     public ScheduledSensorReading generateBasicScheduledSensorReading(){
@@ -30,7 +36,8 @@ public class ScheduledSensorReadingTestService {
         return result;
     }
     public ScheduledSensorReading createBasicScheduledReading(Alert...alerts) throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
+        hardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Sensor sensor = hardwareController.getSensors().get(0);
         ScheduledSensorReading scheduledSensorReading = this.generateBasicScheduledSensorReading();
         sensor.getScheduledSensorReadings().add(scheduledSensorReading);

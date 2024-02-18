@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.digitaltwins.service;
+package urbanjungletech.hardwareservice.digitaltwins.service.implementation;
 
 import com.azure.digitaltwins.core.BasicDigitalTwin;
 import com.azure.digitaltwins.core.BasicDigitalTwinMetadata;
@@ -6,6 +6,7 @@ import com.azure.digitaltwins.core.BasicRelationship;
 import com.azure.digitaltwins.core.DigitalTwinsClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import urbanjungletech.hardwareservice.digitaltwins.service.SpecificDigitalTwinsService;
 import urbanjungletech.hardwareservice.event.sensor.SensorCreateEvent;
 import urbanjungletech.hardwareservice.event.sensor.SensorDeleteEvent;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
@@ -13,7 +14,7 @@ import urbanjungletech.hardwareservice.service.query.SensorQueryService;
 
 @Service
 @ConditionalOnProperty(name = "digitaltwins.enabled", havingValue = "true")
-public class SensorTwinsService implements SpecificDigitalTwinsService<SensorCreateEvent, SensorDeleteEvent>{
+public class SensorTwinsService implements SpecificDigitalTwinsService<SensorCreateEvent, SensorDeleteEvent> {
 
     private DigitalTwinsClient digitalTwinsClient;
     private SensorQueryService sensorQueryService;

@@ -29,10 +29,10 @@ public class SensorTestService {
      * @return the created hardwarecontroller which contains the sensor
      */
     public HardwareController createMqttSensor() throws Exception{
-        Sensor sensor = new MqttSensor();
+        Sensor sensor = new MockSensor();
         sensor.setPort(String.valueOf(this.portCounter.getAndIncrement()));
         sensor.setName(UUID.randomUUID().toString());
-        HardwareController result = this.hardwareControllerTestService.createMqttHardwareControllerWithSensors(List.of(sensor));
+        HardwareController result = this.hardwareControllerTestService.createMockHardwareControllerWithSensors(List.of(sensor));
         return result;
     }
 

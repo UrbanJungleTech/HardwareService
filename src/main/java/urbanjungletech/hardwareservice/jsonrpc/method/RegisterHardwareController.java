@@ -23,8 +23,7 @@ public class RegisterHardwareController implements RpcMethod{
 
     @Override
     public void process(Map<String, Object> params) {
-        objectMapper.registerSubtypes(new NamedType(MqttHardwareController.class, "MqttHardwareController"));
-        HardwareController hardwareController = this.objectMapper.convertValue(params.get("hardwareController"), MqttHardwareController.class);
+        HardwareController hardwareController = this.objectMapper.convertValue(params.get("hardwareController"), HardwareController.class);
         this.hardwareControllerAdditionService.create(hardwareController);
     }
 }

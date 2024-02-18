@@ -32,7 +32,7 @@ public class CpuSpecificControllerCommunicationService implements SpecificContro
 
     @Override
     public double getSensorReading(Sensor sensor) {
-        double result = this.sensorTypeMappings.get(((CpuSensor)sensor).getSensorType()).get();
+        double result = this.sensorTypeMappings.get(CpuSensorType.valueOf(sensor.getPort())).get();
         return result;
     }
 

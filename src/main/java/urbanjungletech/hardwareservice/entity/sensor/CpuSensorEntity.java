@@ -5,13 +5,4 @@ import urbanjungletech.hardwareservice.service.controller.controllercommunicatio
 
 @Entity
 public class CpuSensorEntity extends SensorEntity{
-    private CpuSensorType sensorType;
-
-    public CpuSensorType getSensorType() {
-        return sensorType;
-    }
-
-    public void setSensorType(CpuSensorType sensorType) {
-        this.sensorType = sensorType;
-    }
 }

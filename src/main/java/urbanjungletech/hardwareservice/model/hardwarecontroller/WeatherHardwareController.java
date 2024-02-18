@@ -1,6 +1,7 @@
 package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
 import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
+import urbanjungletech.hardwareservice.model.validation.annotation.WeatherSensorTypeValidation;
 
 public class WeatherHardwareController extends HardwareController {
     public WeatherHardwareController() {

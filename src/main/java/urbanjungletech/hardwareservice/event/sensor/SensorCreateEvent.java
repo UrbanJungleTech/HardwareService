@@ -1,6 +1,6 @@
 package urbanjungletech.hardwareservice.event.sensor;
 
-import urbanjungletech.hardwareservice.event.CreateEvent;
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
 
 public class SensorCreateEvent implements CreateEvent {
     private long sensorId;

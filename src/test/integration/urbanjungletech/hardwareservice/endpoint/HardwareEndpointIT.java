@@ -61,10 +61,6 @@ public class HardwareEndpointIT {
     void readHardware_whenGivenAValidHardwareId_shouldReturnTheHardware() throws Exception {
         HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
         Hardware hardware = new MockHardware();
-        hardware.setType("light");
-        hardware.setName("Test Hardware");
-        hardware.setPort("1");
-        Map<String, String> configuration = Map.of("test", "test");
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);

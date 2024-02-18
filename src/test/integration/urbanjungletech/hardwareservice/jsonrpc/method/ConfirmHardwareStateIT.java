@@ -19,6 +19,7 @@ import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareControll
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.awaitility.Awaitility.await;
@@ -65,6 +66,10 @@ public class ConfirmHardwareStateIT {
     public void confirmHardwareState() throws Exception {
         HardwareController controller = this.hardwareControllerTestService.createMockHardwareController();
         Hardware hardware = new MockHardware();
+        hardware.setPossibleStates(List.of("on", "off"));
+        hardware.setOffState("off");
+        hardware.setPort("1");
+        hardware.setName("test");
         controller.getHardware().add(hardware);
         hardware.setPort("1");
         controller = this.hardwareControllerTestService.postHardwareController(controller);
@@ -78,7 +83,7 @@ public class ConfirmHardwareStateIT {
         params.put("port", "1");
         HardwareState hardwareState = new HardwareState();
         hardwareState.setLevel(2);
-        hardwareState.setState("off");
+        hardwareState.setState("on");
         params.put("hardwareState", hardwareState);
         jsonRpcMessage.setParams(params);
         String mqttPayload = this.objectMapper.writeValueAsString(jsonRpcMessage);
@@ -95,7 +100,7 @@ public class ConfirmHardwareStateIT {
                     if (hardwareResponse.getResponse().getStatus() == HttpStatus.OK.value()) {
                         Hardware updatedHardware = objectMapper.readValue(hardwareResponse.getResponse().getContentAsString(), Hardware.class);
                         HardwareState state = updatedHardware.getCurrentState();
-                        return state.getState().equals("off") && state.getLevel() == 2;
+                        return state.getState().equals("on") && state.getLevel() == 2;
                     }
                     return false;
                 });

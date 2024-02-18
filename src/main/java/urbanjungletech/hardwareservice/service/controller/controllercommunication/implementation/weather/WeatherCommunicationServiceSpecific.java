@@ -42,7 +42,7 @@ public class WeatherCommunicationServiceSpecific implements SpecificControllerCo
         WeatherHardwareController hardwareController = (WeatherHardwareController) this.hardwareControllerQueryService.getHardwareController(sensor.getHardwareControllerId());
         Credentials credentials = hardwareController.getConnectionDetails().getCredentials();
         TokenCredentials tokenCredentials = (TokenCredentials)this.credentialsRetrievalService.getCredentials(credentials);
-        String weatherSensorType = weatherSensor.getSensorType().toString().toLowerCase();
+        String weatherSensorType = weatherSensor.getPort().toLowerCase();
         String longitude= String.valueOf(weatherSensor.getLongitude());
         String latitude = String.valueOf(weatherSensor.getLatitude());
         String apiKey = tokenCredentials.getTokenValue();

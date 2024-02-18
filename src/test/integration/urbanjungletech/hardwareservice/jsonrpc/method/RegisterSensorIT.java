@@ -11,12 +11,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
+import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.jsonrpc.model.RegisterSensorMessage;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -61,10 +64,14 @@ public class RegisterSensorIT {
      */
     @Test
     public void testRegisterSensor() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
+        HardwareController hardwareController = this.sensorTestService.createBasicMockSensor();
         Sensor sensor = hardwareController.getSensors().get(0);
 
-        RegisterSensorMessage registerSensorMessage = new RegisterSensorMessage(sensor);
+        JsonRpcMessage registerSensorMessage = new JsonRpcMessage("RegisterSensor");
+        Map<String, Object> params = new HashMap<>();
+        params.put("serialNumber", hardwareController.getSerialNumber());
+        params.put("sensor", sensor);
+        registerSensorMessage.setParams(params);
         String registerSensorMessageJson = objectMapper.writeValueAsString(registerSensorMessage);
 
         this.mqttTestService.sendMessage(registerSensorMessageJson);

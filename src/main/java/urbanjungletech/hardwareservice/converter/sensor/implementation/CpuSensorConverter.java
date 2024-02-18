@@ -10,19 +10,17 @@ public class CpuSensorConverter implements SpecificSensorConverter<CpuSensor, Cp
     @Override
     public CpuSensor toModel(CpuSensorEntity sensor) {
         CpuSensor result = new CpuSensor();
-        result.setSensorType(sensor.getSensorType());
         return result;
     }
 
     @Override
     public CpuSensorEntity createEntity(CpuSensor sensor) {
         CpuSensorEntity result = new CpuSensorEntity();
-        result.setSensorType(sensor.getSensorType());
         return result;
     }
 
     @Override
     public void fillEntity(CpuSensorEntity sensorEntity, CpuSensor sensor) {
-        sensorEntity.setSensorType(sensor.getSensorType());
+
     }
 }

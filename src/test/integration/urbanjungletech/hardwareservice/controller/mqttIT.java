@@ -66,9 +66,7 @@ public class mqttIT {
     void readHardware_whenGivenAValidHardwareId_shouldSendARegisterHardwareMessage() throws Exception {
 
         HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
-        Hardware hardware = new MqttHardware();
-        hardware.setPort("1");
-        hardware.setOffState("off");
+        Hardware hardware = this.hardwareControllerTestService.createMqttHardware();
         hardwareController.getHardware().add(hardware);
         HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
         Hardware createdHardware = createdHardwareController.getHardware().get(0);
@@ -135,9 +133,7 @@ public class mqttIT {
      */
     @Test
     public void createTimer_when2SecondsHavePassed_2OnEventsShouldHaveBeenSent_and1OffEventShouldHaveBeenSent() throws Exception {
-        Hardware hardware = new MqttHardware();
-        hardware.setOffState("off");
-        hardware.setPort("1");
+        MqttHardware hardware = hardwareControllerTestService.createMqttHardware();
         Timer timer1 = new Timer();
         timer1.setLevel(100);
         timer1.setState("on");
@@ -217,9 +213,12 @@ public class mqttIT {
      */
     @Test
     void getSensor_whenGivenAValidSensorId_shouldSendARegisterSensorMessage() throws Exception {
-        HardwareController hardwareController = this.sensorTestService.createMqttSensor();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
+        Sensor sensor = this.hardwareControllerTestService.createMqttSensor();
+        hardwareController.getSensors().add(sensor);
+        HardwareController createdHardwareController = this.hardwareControllerTestService.postHardwareController(hardwareController);
 
-        Sensor createdSensor = hardwareController.getSensors().get(0);
+        Sensor createdSensor = createdHardwareController.getSensors().get(0);
 
         await()
                 .atMost(Duration.of(3, ChronoUnit.SECONDS))

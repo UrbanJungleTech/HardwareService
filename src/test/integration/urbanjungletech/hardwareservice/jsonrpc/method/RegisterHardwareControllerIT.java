@@ -45,7 +45,7 @@ public class RegisterHardwareControllerIT {
      */
     @Test
     public void testRegisterHardwareController() throws Exception {
-        HardwareController hardwareController = this.hardwareControllerTestService.createMqttHardwareController();
+        HardwareController hardwareController = this.hardwareControllerTestService.createMockHardwareController();
         Map<String, Object> params = new HashMap<>();
         params.put("hardwareController", hardwareController);
         JsonRpcMessage jsonRpcMessage = new JsonRpcMessage("RegisterHardwareController", params);

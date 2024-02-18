@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.model.hardware;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 
@@ -17,8 +19,9 @@ public abstract class Hardware {
     private String port;
     private String name;
     private String type;
+    @NotEmpty
     private List<String> possibleStates;
-    private String serialNumber;
+    @NotNull
     private String offState;
     private HardwareState desiredState;
     private HardwareState currentState;
@@ -108,13 +111,5 @@ public abstract class Hardware {
 
     public void setOffState(String offState) {
         this.offState = offState;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
     }
 }
