@@ -1113,6 +1113,85 @@ In this scenario the user has a garden, and would like to make sure they keep th
 
 This setup effectively regulates the temperature within a desired range.
 
+# Security Configuration
+## Overview
+
+Security within the IoT Automation Framework Accelerator is a critical aspect that ensures the integrity and confidentiality of the system. Recognizing the diverse security needs of different deployments, the framework offers flexibility in its security configuration, allowing users to tailor security measures according to their specific requirements.
+Configurable Security Options
+
+The framework provides two sample security configurations to get users started:
+
+None: This configuration disables security, allowing all requests to proceed without authentication. It is primarily useful for development environments or scenarios where the framework operates within a secure network.
+OAuth: This configuration enables OAuth authentication, integrating with standard OAuth providers. When selected, it requires the setup of normal Spring OAuth settings, including client IDs, client secrets, and token URIs.
+
+## Configuration Property
+
+To select the desired security setup, users should configure the following property within their application properties:
+
+spring.security.type=none  or 'oauth' for OAuth authentication
+
+This property allows for easy switching between security configurations, accommodating the varying security policies and practices of different organizations.
+Extending Security Configurations
+
+## Steps to Implement a New Security Type
+
+It is highly recommended not to use these out of the box setups for real security setups but rather as a guide. New setups can be added by adding a new bean to the SecurityConfiguration.java file.
+
+Implementation steps:
+
+- Define the Security Configuration Bean: In SecurityConfiguration.java, define a new bean that configures your custom security mechanism. This could involve setting up filters, authentication providers, or integrating with external security services.
+
+- Configure Application Properties: If your security configuration requires custom properties (such as API keys, service URLs, etc.), add these to the application properties file and ensure they are properly loaded within your security configuration bean.
+
+- Test Your Security Configuration: After implementing your custom security configuration, thoroughly test it to ensure that it meets your security requirements and behaves as expected in various scenarios.
+
+Example: Adding Basic Authentication
+
+```java
+
+@Configuration
+@Profile("basic-auth")
+public class BasicAuthSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+            .httpBasic();
+    }
+}
+```
+In this example, a basic authentication configuration is defined for demonstration purposes. By setting an appropriate profile or conditionally loading this configuration based on the spring.security.type property, users can easily extend the framework's security capabilities.
+
+# Digital Twins Integration
+## Overview
+
+The IoT Automation Framework Accelerator now supports Digital Twins Integration, enhancing the system's capabilities by synchronizing the physical and digital worlds. This integration introduces two new event types, CreateEvent and DeleteEvent, which are implemented by specific events like HardwareCreateEvent and HardwareDeleteEvent. This hierarchical event structure automates the synchronization process, ensuring that changes in the physical entities are accurately reflected in their digital counterparts.
+## Key Features
+
+- Event-Driven Synchronization: With the new CreateEvent and DeleteEvent, the system automatically triggers updates in the digital twins instance, keeping the digital representation in sync with its physical entity.
+- Digital Twins Service Handling: These events are handled by a dedicated digital twin service, which performs the necessary updates or deletions in the digital twins instance.
+- Selective Integration: To utilize this feature, the digitaltwins.enabled property must be set to true. This allows users to opt-in to the digital twins integration based on their specific needs.
+- Initial Entity Support: Currently, the integration supports hardwarecontroller, hardware, and sensor entities. This selection provides a foundational layer for representing physical devices and their states within the digital twins environment.
+    Future Expansions: While the initial release focuses on a core set of entities, there are plans to extend support to additional entities, broadening the scope of the digital twins integration.
+
+## Configuration
+
+To enable the Digital Twins Integration, the following property must be configured:
+
+digitaltwins.enabled: This property activates the integration, allowing the system to interact with a digital twins instance and perform synchronization based on the defined events.
+Under Development
+
+It's important to note that the Digital Twins Integration is currently under development. This phase focuses on refining the integration, expanding entity support, and enhancing synchronization mechanisms. Users are encouraged to provide feedback and suggestions, which will be invaluable in shaping the future direction of this feature.
+Getting Started
+
+## To start using the Digital Twins Integration:
+
+- Ensure the digitaltwins.enabled property is set to true in your configuration.
+- Begin with supported entities (hardwarecontroller, hardware, and sensor) to establish your digital twins environment.
+
 # Application Configuration Options
 
 This table outlines the configurable properties within the application.yml file for our IoT Automation Framework Accelerator. These settings are designed to provide flexibility and customization of the application's behavior in different environments. Each property can be overridden by specifying the corresponding environment variable, allowing for seamless integration with various deployment pipelines and cloud services. The configuration covers aspects from application naming and logging levels to integration with Azure services and MQTT settings, ensuring a comprehensive setup for development and production environments.
