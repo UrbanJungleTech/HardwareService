@@ -9,7 +9,7 @@ import java.util.Map;
  * but when there is an update the entire hardware will be sent to the controller at once.
  */
 public class StatefulHardware extends Hardware {
-    private Map<String, MqttPin> pins;
+    protected Map<String, MqttPin> pins;
 
     public Map<String, MqttPin> getPins() {
         return pins;

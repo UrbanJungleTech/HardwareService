@@ -13,7 +13,7 @@ public class StatefulHardwareEntity extends HardwareEntity {
             joinColumns = @JoinColumn(name = "stateful_hardware_id"),
             inverseJoinColumns = @JoinColumn(name = "mqtt_pin_id"))
     @MapKeyColumn(name = "pin_name")
-    private Map<String, MqttPinEntity> pins;
+    protected Map<String, MqttPinEntity> pins;
 
     public Map<String, MqttPinEntity> getPins() {
         return pins;
