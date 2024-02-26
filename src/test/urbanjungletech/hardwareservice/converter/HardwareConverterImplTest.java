@@ -5,19 +5,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import urbanjungletech.hardwareservice.converter.hardware.SpecificHardwareConverter;
 import urbanjungletech.hardwareservice.converter.hardware.implementation.HardwareConverterImpl;
 import urbanjungletech.hardwareservice.entity.HardwareStateEntity;
 import urbanjungletech.hardwareservice.entity.TimerEntity;
 import urbanjungletech.hardwareservice.entity.hardware.HardwareEntity;
 import urbanjungletech.hardwareservice.entity.hardwarecontroller.HardwareControllerEntity;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardware;
+import urbanjungletech.hardwareservice.helpers.mock.hardware.MockHardwareEntity;
 import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 import urbanjungletech.hardwareservice.model.hardware.Hardware;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,9 +34,15 @@ class HardwareConverterImplTest {
     TimerConverter timerConverter;
     @InjectMocks
     HardwareConverterImpl hardwareConverter;
+    @Mock
+    SpecificHardwareConverter specificHardwareConverter;
+    @Mock
+    Map<Class, SpecificHardwareConverter> specificHardwareConverterMap;
 
     @Test
     public void toModel() {
+        when(specificHardwareConverterMap.get(any(HardwareEntity.class))).thenReturn(specificHardwareConverter);
+        when(specificHardwareConverter.toModel(any(HardwareEntity.class))).thenReturn(new MockHardware());
         String testPort = "1";
         String hardwareType = "HEATER";
         long hardwareId = 2L;

@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.config.EntityNameConfiguration;
 import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
-import urbanjungletech.hardwareservice.exception.service.EntityNameServiceImpl;
+import urbanjungletech.hardwareservice.exception.service.implementation.EntityNameServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,11 +1,9 @@
 package urbanjungletech.hardwareservice.jsonrpc.method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.addition.HardwareControllerAdditionService;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.hardwarecontroller.MqttHardwareController;
 
 import java.util.Map;
 

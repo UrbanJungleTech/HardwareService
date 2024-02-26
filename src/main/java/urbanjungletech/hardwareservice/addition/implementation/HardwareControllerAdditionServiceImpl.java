@@ -1,5 +1,6 @@
 package urbanjungletech.hardwareservice.addition.implementation;
 
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import urbanjungletech.hardwareservice.addition.HardwareAdditionService;
@@ -53,6 +54,7 @@ public class HardwareControllerAdditionServiceImpl implements HardwareController
 
     @Transactional
     @Override
+    @Observed
     public HardwareController create(HardwareController hardwareController) {
         this.objectLoggerService.logInfo("Adding new hardware controller", hardwareController);
         HardwareControllerEntity result = this.hardwareControllerDAO.createHardwareController(hardwareController);

@@ -7,9 +7,7 @@ import urbanjungletech.hardwareservice.model.HardwareState;
 import urbanjungletech.hardwareservice.model.Timer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

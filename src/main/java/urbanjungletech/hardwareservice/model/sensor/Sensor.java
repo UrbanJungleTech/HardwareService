@@ -5,9 +5,7 @@ import urbanjungletech.hardwareservice.model.ScheduledSensorReading;
 import urbanjungletech.hardwareservice.model.sensorreadingrouter.SensorReadingRouter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

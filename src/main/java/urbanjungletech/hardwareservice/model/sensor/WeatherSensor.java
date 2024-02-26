@@ -1,7 +1,6 @@
 package urbanjungletech.hardwareservice.model.sensor;
 
 import urbanjungletech.hardwareservice.model.validation.annotation.WeatherSensorTypeValidation;
-import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.model.WeatherSensorTypes;
 
 @WeatherSensorTypeValidation
 public class WeatherSensor extends Sensor{

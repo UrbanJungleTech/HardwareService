@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.hardwarestate;
 
-public class HardwareStateCreateEvent {
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
+
+public class HardwareStateCreateEvent implements CreateEvent {
     private long hardwareStateId;
 
     public HardwareStateCreateEvent(long hardwareStateId) {

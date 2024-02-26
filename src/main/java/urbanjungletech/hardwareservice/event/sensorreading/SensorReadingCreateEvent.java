@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.sensorreading;
 
-public class SensorReadingCreateEvent {
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
+
+public class SensorReadingCreateEvent implements CreateEvent {
     private Long id;
 
     public SensorReadingCreateEvent(Long id){

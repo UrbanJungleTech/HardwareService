@@ -13,8 +13,6 @@ import urbanjungletech.hardwareservice.helpers.WeatherTestService;
 import urbanjungletech.hardwareservice.helpers.services.config.WeatherProperties;
 import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerTestService;
 import urbanjungletech.hardwareservice.model.SensorReading;
-import urbanjungletech.hardwareservice.model.connectiondetails.WeatherConnectionDetails;
-import urbanjungletech.hardwareservice.model.credentials.TokenCredentials;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.WeatherHardwareController;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
@@ -22,7 +20,6 @@ import urbanjungletech.hardwareservice.model.sensor.WeatherSensor;
 import urbanjungletech.hardwareservice.service.controller.controllercommunication.implementation.weather.model.WeatherSensorTypes;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -3,7 +3,6 @@ package urbanjungletech.hardwareservice.helpers.services.http;
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.helpers.mock.sensor.MockSensor;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.List;

@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import urbanjungletech.hardwareservice.helpers.services.http.SensorTestService;
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
-import urbanjungletech.hardwareservice.jsonrpc.model.RegisterSensorMessage;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 import urbanjungletech.hardwareservice.repository.HardwareControllerRepository;

@@ -1,9 +1,7 @@
 package urbanjungletech.hardwareservice.service.query.implementation;
 
 import org.springframework.stereotype.Service;
-import urbanjungletech.hardwareservice.converter.ScheduledSensorReadingConverter;
 import urbanjungletech.hardwareservice.converter.sensor.SensorConverter;
-import urbanjungletech.hardwareservice.dao.HardwareControllerDAO;
 import urbanjungletech.hardwareservice.dao.SensorDAO;
 import urbanjungletech.hardwareservice.entity.sensor.SensorEntity;
 import urbanjungletech.hardwareservice.model.SensorReading;
@@ -15,22 +13,15 @@ import java.time.LocalDateTime;
 
 @Service
 public class SensorQueryServiceImpl implements SensorQueryService {
-
-    private final HardwareControllerDAO hardwareControllerDAO;
     private final ControllerCommunicationService controllerCommunicationService;
     private final SensorDAO sensorDAO;
-    private final ScheduledSensorReadingConverter scheduledSensorReadingConverter;
     private final SensorConverter sensorConverter;
 
     public SensorQueryServiceImpl(ControllerCommunicationService controllerCommunicationService,
-                                  HardwareControllerDAO hardwareControllerDAO,
                                   SensorDAO sensorDAO,
-                                  ScheduledSensorReadingConverter scheduledSensorReadingConverter,
                                   SensorConverter sensorConverter){
         this.controllerCommunicationService = controllerCommunicationService;
-        this.hardwareControllerDAO = hardwareControllerDAO;
         this.sensorDAO = sensorDAO;
-        this.scheduledSensorReadingConverter = scheduledSensorReadingConverter;
         this.sensorConverter = sensorConverter;
     }
 

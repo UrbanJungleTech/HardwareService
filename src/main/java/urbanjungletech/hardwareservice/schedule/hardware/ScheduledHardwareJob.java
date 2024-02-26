@@ -31,6 +31,7 @@ public class ScheduledHardwareJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        logger.debug("Executing scheduled hardware job for timer with id: {} ", this.timerId);
         Timer timer = this.timerQueryService.getTimer(this.timerId);
         Hardware hardware = this.hardwareQueryService.getHardware(timer.getHardwareId());
         hardware.getDesiredState().setState(timer.getState());

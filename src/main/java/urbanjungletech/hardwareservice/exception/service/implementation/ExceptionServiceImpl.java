@@ -1,4 +1,4 @@
-package urbanjungletech.hardwareservice.exception.service;
+package urbanjungletech.hardwareservice.exception.service.implementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.exception.DefaultSystemException;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.exception.SystemException;
+import urbanjungletech.hardwareservice.exception.service.EntityNameService;
+import urbanjungletech.hardwareservice.exception.service.ExceptionService;
 
 import java.lang.reflect.InvocationTargetException;
 

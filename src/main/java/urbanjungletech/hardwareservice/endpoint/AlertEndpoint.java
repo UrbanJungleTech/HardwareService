@@ -15,13 +15,10 @@ public class AlertEndpoint {
 
     private AlertAdditionService alertAdditionService;
     private AlertQueryService alertQueryService;
-    private AlertActionAdditionService alertActionAdditionService;
     public AlertEndpoint(AlertAdditionService alertAdditionService,
-                         AlertQueryService alertQueryService,
-                         AlertActionAdditionService alertActionAdditionService){
+                         AlertQueryService alertQueryService){
         this.alertAdditionService = alertAdditionService;
         this.alertQueryService = alertQueryService;
-        this.alertActionAdditionService = alertActionAdditionService;
     }
 
 

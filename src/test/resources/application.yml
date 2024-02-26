@@ -118,3 +118,5 @@ digitaltwins:
   digital-twins-uri: ${DIGITAL_TWINS_URL}
   enabled: ${DIGITAL_TWINS_ENABLED:false}
 
+validation:
+  mqtt-broker-url-schemas: ${VALIDATION_MQTT_BROKER_URL_SCHEMAS:tcp,mqtt}

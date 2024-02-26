@@ -19,6 +19,10 @@ spring:
       keyvault:
         secret:
           endpoint: ${AZURE_KEYVAULT_URI}
+          enabled: ${AZURE_KEYVAULT_ENABLED:false}
+          client-id: ${AZURE_KEYVAULT_CLIENT_ID}
+          client-secret: ${AZURE_KEYVAULT_CLIENT_SECRET}
+          tenant-id: ${AZURE_KEYVAULT_TENANT_ID}
     vault:
       uri: ${VAULT_URI}
       connection-timeout: ${VAULT_CONNECTION_TIMEOUT:5000}
@@ -29,6 +33,7 @@ spring:
         enabled: ${VAULT_KV_ENABLED:false}
         backend: ${VAULT_KV_BACKEND}
         profile-separator: ${VAULT_KV_PROFILE_SEPARATOR:/}
+        path: ${VAULT_KV_CREDENTIAL_PATH}
   security:
     type: ${SECURITY_TYPE:none}
     oauth2:
@@ -56,13 +61,8 @@ entity:
     urbanjungletech.hardwareservice.entity.HardwareControllerGroupEntity: Hardware Controller Group
     urbanjungletech.hardwareservice.entity.sensorreadingrouter.SensorReadingRouterEntity: Sensor Reading Router
 
-azure:
-  keyvault:
-    uri: ${AZURE_KEYVAULT_URI}
-    enabled: ${AZURE_KEYVAULT_ENABLED:false}
-    client-id: ${AZURE_KEYVAULT_CLIENT_ID}
-    client-secret: ${AZURE_KEYVAULT_CLIENT_SECRET}
-    tenant-id: ${AZURE_KEYVAULT_TENANT_ID}
+credentials-vault:
+  path: ${CREDENTIALS_VAULT_PATH}
 
 mqtt-rpc:
   uri: ${SYSTEM_MQTT_URI}
@@ -114,4 +114,5 @@ digitaltwins:
   tenant-id: ${DIGITAL_TWINS_TENANT_ID}
   digital-twins-uri: ${DIGITAL_TWINS_URL}
   enabled: ${DIGITAL_TWINS_ENABLED:false}
-
+validation:
+  mqtt-broker-url-schemas: ${VALIDATION_MQTT_BROKER_URL_SCHEMAS:tcp,mqtt}

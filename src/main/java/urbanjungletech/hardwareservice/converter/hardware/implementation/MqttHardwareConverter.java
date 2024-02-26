@@ -2,6 +2,7 @@ package urbanjungletech.hardwareservice.converter.hardware.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.converter.hardware.SpecificHardwareConverter;
+import urbanjungletech.hardwareservice.converter.hardware.mqtt.MqttPinConverter;
 import urbanjungletech.hardwareservice.entity.hardware.MqttHardwareEntity;
 import urbanjungletech.hardwareservice.model.hardware.MqttHardware;
 

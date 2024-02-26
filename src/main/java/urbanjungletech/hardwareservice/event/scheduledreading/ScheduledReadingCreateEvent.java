@@ -1,6 +1,8 @@
 package urbanjungletech.hardwareservice.event.scheduledreading;
 
-public class ScheduledReadingCreateEvent {
+import urbanjungletech.hardwareservice.event.digitaltwins.CreateEvent;
+
+public class ScheduledReadingCreateEvent implements CreateEvent {
     private long scheduledReadingId;
 
     public ScheduledReadingCreateEvent(long scheduledReadingId){

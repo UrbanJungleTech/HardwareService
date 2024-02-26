@@ -11,7 +11,6 @@ import urbanjungletech.hardwareservice.helpers.services.http.HardwareControllerT
 import urbanjungletech.hardwareservice.helpers.services.mqtt.MqttTestService;
 import urbanjungletech.hardwareservice.jsonrpc.model.JsonRpcMessage;
 import urbanjungletech.hardwareservice.model.hardwarecontroller.HardwareController;
-import urbanjungletech.hardwareservice.model.sensor.MqttSensor;
 import urbanjungletech.hardwareservice.model.sensor.Sensor;
 
 import java.util.HashMap;

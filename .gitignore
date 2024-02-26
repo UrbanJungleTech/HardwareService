@@ -45,4 +45,7 @@ deploy.sh
 destroy.sh
 src/test/request.http
 src/test/http-client.env.json
-./*.http
+.azure/*
+./sampleflow/
+/.github/
+/sampleflow/
