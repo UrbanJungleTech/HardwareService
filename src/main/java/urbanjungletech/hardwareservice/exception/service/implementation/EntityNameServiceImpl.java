@@ -1,9 +1,10 @@
-package urbanjungletech.hardwareservice.exception.service;
+package urbanjungletech.hardwareservice.exception.service.implementation;
 
 import org.springframework.stereotype.Service;
 import urbanjungletech.hardwareservice.config.EntityNameConfiguration;
 import urbanjungletech.hardwareservice.exception.exception.EntityNameConfigurationNotSetException;
 import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
+import urbanjungletech.hardwareservice.exception.service.EntityNameService;
 
 import java.util.Optional;
 

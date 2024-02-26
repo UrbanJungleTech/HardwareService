@@ -245,6 +245,26 @@
         <testSourceDirectory>src/test</testSourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <apiDocsUrl>http://localhost:8081/v3/api-docs</apiDocsUrl> <!-- Replace with your application's URL -->
+                    <outputFileName>openapi.yml</outputFileName>
+                    <outputDir>${project.build.directory}</outputDir>
+                    <outputFormat>YAML</outputFormat>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.version}</version>

@@ -114,4 +114,5 @@ digitaltwins:
   tenant-id: ${DIGITAL_TWINS_TENANT_ID}
   digital-twins-uri: ${DIGITAL_TWINS_URL}
   enabled: ${DIGITAL_TWINS_ENABLED:false}
-
+validation:
+  mqtt-broker-url-schemas: ${VALIDATION_MQTT_BROKER_URL_SCHEMAS:tcp,mqtt}

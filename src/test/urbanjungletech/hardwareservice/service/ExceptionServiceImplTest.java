@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import urbanjungletech.hardwareservice.exception.exception.NameNotFoundException;
 import urbanjungletech.hardwareservice.exception.exception.NotFoundException;
 import urbanjungletech.hardwareservice.exception.service.EntityNameService;
-import urbanjungletech.hardwareservice.exception.service.ExceptionServiceImpl;
+import urbanjungletech.hardwareservice.exception.service.implementation.ExceptionServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

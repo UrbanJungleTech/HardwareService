@@ -11,6 +11,7 @@ import urbanjungletech.hardwareservice.exception.exception.StandardErrorExceptio
 import urbanjungletech.hardwareservice.exception.exception.WebRequestException;
 import urbanjungletech.hardwareservice.exception.model.InvalidRequestError;
 import urbanjungletech.hardwareservice.exception.model.InvalidRequestField;
+import urbanjungletech.hardwareservice.exception.model.UnknownErrorResponse;
 
 
 @ControllerAdvice
@@ -42,10 +43,13 @@ public class ErrorHandler {
         return ResponseEntity.status(exception.getHttpStatus()).body(error);
     }
 
-    @ExceptionHandler(value=RuntimeException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<WebRequestException> fallback(Exception ex){
         WebRequestException error = new WebRequestException();
-        error.setMessage("Unknown error");
+        UnknownErrorResponse unknownError = new UnknownErrorResponse();
+        unknownError.setMessage("Unknown error occurred. Please try again later.");
+        unknownError.setExceptionMessage(ex.getMessage());
+        error.setMessage("Unknown error occurred. Please try again later.");
         error.setHttpStatus(500);
         logger.debug("unknown error is {}: ", ex.getMessage());
         ex.printStackTrace();

@@ -2,11 +2,13 @@ package urbanjungletech.hardwareservice.model.hardwarecontroller;
 
 import jakarta.validation.constraints.NotEmpty;
 import urbanjungletech.hardwareservice.model.credentials.Credentials;
+import urbanjungletech.hardwareservice.model.validation.annotation.ValidMqttBrokerUrl;
 
 public class HardwareMqttClient {
     private Long id;
     private Long hardwareControllerId;
     @NotEmpty
+    @ValidMqttBrokerUrl
     private String brokerUrl;
     @NotEmpty
     private String requestTopic;
